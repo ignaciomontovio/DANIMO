@@ -137,3 +137,7 @@ dist
 
 # idea
 .idea
+
+# node
+package-lock.json
+

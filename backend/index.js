@@ -12,10 +12,6 @@ app.use(express.json());
 const sequelize = require('./db');
 testConnection();
 
-app.get('/', (req, res) => {
-    res.send('Backend funcionando');
-});
-
 // Importa rutas
 const apiRoutes = require('./routes/api');
 const registerRoutes = require('./routes/register');

@@ -1,10 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcrypt');
 
 router.post('/register', (req, res) => {
-    const {nombre, apellido, dni} = req.body;
-    crearUsuario(nombre, apellido, dni);
+    const {nombre, apellido, dni, password} = req.body;
+    console.log(password)
+    const passwordHash = hashPassword(password)
+
+    crearUsuario(nombre, apellido, dni, passwordHash);
     res.json({mensaje: '¡Hola desde la API!'});
 });
 
@@ -25,3 +29,7 @@ async function crearUsuario(nombre, apellido, dni) {
         console.error('❌ Error al crear usuario:', error);
     }
 }
+
+async function hashPassword(plainPassword): Promise<String> {
+    return await bcrypt.hash(plainPassword, 10);
+};

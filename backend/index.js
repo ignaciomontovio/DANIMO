@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 // test-connection.js
-const sequelize = require('./db/db');
+const sequelize = require('./db');
 testConnection();
 
 app.get('/', (req, res) => {
@@ -18,7 +18,9 @@ app.get('/', (req, res) => {
 
 // Importa rutas
 const apiRoutes = require('./routes/api');
+const registerRoutes = require('./routes/register');
 app.use('/api', apiRoutes);
+app.use('/', registerRoutes)
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en puerto ${PORT}`);

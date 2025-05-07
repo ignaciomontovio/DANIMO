@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS Usuario (
                                        id VARCHAR(100) PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
-    dni INT NOT NULL
+    dni INT NOT NULL,
+    password VARCHAR(100) NOT NULL
     );
 
 -- Insertar un usuario de prueba (descomenta si quieres probar)

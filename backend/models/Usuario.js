@@ -20,6 +20,9 @@ const Usuario = sequelize.define('Usuario', {
         allowNull: false,
         unique: false
     }
+}, {
+    freezeTableName: true, // ✅ No pluralizar automáticamente
+    timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt
 });
 
 module.exports = Usuario;

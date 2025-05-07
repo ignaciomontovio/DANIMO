@@ -3,33 +3,42 @@ const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 
-router.post('/register', (req, res) => {
-    const {nombre, apellido, dni, password} = req.body;
-    console.log(password)
-    const passwordHash = hashPassword(password)
+// POST /register
+router.post('/register', async (req, res) => {
+    const { nombre, apellido, dni, password } = req.body;
 
-    crearUsuario(nombre, apellido, dni, passwordHash);
-    res.json({mensaje: '¡Hola desde la API!'});
+    try {
+        // Crear usuario con hash
+        await crearUsuario(nombre, apellido, dni, await hashPassword(password));
+
+        res.json({ mensaje: '¡Usuario registrado correctamente!' });
+    } catch (error) {
+        console.error('❌ Error en /register:', error);
+        res.status(500).json({ error: 'Error al registrar usuario' });
+    }
 });
 
 module.exports = router;
 
-async function crearUsuario(nombre, apellido, dni) {
+// Función para crear el usuario en la base de datos
+async function crearUsuario(nombre, apellido, dni, passwordHash) {
     try {
         const Usuario = require('../models/Usuario');
         const nuevoUsuario = await Usuario.create({
             id: "U-" + uuidv4(),
             nombre: nombre,
             apellido: apellido,
-            dni: dni
+            dni: dni,
+            password: passwordHash,
         });
 
         console.log('✅ Usuario creado:', nuevoUsuario.toJSON());
     } catch (error) {
-        console.error('❌ Error al crear usuario:', error);
+        throw error;
     }
 }
 
-async function hashPassword(plainPassword): Promise<String> {
+// Función para hashear la contraseña
+async function hashPassword(plainPassword) {
     return await bcrypt.hash(plainPassword, 10);
-};
+}

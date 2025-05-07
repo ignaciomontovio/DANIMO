@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login con Google</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    function handleCredentialResponse(response) {
+      console.log("🔐 ID Token recibido:");
+      console.log(response.credential);
+
+      // Podés copiar este token para enviarlo al backend en pruebas
+      document.getElementById('token').textContent = response.credential;
+    }
+
+    window.onload = function () {
+      google.accounts.id.initialize({
+        client_id: "725293270569-gm4iupqhciefncm456s55deq5k91k8fs.apps.googleusercontent.com", // 🔁 Reemplaza con tu client_id
+        callback: handleCredentialResponse
+      });
+
+      google.accounts.id.renderButton(
+        document.getElementById("google-login"),
+        { theme: "outline", size: "large" }
+      );
+    };
+  </script>
+</head>
+<body>
+  <h2>Login con Google (prueba)</h2>
+  <div id="google-login"></div>
+  <p><strong>ID Token:</strong></p>
+  <pre id="token" style="white-space: break-spaces; background: #eee; padding: 1em;"></pre>
+</body>
+</html>

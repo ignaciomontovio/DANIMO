@@ -14,9 +14,9 @@ testConnection();
 
 // Importa rutas
 const apiRoutes = require('./routes/api');
-const registerRoutes = require('./routes/register');
+const registerRoutes = require('./routes/auth');
 app.use('/api', apiRoutes);
-app.use('/', registerRoutes)
+app.use('/auth', registerRoutes)
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en puerto ${PORT}`);

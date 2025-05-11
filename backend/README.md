@@ -5,3 +5,6 @@ Pasos para levantar servidor node
 Complementos ubuntu necesarios
 
 npm install sequelize mysql2
+
+Crear base de datos
+sudo mysql < schema.sql

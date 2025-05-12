@@ -5,6 +5,7 @@ const {v4: uuidv4} = require('uuid');
 const bcrypt = require('bcrypt');
 const {OAuth2Client} = require('google-auth-library');
 const Joi = require('joi');
+const jwt = require('jsonwebtoken');
 
 const Usuario = require('../models/Usuario');
 
@@ -103,8 +104,11 @@ router.post('/login', async (req, res) => {
     if (!esValida) {
         return res.status(400).json({error: 'Contraseña incorrecta.'});
     }
-
-    return res.status(200).json({error: 'Login completado con exito'});
+    const token = jwt.sign({usuario: usuarioExistente.usuario}, process.env.JWT_SECRET, {
+        expiresIn: '1000h',
+        algorithm: 'HS256'
+    })
+    return res.status(200).json({error: 'Login completado con exito. Token: ' + token});
 });
 
 // Login con Google

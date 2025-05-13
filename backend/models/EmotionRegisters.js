@@ -1,24 +1,20 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
-const RegistroDeEmocion = sequelize.define('RegistroDeEmocion', {
+const EmotionRegisters = sequelize.define('EmotionRegisters', {
     id: {
         type: DataTypes.STRING,
         allowNull: false,
+        primaryKey: true
     },
-    fecha: {
+    date: {
         type: DataTypes.DATE,
         allowNull: false,
     },
-    emocion: {
+    emotion: {
         type: DataTypes.STRING,
         allowNull: true,
         unique: true,
-    },
-    contrasena: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: false
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente
@@ -27,4 +23,4 @@ const RegistroDeEmocion = sequelize.define('RegistroDeEmocion', {
 
 sequelize.sync();
 
-module.exports = Usuario;
+module.exports = EmotionRegisters;

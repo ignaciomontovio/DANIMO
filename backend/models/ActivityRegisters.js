@@ -1,24 +1,21 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
+const { date } = require('joi');
 
-const Usuario = sequelize.define('Usuario', {
-    nombre: {
+const ActivityRegisters = sequelize.define('ActivityRegisters', {
+    id: {
         type: DataTypes.STRING,
         allowNull: false,
+        primaryKey: true
     },
-    apellido: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    usuario: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        unique: true,
-    },
-    contrasena: {
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: false
+    },
+    category: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente
@@ -27,4 +24,4 @@ const Usuario = sequelize.define('Usuario', {
 
 sequelize.sync();
 
-module.exports = Usuario;
+module.exports = ActivityRegisters;

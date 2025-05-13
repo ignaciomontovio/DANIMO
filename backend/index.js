@@ -8,9 +8,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// test-connection.js
-const sequelize = require('./db');
-testConnection();
+const sequelizeConfig = require('./models/sequelizeConfig')
+const seq = sequelizeConfig.init()
+sequelizeConfig.sync(seq, { force: true })
+testConnection()
 
 // Importa rutas
 const apiRoutes = require('./routes/api');
@@ -24,7 +25,7 @@ app.listen(PORT, () => {
 
 async function testConnection() {
     try {
-        await sequelize.authenticate();
+        await seq.authenticate();
         console.log('✅ Conexión establecida correctamente.');
     } catch (error) {
         console.error('❌ Error al conectar con la base de datos:', error);

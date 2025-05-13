@@ -39,9 +39,6 @@ async function sync(sequelize, syncOpts) {
 
     // Definicion de relaciones
 
-    Users.associate = (models) => {
-        Users.belongsTo(models.Profesional, { foreignKey: 'profesionalId' });
-    };
     // Sincronización
 
     try {

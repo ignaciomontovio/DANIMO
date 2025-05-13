@@ -38,6 +38,8 @@ async function sync(sequelize, syncOpts) {
     const models = require("./models");
 
     // Definicion de relaciones
+
+    //Un usuario puede tomar varias medicaciones
     models.Users.hasMany(models.Medications, {
         foreignKey: "userId",
         allowNull: false,

@@ -38,6 +38,11 @@ async function sync(sequelize, syncOpts) {
     const models = require("./models");
 
     // Definicion de relaciones
+    models.Users.hasMany(models.Medications, {
+        foreignKey: "userId",
+        allowNull: false,
+        as: "Medications",
+    })
 
     // Sincronización
 

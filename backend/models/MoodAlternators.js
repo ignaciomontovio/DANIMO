@@ -6,6 +6,10 @@ const MoodAlternators = sequelize.define('MoodAlternators', {
         type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true
+    },
+    description: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

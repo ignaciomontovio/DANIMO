@@ -29,21 +29,21 @@ const validateLoginInput = (data) => {
     return schema.validate(data);
 };
 
-const hashPassword = async (plainPassword) => {
-    return await bcrypt.hash(plainPassword, 10);
+const hashPassword = async (password) => {
+    return await bcrypt.hash(password, 10);
 };
 
 const findUserByEmail = async (email) => {
-    return await Users.findOne({where: {email}});
+    return await Users.findOne({ where: { email } });
 };
 
-const createUser = async ({firstName, lastName, email, password}) => {
+const createUser = async ({firstName, lastName, email, passwordHash}) => {
     return await Users.create({
         id: `U-${uuidv4()}`,
-        firstName,
-        lastName,
-        email,
-        password,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: passwordHash,
     });
 };
 
@@ -75,7 +75,7 @@ router.post('/register', async (req, res) => {
     try {
         const userFound = await findUserByEmail(email);
         if (userFound) {
-            return res.status(400).json({error: 'Users ya existe.'});
+            return res.status(400).json({error: 'Usuario ya existe.'});
         }
 
         const passwordHash = await hashPassword(password);
@@ -94,8 +94,8 @@ router.post('/login', async (req, res) => {
     if (error) {
         return res.status(400).json({error: error.details[0].message});
     }
-    const {user, password} = req.body;
-    const existingUser = await findUserByEmail(usuario);
+    const {email, password} = req.body;
+    const existingUser = await findUserByEmail(email);
     if (!existingUser) {
         return res.status(400).json({error: 'Users inexistente.'});
     }

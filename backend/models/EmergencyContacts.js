@@ -15,6 +15,4 @@ const EmergencyContacts = sequelize.define('EmergencyContacts', {
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt
 });
 
-sequelize.sync();
-
 module.exports = EmergencyContacts;

@@ -24,6 +24,4 @@ const Medications = sequelize.define('Medications', {
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt
 });
 
-sequelize.sync();
-
 module.exports = Medications;

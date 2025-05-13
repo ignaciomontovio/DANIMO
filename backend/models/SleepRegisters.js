@@ -26,6 +26,4 @@ const SleepRegisters = sequelize.define('SleepRegisters', {
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt
 });
 
-sequelize.sync();
-
 module.exports = SleepRegisters;

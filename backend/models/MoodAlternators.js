@@ -12,6 +12,4 @@ const MoodAlternators = sequelize.define('MoodAlternators', {
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt
 });
 
-sequelize.sync();
-
 module.exports = MoodAlternators;

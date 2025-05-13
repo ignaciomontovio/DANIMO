@@ -21,6 +21,4 @@ const EmotionRegisters = sequelize.define('EmotionRegisters', {
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt
 });
 
-sequelize.sync();
-
 module.exports = EmotionRegisters;

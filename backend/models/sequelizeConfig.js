@@ -35,11 +35,13 @@ function init() {
 
 async function sync(sequelize, syncOpts) {
     // Importando modelos
-    const models = require("./models/_models.js");
+    const models = require("./models");
 
     // Definicion de relaciones
 
-
+    Users.associate = (models) => {
+        Users.belongsTo(models.Profesional, { foreignKey: 'profesionalId' });
+    };
     // Sincronización
 
     try {

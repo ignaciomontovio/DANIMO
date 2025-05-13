@@ -30,10 +30,4 @@ const Users = sequelize.define('Users', {
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt
 });
 
-Users.associate = (models) => {
-    Users.belongsTo(models.Profesional, { foreignKey: 'profesionalId' });
-};
-
-sequelize.sync();
-
 module.exports = Users;

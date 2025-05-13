@@ -25,10 +25,6 @@ const Usuario = sequelize.define('Usuario', {
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt
 });
 
-Usuario.associate = (models) => {
-    Usuario.belongsTo(models.Profesional, { foreignKey: 'profesionalId' });
-};
-
 sequelize.sync();
 
 module.exports = Usuario;

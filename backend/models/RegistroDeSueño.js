@@ -1,22 +1,22 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
-const Usuario = sequelize.define('Usuario', {
-    nombre: {
+const RegistroDeEmocion = sequelize.define('RegistroDeEmocion', {
+    id: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    apellido: {
-        type: DataTypes.STRING,
+    fecha: {
+        type: DataTypes.DATE,
         allowNull: false,
     },
-    usuario: {
+    horas: {
         type: DataTypes.STRING,
         allowNull: true,
         unique: true,
     },
-    contrasena: {
-        type: DataTypes.STRING,
+    pesadillas: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
         unique: false
     }
@@ -24,10 +24,6 @@ const Usuario = sequelize.define('Usuario', {
     freezeTableName: true, // ✅ No pluralizar automáticamente
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt
 });
-
-Usuario.associate = (models) => {
-    Usuario.belongsTo(models.Profesional, { foreignKey: 'profesionalId' });
-};
 
 sequelize.sync();
 

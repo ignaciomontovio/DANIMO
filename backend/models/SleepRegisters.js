@@ -1,21 +1,22 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
-const RegistroDeEmocion = sequelize.define('RegistroDeEmocion', {
+const SleepRegisters = sequelize.define('SleepRegisters', {
     id: {
         type: DataTypes.STRING,
         allowNull: false,
+        primaryKey: true
     },
-    fecha: {
+    date: {
         type: DataTypes.DATE,
         allowNull: false,
     },
-    horas: {
-        type: DataTypes.STRING,
+    hoursOfSleep: {
+        type: DataTypes.INTEGER,
         allowNull: true,
         unique: true,
     },
-    pesadillas: {
+    nightmares: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         unique: false
@@ -27,4 +28,4 @@ const RegistroDeEmocion = sequelize.define('RegistroDeEmocion', {
 
 sequelize.sync();
 
-module.exports = Usuario;
+module.exports = SleepRegisters;

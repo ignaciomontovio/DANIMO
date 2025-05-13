@@ -23,7 +23,7 @@ const validateRegisterInput = (data) => {
 };
 const validateLoginInput = (data) => {
     const schema = Joi.object({
-        email: Joi.string().alphanum().min(3).max(30).required(),
+        email: Joi.string().min(3).max(30).required(),
         password: Joi.string().min(5).max(15).required(),
     });
     return schema.validate(data);
@@ -81,7 +81,7 @@ router.post('/register', async (req, res) => {
         const passwordHash = await hashPassword(password);
         await createUser({firstName, lastName, email, passwordHash});
 
-        res.json({message: '¡Users registrado correctamente!'});
+        res.json({message: '¡Usuario registrado correctamente!'});
     } catch (err) {
         console.error('❌ Error en /register:', err);
         return res.status(500).json({error: 'Error al registrar usuario'});
@@ -97,7 +97,7 @@ router.post('/login', async (req, res) => {
     const {email, password} = req.body;
     const existingUser = await findUserByEmail(email);
     if (!existingUser) {
-        return res.status(400).json({error: 'Users inexistente.'});
+        return res.status(400).json({error: 'Usuario inexistente.'});
     }
     const isValid = await bcrypt.compare(password, existingUser.password);
     if (!isValid) {
@@ -122,7 +122,7 @@ router.post('/google', async (req, res) => {
         }
 
         const userData = await verifyGoogleToken(googleJWT);
-        console.log('✅ Users verificado con Google:', userData);
+        console.log('✅ Usuario verificado con Google:', userData);
         res.json(userData);
     } catch (err) {
         console.error('❌ Error al verificar token de Google:', err);

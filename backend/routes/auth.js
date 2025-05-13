@@ -7,25 +7,24 @@ const {OAuth2Client} = require('google-auth-library');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 
-const Usuario = require('../models/Usuario');
+const Users = require('../models/Users');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // === Helpers ===
 const validateRegisterInput = (data) => {
     const schema = Joi.object({
-        usuario: Joi.string().alphanum().min(3).max(30).required(),
-        contrasena: Joi.string().min(5).max(15).required(),
-        nombre: Joi.string().alphanum().min(3).max(30).required(),
-        apellido: Joi.string().alphanum().min(3).max(30).required(),
+        password: Joi.string().min(5).max(15).required(),
+        firstName: Joi.string().alphanum().min(3).max(30).required(),
+        lastName: Joi.string().alphanum().min(3).max(30).required(),
         email: Joi.string().email().required(),
     });
     return schema.validate(data);
 };
 const validateLoginInput = (data) => {
     const schema = Joi.object({
-        usuario: Joi.string().alphanum().min(3).max(30).required(),
-        contrasena: Joi.string().min(5).max(15).required(),
+        email: Joi.string().alphanum().min(3).max(30).required(),
+        password: Joi.string().min(5).max(15).required(),
     });
     return schema.validate(data);
 };
@@ -34,17 +33,17 @@ const hashPassword = async (plainPassword) => {
     return await bcrypt.hash(plainPassword, 10);
 };
 
-const findUsuarioByNombre = async (usuario) => {
-    return await Usuario.findOne({where: {usuario}});
+const findUserByEmail = async (email) => {
+    return await Users.findOne({where: {email}});
 };
 
-const crearUsuario = async ({nombre, apellido, usuario, contrasena}) => {
-    return await Usuario.create({
+const createUser = async ({firstName, lastName, email, password}) => {
+    return await Users.create({
         id: `U-${uuidv4()}`,
-        nombre,
-        apellido,
-        usuario,
-        contrasena,
+        firstName,
+        lastName,
+        email,
+        password,
     });
 };
 
@@ -71,18 +70,18 @@ router.post('/register', async (req, res) => {
         return res.status(400).json({error: error.details[0].message});
     }
 
-    const {nombre, apellido, usuario, contrasena} = req.body;
+    const {firstName, lastName, email, password} = req.body;
 
     try {
-        const usuarioExistente = await findUsuarioByNombre(usuario);
-        if (usuarioExistente) {
-            return res.status(400).json({error: 'Usuario ya existe.'});
+        const userFound = await findUserByEmail(email);
+        if (userFound) {
+            return res.status(400).json({error: 'Users ya existe.'});
         }
 
-        const passwordHash = await hashPassword(contrasena);
-        await crearUsuario({nombre, apellido, usuario, contrasena: passwordHash});
+        const passwordHash = await hashPassword(password);
+        await createUser({firstName, lastName, email, passwordHash});
 
-        res.json({mensaje: '¡Usuario registrado correctamente!'});
+        res.json({mensaje: '¡Users registrado correctamente!'});
     } catch (err) {
         console.error('❌ Error en /register:', err);
         return res.status(500).json({error: 'Error al registrar usuario'});
@@ -96,9 +95,9 @@ router.post('/login', async (req, res) => {
         return res.status(400).json({error: error.details[0].message});
     }
     const {usuario, contrasena} = req.body;
-    const usuarioExistente = await findUsuarioByNombre(usuario);
+    const usuarioExistente = await findUserByEmail(usuario);
     if (!usuarioExistente) {
-        return res.status(400).json({error: 'Usuario inexistente.'});
+        return res.status(400).json({error: 'Users inexistente.'});
     }
     const esValida = await bcrypt.compare(contrasena, usuarioExistente.contrasena);
     if (!esValida) {
@@ -123,7 +122,7 @@ router.post('/google', async (req, res) => {
         }
 
         const datosUsuario = await verificarTokenGoogle(googleJWT);
-        console.log('✅ Usuario verificado con Google:', datosUsuario);
+        console.log('✅ Users verificado con Google:', datosUsuario);
         res.json(datosUsuario);
     } catch (err) {
         console.error('❌ Error al verificar token de Google:', err);

@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
-const Profesional = sequelize.define('Profesional', {
+const Professionals = sequelize.define('Professionals', {
     nombre: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -25,8 +25,8 @@ const Profesional = sequelize.define('Profesional', {
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt
 });
 
-Profesional.associate = (models) => {
-    Profesional.hasMany(models.Usuario, { foreignKey: 'userId' });
+Professionals.associate = (models) => {
+    Professionals.hasMany(models.Usuario, { foreignKey: 'userId' });
 };
 
 sequelize.sync();

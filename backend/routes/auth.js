@@ -47,7 +47,7 @@ const createUser = async ({firstName, lastName, email, password}) => {
     });
 };
 
-const verificarTokenGoogle = async (idToken) => {
+const verifyGoogleToken = async (idToken) => {
     const ticket = await client.verifyIdToken({
         idToken,
         audience: process.env.GOOGLE_CLIENT_ID,
@@ -56,8 +56,8 @@ const verificarTokenGoogle = async (idToken) => {
     return {
         id: payload.sub,
         email: payload.email,
-        nombre: payload.name,
-        foto: payload.picture,
+        name: payload.name,
+        picture: payload.picture,
     };
 };
 
@@ -81,7 +81,7 @@ router.post('/register', async (req, res) => {
         const passwordHash = await hashPassword(password);
         await createUser({firstName, lastName, email, passwordHash});
 
-        res.json({mensaje: '¡Users registrado correctamente!'});
+        res.json({message: '¡Users registrado correctamente!'});
     } catch (err) {
         console.error('❌ Error en /register:', err);
         return res.status(500).json({error: 'Error al registrar usuario'});
@@ -94,16 +94,16 @@ router.post('/login', async (req, res) => {
     if (error) {
         return res.status(400).json({error: error.details[0].message});
     }
-    const {usuario, contrasena} = req.body;
-    const usuarioExistente = await findUserByEmail(usuario);
-    if (!usuarioExistente) {
+    const {user, password} = req.body;
+    const existingUser = await findUserByEmail(usuario);
+    if (!existingUser) {
         return res.status(400).json({error: 'Users inexistente.'});
     }
-    const esValida = await bcrypt.compare(contrasena, usuarioExistente.contrasena);
-    if (!esValida) {
+    const isValid = await bcrypt.compare(password, existingUser.password);
+    if (!isValid) {
         return res.status(400).json({error: 'Contraseña incorrecta.'});
     }
-    const token = jwt.sign({usuario: usuarioExistente.usuario}, process.env.JWT_SECRET, {
+    const token = jwt.sign({user: existingUser.user}, process.env.JWT_SECRET, {
         expiresIn: '1000h',
         algorithm: 'HS256'
     })
@@ -121,9 +121,9 @@ router.post('/google', async (req, res) => {
             return res.status(400).json({error: error.details[0].message});
         }
 
-        const datosUsuario = await verificarTokenGoogle(googleJWT);
-        console.log('✅ Users verificado con Google:', datosUsuario);
-        res.json(datosUsuario);
+        const userData = await verifyGoogleToken(googleJWT);
+        console.log('✅ Users verificado con Google:', userData);
+        res.json(userData);
     } catch (err) {
         console.error('❌ Error al verificar token de Google:', err);
         res.status(401).json({error: 'Token inválido'});

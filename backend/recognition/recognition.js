@@ -2,14 +2,14 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 // Función asincrónica que ejecuta el script Python
-async function detectarEmocion(rutaImagen) {
+async function detectEmotion(imagePath) {
     return new Promise((resolve, reject) => {
         //ruta del script de python que usa deepface para determinar emocion
-        const scriptPath = path.resolve(__dirname, '../../reconocimiento_emociones/emocion_foto.py');
+        const scriptPath = path.resolve(__dirname, '../../emotionRecognition/recognition.py');
 
         //spawn permite la creación de un proceso hijo.
         // le mando el script y la ruta de la imagen como argumento
-        const python = spawn('python', [scriptPath, rutaImagen]);
+        const python = spawn('python', [scriptPath, imagePath]);
 
         let output = '';
         let errorOutput = '';
@@ -42,11 +42,11 @@ async function detectarEmocion(rutaImagen) {
 (async () => {
     //ruta de la imagen que va a usar el script. 
     //PARA DESPUES: ver como obtener la foto de la camara
-    const rutaImagen = path.resolve(__dirname, '../../reconocimiento_emociones/Cara2.jpg');
+    const imagePath = path.resolve(__dirname, '../../emotionRecognition/Cara2.jpg');
 
     try {
-        const emocion = await detectarEmocion(rutaImagen);
-        console.log(emocion);
+        const emotion = await detectEmotion(imagePath);
+        console.log(emotion);
     } catch (error) {
         console.error("Error al detectar emoción:", error.message);
     }
@@ -54,4 +54,4 @@ async function detectarEmocion(rutaImagen) {
 
 // Exportar la función para poder usarla desde otro lado
 //const { detectarEmocion } = require('./reconocimiento/reconocimiento'); 
-module.exports = { detectarEmocion };
+module.exports = { detectEmotion };

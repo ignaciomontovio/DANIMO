@@ -96,7 +96,16 @@ async function sync(sequelize, syncOpts) {
         as: "DailyRegister"
     });
 
+    //USUARIO y Registro diario: 1 a N
+    models.Users.hasMany(models.DailyRegisters, {
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
+        as: "DailyRegisters",
+    });
 
+    models.DailyRegisters.belongsTo(models.Users, {
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
+        as: "User"
+    });
 
     // Sincronización
 

@@ -7,10 +7,6 @@ const EmotionRegisters = sequelize.define('EmotionRegisters', {
         allowNull: false,
         primaryKey: true
     },
-    date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-    },
     emotion: {
         type: DataTypes.STRING,
         allowNull: true,

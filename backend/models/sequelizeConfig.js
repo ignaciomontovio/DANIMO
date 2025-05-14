@@ -50,6 +50,17 @@ async function sync(sequelize, syncOpts) {
         as: "User"
     });
 
+    //USUARIO y CONTACTO EMERGENCIA
+    models.Users.hasMany(models.EmergencyContacts, {
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
+        as: "EmergencyContacts",
+    });
+
+    models.EmergencyContacts.belongsTo(models.Users, {
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
+        as: "User"
+    });
+
     // Sincronización
 
     try {

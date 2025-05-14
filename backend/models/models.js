@@ -1,4 +1,5 @@
 const ActivityRegisters = require("./ActivityRegisters");
+const DailyRegisters = require("./DailyRegisters");
 const EmergencyContacts = require("./EmergencyContacts");
 const EmotionRegisters = require("./EmotionRegisters");
 const Medications = require("./Medications");
@@ -9,6 +10,7 @@ const Users = require("./Users");
 
 module.exports = {
     ActivityRegisters,
+    DailyRegisters,
     EmergencyContacts,
     EmotionRegisters,
     Medications,

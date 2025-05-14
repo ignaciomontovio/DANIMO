@@ -74,6 +74,29 @@ async function sync(sequelize, syncOpts) {
         foreignKey: "professionalId",
     });
 
+    //REGISTRO DIARIO y REGISTRO EMOCION: 1 a 1
+    models.DailyRegisters.hasOne(models.EmotionRegisters, {
+        foreignKey: "dailyRegisterId",
+        as: "EmotionRegister"
+    });
+
+    models.EmotionRegisters.belongsTo(models.DailyRegisters, {
+        foreignKey: "dailyRegisterId",
+        as: "DailyRegister"
+    });
+
+    //REGISTRO DIARIO y REGISTRO SUEÑO: 1 a 1
+    models.DailyRegisters.hasOne(models.SleepRegisters, {
+        foreignKey: "dailyRegisterId",
+        as: "SleepRegister"
+    });
+
+    models.SleepRegisters.belongsTo(models.DailyRegisters, {
+        foreignKey: "dailyRegisterId",
+        as: "DailyRegister"
+    });
+
+
 
     // Sincronización
 

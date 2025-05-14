@@ -39,12 +39,16 @@ async function sync(sequelize, syncOpts) {
 
     // Definicion de relaciones
 
-    //Un usuario puede tomar varias medicaciones
+    //USUARIO y MEDICACION
     models.Users.hasMany(models.Medications, {
-        foreignKey: "userId",
-        allowNull: false,
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
         as: "Medications",
-    })
+    });
+
+    models.Medications.belongsTo(models.Users, {
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
+        as: "User"
+    });
 
     // Sincronización
 

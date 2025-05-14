@@ -41,23 +41,23 @@ async function sync(sequelize, syncOpts) {
 
     //USUARIO y MEDICACION: 1 a N
     models.Users.hasMany(models.Medications, {
-        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Si no puede tirar error ER_BAD_FIELD_ERROR
         as: "Medications",
     });
 
     models.Medications.belongsTo(models.Users, {
-        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Si no puede tirar error ER_BAD_FIELD_ERROR
         as: "User"
     });
 
     //USUARIO y CONTACTO EMERGENCIA: 1 a N
     models.Users.hasMany(models.EmergencyContacts, {
-        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Si no puede tirar error ER_BAD_FIELD_ERROR
         as: "EmergencyContacts",
     });
 
     models.EmergencyContacts.belongsTo(models.Users, {
-        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Si no puede tirar error ER_BAD_FIELD_ERROR
         as: "User"
     });
 
@@ -98,12 +98,23 @@ async function sync(sequelize, syncOpts) {
 
     //USUARIO y Registro diario: 1 a N
     models.Users.hasMany(models.DailyRegisters, {
-        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Si no puede tirar error ER_BAD_FIELD_ERROR
         as: "DailyRegisters",
     });
 
     models.DailyRegisters.belongsTo(models.Users, {
-        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Si no puede tirar error ER_BAD_FIELD_ERROR
+        as: "User"
+    });
+
+    //USUARIO y alteradores animo: 1 a N
+    models.Users.hasMany(models.MoodAlternators, {
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Si no puede tirar error ER_BAD_FIELD_ERROR
+        as: "MoodAlternators",
+    });
+
+    models.MoodAlternators.belongsTo(models.Users, {
+        foreignKey: "userId", // 👈 Debe coincidir segun GPT - Si no puede tirar error ER_BAD_FIELD_ERROR
         as: "User"
     });
 

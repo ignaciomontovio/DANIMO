@@ -39,7 +39,7 @@ async function sync(sequelize, syncOpts) {
 
     // Definicion de relaciones
 
-    //USUARIO y MEDICACION
+    //USUARIO y MEDICACION: 1 a N
     models.Users.hasMany(models.Medications, {
         foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
         as: "Medications",
@@ -50,7 +50,7 @@ async function sync(sequelize, syncOpts) {
         as: "User"
     });
 
-    //USUARIO y CONTACTO EMERGENCIA
+    //USUARIO y CONTACTO EMERGENCIA: 1 a N
     models.Users.hasMany(models.EmergencyContacts, {
         foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
         as: "EmergencyContacts",
@@ -60,6 +60,20 @@ async function sync(sequelize, syncOpts) {
         foreignKey: "userId", // 👈 Debe coincidir segun GPT - Puede tirar error ER_BAD_FIELD_ERROR
         as: "User"
     });
+
+    //USUARIO y PROFESIONAL: N a N
+    models.Users.belongsToMany(models.Professionals, {
+        through: "UserProfessional", // 👈 nombre de la tabla intermedia
+        as: "Professionals",
+        foreignKey: "userId",
+    });
+
+    models.Professionals.belongsToMany(models.Users, {
+        through: "UserProfessional", // 👈 mismo nombre
+        as: "Users",
+        foreignKey: "professionalId",
+    });
+
 
     // Sincronización
 

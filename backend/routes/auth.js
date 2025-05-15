@@ -112,15 +112,15 @@ router.post('/login', async (req, res) => {
 
 // Login con Google
 router.post('/google', async (req, res) => {
-    const {googleJWT} = req.body;
+    const data = req.body;
     try {
         const schema = Joi.object({
-            googleJWT: Joi.string().required(),
+            googleJWT: Joi.required(),
         });
         if (schema.validate(data)) {
-            return res.status(400).json({error: error.details[0].message});
+            return res.status(400);
         }
-
+        const {googleJWT} = req.body;
         const userData = await verifyGoogleToken(googleJWT);
         console.log('✅ Usuario verificado con Google:', userData);
         res.json(userData);

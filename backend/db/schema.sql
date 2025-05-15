@@ -14,14 +14,3 @@ GRANT ALL PRIVILEGES ON DANIMO.* TO 'grupo101'@'localhost';
 -- Aplicar cambios
 FLUSH PRIVILEGES;
 
--- Crear tabla Usuario
-CREATE TABLE IF NOT EXISTS Users (
-    id VARCHAR(100) PRIMARY KEY,
-    firstName VARCHAR(100) NOT NULL,
-    lastName VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    password VARCHAR(100) NOT NULL
-    );
-
--- Insertar un usuario de prueba (descomenta si quieres probar)
--- INSERT INTO Usuario (id, nombre, apellido, dni) VALUES ('1', 'Ana', 'Saavedra', 38345234);

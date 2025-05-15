@@ -28,7 +28,12 @@ const validateLoginInput = (data) => {
     });
     return schema.validate(data);
 };
-
+const validateGoogleToken = (data) => {
+    const schema = Joi.object({
+        googleJWT: Joi.required()
+    });
+    return schema.validate(data);
+};
 const hashPassword = async (password) => {
     return await bcrypt.hash(password, 10);
 };
@@ -112,18 +117,15 @@ router.post('/login', async (req, res) => {
 
 // Login con Google
 router.post('/google', async (req, res) => {
-    const data = req.body;
     try {
-        const schema = Joi.object({
-            googleJWT: Joi.required(),
-        });
-        if (schema.validate(data)) {
-            return res.status(400);
+        const {error} = validateGoogleToken(req.body);
+        if (error) {
+            return res.status(400).json({error: 'Contraseña incorrecta.'});
         }
         const {googleJWT} = req.body;
         const userData = await verifyGoogleToken(googleJWT);
         console.log('✅ Usuario verificado con Google:', userData);
-        res.json(userData);
+        res.status(200).json(userData);
     } catch (err) {
         console.error('❌ Error al verificar token de Google:', err);
         res.status(401).json({error: 'Token inválido'});

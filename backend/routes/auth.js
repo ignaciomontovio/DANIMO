@@ -112,7 +112,7 @@ router.post('/login', async (req, res) => {
         expiresIn: '1000h',
         algorithm: 'HS256'
     })
-    return res.status(200).json({error: 'Login completado con exito. Token: ' + token});
+    return res.status(200).json({message: 'Login completado con exito. Token: ' + token});
 });
 
 // Login con Google

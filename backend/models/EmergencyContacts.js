@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('./sequelizeConfig').init()
+const sequelize = require('../orm/sequelizeConfig').init()
 
 const EmergencyContacts = sequelize.define('EmergencyContacts', {
     name: {

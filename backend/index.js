@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-const sequelizeConfig = require('./models/sequelizeConfig')
+const sequelizeConfig = require('./orm/sequelizeConfig')
 const seq = sequelizeConfig.init()
 sequelizeConfig.sync(seq, { force: true })
 testConnection()

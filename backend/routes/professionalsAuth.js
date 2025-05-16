@@ -117,10 +117,10 @@ router.post('/loginProf', async (req, res) => {
     if (!existingProfessional) {
         return res.status(400).json({error: 'Profesional inexistente.'});
     }
-    // Para cuando este implementado google
-    /*if (existingProfessional.hasGoogleAccount){
+    
+    if (existingProfessional.hasGoogleAccount){
         return res.status(400).json({error: 'Solo puede iniciar sesion con Google.'});
-    }*/
+    }
     const isValid = await bcrypt.compare(password, existingProfessional.password);
     if (!isValid) {
         return res.status(400).json({error: 'Contraseña incorrecta.'});
@@ -133,4 +133,39 @@ router.post('/loginProf', async (req, res) => {
 });
 
 // // Login con Google
+router.post('/googleProf', async (req, res) => {
+    try {
+        const {error} = validateGoogleToken(req.body);
+        if (error) {
+            return res.status(400).json({error: 'Contraseña incorrecta.'});
+        }
+        const {googleJWT} = req.body;
+        const userData = await verifyGoogleToken(googleJWT);
+        console.log('✅ Usuario verificado con Google:', userData);
+        const { firstName, lastName, email } = userData;
+        
+        try {
+            const professionalFound = await findProfessionalByEmail(email);
+            if (professionalFound) {
+                const token = jwt.sign({user: professionalFound.user}, process.env.JWT_SECRET, {
+                    expiresIn: '1000h',
+                    algorithm: 'HS256'
+                })
+                return res.status(200).json({message: 'Login completado con exito. Token: ' + token});
+            }
+
+            await createProfessionalGoogleAccount({firstName, lastName, email});
+
+            res.json({message: '¡Profesional registrado correctamente con Google!'});
+        } catch (err) {
+            console.error('❌ Error en /register:', err);
+            return res.status(500).json({error: 'Error al registrar profesional con Google'});
+        }
+
+    } catch (err) {
+        console.error('❌ Error al verificar token de Google:', err);
+        res.status(401).json({error: 'Token inválido'});
+    }
+});
+
 module.exports = router;

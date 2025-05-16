@@ -22,7 +22,7 @@ const Professionals = sequelize.define('Professionals', {
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: false
     },
     hasGoogleAccount:{

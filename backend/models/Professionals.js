@@ -2,6 +2,11 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../orm/sequelizeConfig').init()
 
 const Professionals = sequelize.define('Professionals', {
+    id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        primaryKey: true
+    },
     firstName: {
         type: DataTypes.STRING,
         allowNull: false,

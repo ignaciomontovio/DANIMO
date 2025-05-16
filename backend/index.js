@@ -17,10 +17,12 @@ testConnection()
 const apiRoutes = require('./routes/api');
 const registerRoutes = require('./routes/auth');
 const chatgpt = require('./routes/OpenIA/chat');
+const professionalRoutes = require('./routes/professionalsAuth');
 
 app.use('/api', apiRoutes);
 app.use('/auth', registerRoutes)
 app.use('/api', chatgpt)
+app.use('/professionalsAuth', professionalRoutes)
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en puerto ${PORT}`);

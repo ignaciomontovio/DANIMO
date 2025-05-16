@@ -41,14 +41,15 @@ const findProfessionalByEmail = async (email) => {
     return await Professionals.findOne({ where: { email } });
 };
 
-const createProfessional = async ({firstName, lastName, email, passwordHash}) => {
+const createProfessional = async ({firstName, lastName, email, passwordHash, profession}) => {
     return await Professionals.create({
         id: `U-${uuidv4()}`,
         firstName: firstName,
         lastName: lastName,
         email: email,
         password: passwordHash,
-        hasGoogleAccount: false //No se registró usando login google
+        hasGoogleAccount: false, //No se registró usando login google
+        profession: profession
     });
 };
 
@@ -58,7 +59,8 @@ const createProfessionalGoogleAccount = async ({firstName, lastName, email}) => 
         firstName: firstName,
         lastName: lastName,
         email: email,
-        hasGoogleAccount: true //Se registró usando login google
+        hasGoogleAccount: true, //Se registró usando login google
+        profession: "Psicologo" //por defecto, despues ver como cambiarlo
     });
 };
 
@@ -80,6 +82,29 @@ const verifyGoogleToken = async (idToken) => {
 // === Rutas ===
 
 // Registro de profesional
+router.post('/registerProf', async (req, res) => {
+    const {error} = validateRegisterInput(req.body);
+    if (error) {
+        return res.status(400).json({error: error.details[0].message});
+    }
+
+    const {firstName, lastName, email, password, profession} = req.body;
+
+    try {
+        const professionalFound = await findProfessionalByEmail(email);
+        if (professionalFound) {
+            return res.status(400).json({error: 'Profesional ya existe.'});
+        }
+
+        const passwordHash = await hashPassword(password);
+        await createProfessional({firstName, lastName, email, passwordHash, profession});
+
+        res.json({message: '¡Profesional registrado correctamente!'});
+    } catch (err) {
+        console.error('❌ Error en /register:', err);
+        return res.status(500).json({error: 'Error al registrar profesional'});
+    }
+});
 
 // Login de profesional
 

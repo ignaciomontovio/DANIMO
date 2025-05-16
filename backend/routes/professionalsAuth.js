@@ -6,7 +6,6 @@ const {OAuth2Client} = require('google-auth-library');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 
-const professionals = require('../models/Professionals');
 const Professionals = require('../models/Professionals');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -18,6 +17,7 @@ const validateRegisterInput = (data) => {
         firstName: Joi.string().alphanum().min(3).max(30).required(),
         lastName: Joi.string().alphanum().min(3).max(30).required(),
         email: Joi.string().email().required(),
+        profession: Joi.string().valid('Psicologo', 'Psiquiatra').required()
     });
     return schema.validate(data);
 };
@@ -76,3 +76,12 @@ const verifyGoogleToken = async (idToken) => {
         lastName: payload.family_name
     };
 };
+
+// === Rutas ===
+
+// Registro de profesional
+
+// Login de profesional
+
+// // Login con Google
+module.exports = router;

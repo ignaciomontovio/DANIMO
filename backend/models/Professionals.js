@@ -29,7 +29,17 @@ const Professionals = sequelize.define('Professionals', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         unique: true
-    }
+    },
+    profession: {
+        type: DataTypes.ENUM('Psicologo', 'Psiquiatra'),
+        allowNull: false
+    },
+    /* MATRICULA. Ver mas adelante
+    license: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    }*/
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt

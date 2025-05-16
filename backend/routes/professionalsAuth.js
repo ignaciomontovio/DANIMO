@@ -7,6 +7,7 @@ const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 
 const professionals = require('../models/Professionals');
+const Professionals = require('../models/Professionals');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -36,8 +37,27 @@ const validateGoogleToken = (data) => {
 const hashPassword = async (password) => {
     return await bcrypt.hash(password, 10);
 };
-
-const findUserByEmail = async (email) => {
-    return await Users.findOne({ where: { email } });
+const findProfessionalByEmail = async (email) => {
+    return await Professionals.findOne({ where: { email } });
 };
 
+const createProfessional = async ({firstName, lastName, email, passwordHash}) => {
+    return await Users.create({
+        id: `U-${uuidv4()}`,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: passwordHash,
+        hasGoogleAccount: false //No se registró usando login google
+    });
+};
+
+const createProfessionalGoogleAccount = async ({firstName, lastName, email}) => {
+    return await Users.create({
+        id: `U-${uuidv4()}`,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        hasGoogleAccount: true //Se registró usando login google
+    });
+};

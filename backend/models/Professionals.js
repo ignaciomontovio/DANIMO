@@ -24,6 +24,11 @@ const Professionals = sequelize.define('Professionals', {
         type: DataTypes.STRING,
         allowNull: false,
         unique: false
+    },
+    hasGoogleAccount:{
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        unique: true
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

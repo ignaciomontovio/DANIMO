@@ -16,8 +16,11 @@ testConnection()
 // Importa rutas
 const apiRoutes = require('./routes/api');
 const registerRoutes = require('./routes/auth');
+const chatgpt = require('./routes/OpenIA/chat');
+
 app.use('/api', apiRoutes);
 app.use('/auth', registerRoutes)
+app.use('/api', chatgpt)
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en puerto ${PORT}`);

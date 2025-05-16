@@ -107,6 +107,30 @@ router.post('/registerProf', async (req, res) => {
 });
 
 // Login de profesional
+router.post('/loginProf', async (req, res) => {
+    const {error} = validateLoginInput(req.body);
+    if (error) {
+        return res.status(400).json({error: error.details[0].message});
+    }
+    const {email, password} = req.body;
+    const existingProfessional = await findProfessionalByEmail(email);
+    if (!existingProfessional) {
+        return res.status(400).json({error: 'Profesional inexistente.'});
+    }
+    // Para cuando este implementado google
+    /*if (existingProfessional.hasGoogleAccount){
+        return res.status(400).json({error: 'Solo puede iniciar sesion con Google.'});
+    }*/
+    const isValid = await bcrypt.compare(password, existingProfessional.password);
+    if (!isValid) {
+        return res.status(400).json({error: 'Contraseña incorrecta.'});
+    }
+    const token = jwt.sign({user: existingProfessional.user}, process.env.JWT_SECRET, {
+        expiresIn: '1000h',
+        algorithm: 'HS256'
+    })
+    return res.status(200).json({message: 'Login completado con exito. Token: ' + token});
+});
 
 // // Login con Google
 module.exports = router;

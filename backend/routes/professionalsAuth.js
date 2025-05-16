@@ -42,7 +42,7 @@ const findProfessionalByEmail = async (email) => {
 };
 
 const createProfessional = async ({firstName, lastName, email, passwordHash}) => {
-    return await Users.create({
+    return await Professionals.create({
         id: `U-${uuidv4()}`,
         firstName: firstName,
         lastName: lastName,
@@ -53,11 +53,26 @@ const createProfessional = async ({firstName, lastName, email, passwordHash}) =>
 };
 
 const createProfessionalGoogleAccount = async ({firstName, lastName, email}) => {
-    return await Users.create({
+    return await Professionals.create({
         id: `U-${uuidv4()}`,
         firstName: firstName,
         lastName: lastName,
         email: email,
         hasGoogleAccount: true //Se registró usando login google
     });
+};
+
+const verifyGoogleToken = async (idToken) => {
+    const ticket = await client.verifyIdToken({
+        idToken,
+        audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    return {
+        id: payload.sub,
+        email: payload.email,
+        picture: payload.picture,
+        firstName: payload.given_name,
+        lastName: payload.family_name
+    };
 };

@@ -22,8 +22,13 @@ const Users = sequelize.define('Users', {
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: false
+    },
+    hasGoogleAccount:{
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        unique: true
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

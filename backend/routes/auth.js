@@ -23,7 +23,7 @@ const validateRegisterInput = (data) => {
 };
 const validateLoginInput = (data) => {
     const schema = Joi.object({
-        email: Joi.string().min(3).max(30).required(),
+        email: Joi.string().min(3).max(40).required(),
         password: Joi.string().min(5).max(15).required(),
     });
     return schema.validate(data);
@@ -49,6 +49,17 @@ const createUser = async ({firstName, lastName, email, passwordHash}) => {
         lastName: lastName,
         email: email,
         password: passwordHash,
+        hasGoogleAccount: false //No se registró usando login google
+    });
+};
+
+const createUserGoogleAccount = async ({firstName, lastName, email}) => {
+    return await Users.create({
+        id: `U-${uuidv4()}`,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        hasGoogleAccount: true //Se registró usando login google
     });
 };
 
@@ -61,8 +72,9 @@ const verifyGoogleToken = async (idToken) => {
     return {
         id: payload.sub,
         email: payload.email,
-        name: payload.name,
         picture: payload.picture,
+        firstName: payload.given_name,
+        lastName: payload.family_name
     };
 };
 
@@ -104,6 +116,9 @@ router.post('/login', async (req, res) => {
     if (!existingUser) {
         return res.status(400).json({error: 'Usuario inexistente.'});
     }
+    if (existingUser.hasGoogleAccount){
+        return res.status(400).json({error: 'Solo puede iniciar sesion con Google.'});
+    }
     const isValid = await bcrypt.compare(password, existingUser.password);
     if (!isValid) {
         return res.status(400).json({error: 'Contraseña incorrecta.'});
@@ -125,7 +140,26 @@ router.post('/google', async (req, res) => {
         const {googleJWT} = req.body;
         const userData = await verifyGoogleToken(googleJWT);
         console.log('✅ Usuario verificado con Google:', userData);
-        res.status(200).json(userData);
+        const { firstName, lastName, email } = userData;
+        
+        try {
+            const userFound = await findUserByEmail(email);
+            if (userFound) {
+                const token = jwt.sign({user: userFound.user}, process.env.JWT_SECRET, {
+                    expiresIn: '1000h',
+                    algorithm: 'HS256'
+                })
+                return res.status(200).json({message: 'Login completado con exito. Token: ' + token});
+            }
+
+            await createUserGoogleAccount({firstName, lastName, email});
+
+            res.json({message: '¡Usuario registrado correctamente con Google!'});
+        } catch (err) {
+            console.error('❌ Error en /register:', err);
+            return res.status(500).json({error: 'Error al registrar usuario con Google'});
+        }
+
     } catch (err) {
         console.error('❌ Error al verificar token de Google:', err);
         res.status(401).json({error: 'Token inválido'});

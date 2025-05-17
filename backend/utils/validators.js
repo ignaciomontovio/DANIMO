@@ -34,3 +34,13 @@ exports.validateLoginInput = (data) => Joi.object({
 exports.validateGoogleToken = (data) => Joi.object({
     googleJWT: Joi.required()
 }).validate(data);
+
+// ----------------------Registers --------------------------
+
+exports.validateDailyRegisterInput = (data) => {
+    const schema = Joi.object({
+        date: Joi.date().required(),
+        email: Joi.string().email().required(),
+    });
+    return schema.validate(data);
+};

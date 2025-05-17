@@ -11,7 +11,7 @@ app.use(express.json());
 const usersRoutes = require('../routes/users.routes');
 const professionalsRoutes = require('../routes/professionals.routes');
 const activity = require('../routes/registers/activityRegister');
-const dailiy = require('../routes/registers/dailyRegister');
+const daily = require('../routes/registers.routers');
 const emotion = require('../routes/registers/emotionRegister');
 const sleep = require('../routes/registers/sleepRegister');
 
@@ -24,7 +24,7 @@ app.use('/professionalsAuth', professionalsRoutes);
 //app.use('/api', chatRoutes);
 
 app.use('/activity', activity)
-app.use('/daily', dailiy)
+app.use('/daily', daily)
 app.use('/emotion', emotion)
 app.use('/sleep', sleep)
 

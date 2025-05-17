@@ -2,15 +2,16 @@
 const express = require('express');
 const router = express.Router();
 const {v4: uuidv4} = require('uuid');
-const bcrypt = require('bcrypt');
-const {OAuth2Client} = require('google-auth-library');
 const Joi = require('joi');
-const jwt = require('jsonwebtoken');
 
 const Users = require('../../models/Users');
 const DailyRegisters = require('../../models/DailyRegisters');
 
 // === Helpers ===
+
+//MODIFICAR
+/*No deberia recibir el mail del usuario, sino su Id.
+Lo hice asi solo para probar mas facil con lo que esta hecho.*/
 const validateDailyRegisterInput = (data) => {
     const schema = Joi.object({
         date: Joi.date().required(),
@@ -19,6 +20,9 @@ const validateDailyRegisterInput = (data) => {
     return schema.validate(data);
 };
 
+//MODIFICAR
+/*Aplica lo mismo que a la funcion validateDailyRegister
+Tambien haria falta cambiar el nombre a la funcion*/
 const findUserIdByEmail = async (email) => {
     const user = await Users.findOne({
         where: { email },
@@ -27,6 +31,7 @@ const findUserIdByEmail = async (email) => {
     return user?.id || null;
 };
 
+//Creamos el registro diario
 const createDailyRegister = async ({date, userId}) => {
     return await DailyRegisters.create({
         id: `U-${uuidv4()}`,

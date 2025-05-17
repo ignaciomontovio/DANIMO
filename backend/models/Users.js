@@ -18,7 +18,7 @@ const Users = sequelize.define('Users', {
     email: {
         type: DataTypes.STRING,
         allowNull: true,
-        unique: true,
+        unique: false,
     },
     password: {
         type: DataTypes.STRING,
@@ -28,7 +28,7 @@ const Users = sequelize.define('Users', {
     hasGoogleAccount:{
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        unique: true
+        unique: false
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

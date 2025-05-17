@@ -18,7 +18,7 @@ const Professionals = sequelize.define('Professionals', {
     email: {
         type: DataTypes.STRING,
         allowNull: true,
-        unique: true,
+        unique: false,
     },
     password: {
         type: DataTypes.STRING,
@@ -28,7 +28,7 @@ const Professionals = sequelize.define('Professionals', {
     hasGoogleAccount:{
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        unique: true
+        unique: false
     },
     profession: {
         type: DataTypes.ENUM('Psicologo', 'Psiquiatra'),

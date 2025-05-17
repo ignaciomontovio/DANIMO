@@ -40,7 +40,6 @@ exports.validateGoogleToken = (data) => Joi.object({
 exports.validateDailyRegisterInput = (data) => {
     const schema = Joi.object({
         date: Joi.required(),
-        email: Joi.string().email().required(),
     });
     return schema.validate(data);
 };

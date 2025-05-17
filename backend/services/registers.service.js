@@ -6,7 +6,7 @@ import DailyRegisters from '../models/DailyRegisters.js';
 import { v4 as uuidv4 } from 'uuid';
 
 
-export async function createDailyRegister(date, email, userId ) {
+export async function createDailyRegister(date, userId ) {
     await DailyRegisters.create({
         id: `U-${uuidv4()}`,
         date: date,

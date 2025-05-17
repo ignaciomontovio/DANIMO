@@ -1,38 +1,11 @@
-const express = require('express');
-const cors = require('cors');
 require('dotenv').config();
+const app = require('./app');
+const { testConnection, syncDatabase } = require('./config/sync');
 
-const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(express.json());
-
-const sequelizeConfig = require('./orm/sequelizeConfig')
-const seq = sequelizeConfig.init()
-sequelizeConfig.sync(seq, { force: true })
-testConnection()
-
-// Importa rutas
-const apiRoutes = require('./routes/api');
-const registerRoutes = require('./routes/auth');
-const chatgpt = require('./routes/OpenIA/chat');
-const professionalRoutes = require('./routes/professionalsAuth');
-
-app.use('/api', apiRoutes);
-app.use('/auth', registerRoutes)
-app.use('/api', chatgpt)
-app.use('/professionalsAuth', professionalRoutes)
-
-app.listen(PORT, () => {
-    console.log(`Servidor escuchando en puerto ${PORT}`);
+app.listen(PORT, async () => {
+    await testConnection();
+    await syncDatabase(); // usa alter por defecto
+    console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
-
-async function testConnection() {
-    try {
-        await seq.authenticate();
-        console.log('✅ Conexión establecida correctamente.');
-    } catch (error) {
-        console.error('❌ Error al conectar con la base de datos:', error);
-    }
-}

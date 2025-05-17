@@ -8,7 +8,7 @@ exports.createDailyRegister = async (req, res) => {
         return res.status(400).json({error: error.details[0].message});
     }
     try {
-        await service.createDailyRegister(req.body);
+        await service.createDailyRegister(req.body.date, req.body.email, req.userId);
         res.json({message: '¡Registro diario creado correctamente!'});
     } catch (err) {
         console.error('❌ Error en /daily:', err);

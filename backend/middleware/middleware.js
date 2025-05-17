@@ -9,7 +9,7 @@ const authMiddleware = (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-
+    console.log(token);
     try {
         // Verifica el token usando tu clave secreta
         const decoded = jwt.verify(token, process.env.JWT_SECRET);

@@ -34,7 +34,7 @@ exports.loginUser = async ({ email, password }) => {
     const isValid = await comparePassword(password, user.password);
     if (!isValid) throw new Error('Contraseña incorrecta.');
 
-    return signToken({ user: user.user });
+    return signToken({ userId: user.id });
 };
 
 exports.googleLogin = async (googleJWT) => {

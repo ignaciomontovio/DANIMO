@@ -18,11 +18,19 @@ const apiRoutes = require('./routes/api');
 const registerRoutes = require('./routes/auth');
 const chatgpt = require('./routes/OpenIA/chat');
 const professionalRoutes = require('./routes/professionalsAuth');
+const activity = require('./routes/registers/activityRegister');
+const dailiy = require('./routes/registers/dailyRegister');
+const emotion = require('./routes/registers/emotionRegister');
+const sleep = require('./routes/registers/sleepRegister');
 
 app.use('/api', apiRoutes);
 app.use('/auth', registerRoutes)
 app.use('/api', chatgpt)
 app.use('/professionalsAuth', professionalRoutes)
+app.use('/activity', activity)
+app.use('/daily', dailiy)
+app.use('/emotion', emotion)
+app.use('/sleep', sleep)
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en puerto ${PORT}`);

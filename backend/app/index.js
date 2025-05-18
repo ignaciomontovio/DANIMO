@@ -12,7 +12,7 @@ const usersRoutes = require('../routes/users.routes');
 const professionalsRoutes = require('../routes/professionals.routes');
 const activity = require('../routes/registers/activityRegister');
 const daily = require('../routes/registers.routers');
-const emotion = require('../routes/registers/emotionRegister');
+const emotion = require('../routes/emotions.routers');
 const sleep = require('../routes/registers/sleepRegister');
 
 //const apiRoutes = require('../routes/api.routes');

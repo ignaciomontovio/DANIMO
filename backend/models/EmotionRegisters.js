@@ -8,9 +8,8 @@ const EmotionRegisters = sequelize.define('EmotionRegisters', {
         primaryKey: true
     },
     emotion: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        unique: true,
+        type: DataTypes.ENUM('Alegria', 'Tristeza', 'Miedo', 'Ira', 'Sorpresa', 'Anticipacion', 'Confianza', 'Asco'),
+        allowNull: false,
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

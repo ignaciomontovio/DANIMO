@@ -43,3 +43,13 @@ exports.validateDailyRegisterInput = (data) => {
     });
     return schema.validate(data);
 };
+
+// ----------------------Emotions --------------------------
+
+exports.validateEmotionRegisterInput = (data) => {
+    const schema = Joi.object({
+        emotion: Joi.string().valid('Alegria', 'Tristeza', 'Miedo', 'Ira', 'Sorpresa', 'Anticipacion', 'Confianza', 'Asco').required(),
+        dailyRegisterId: Joi.string().pattern(/^U-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i).required()
+    });
+    return schema.validate(data);
+};

@@ -10,7 +10,7 @@ const SleepRegisters = sequelize.define('SleepRegisters', {
     hoursOfSleep: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        unique: true,
+        unique: false,
     },
     nightmares: {
         type: DataTypes.BOOLEAN,

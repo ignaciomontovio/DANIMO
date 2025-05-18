@@ -53,3 +53,14 @@ exports.validateEmotionRegisterInput = (data) => {
     });
     return schema.validate(data);
 };
+
+// ----------------------Sleeps --------------------------
+
+exports.validateSleepRegisterInput = (data) => {
+    const schema = Joi.object({
+        hoursOfSleep: Joi.number().integer().min(0).required(),
+        nightmares: Joi.boolean().required(),
+        dailyRegisterId: Joi.string().pattern(/^U-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i).required()
+    });
+    return schema.validate(data);
+};

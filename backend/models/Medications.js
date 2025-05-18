@@ -5,7 +5,6 @@ const Medications = sequelize.define('Medications', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
     },
     startDate: {
         type: DataTypes.DATE,

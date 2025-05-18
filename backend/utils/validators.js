@@ -76,3 +76,13 @@ exports.validateActivityRegisterInput = (data) => {
     });
     return schema.validate(data);
 };
+
+// ----------------------Emergency Contacts --------------------------
+
+exports.validateEmergencyContactInput = (data) => {
+    const schema = Joi.object({
+        name: Joi.string().min(1).max(100).required(),
+        phoneNumber: Joi.string().min(1).max(18).required(),
+    });
+    return schema.validate(data);
+};

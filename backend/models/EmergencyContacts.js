@@ -5,6 +5,7 @@ const EmergencyContacts = sequelize.define('EmergencyContacts', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        primaryKey: true
     },
     phoneNumber: {
         type: DataTypes.STRING,

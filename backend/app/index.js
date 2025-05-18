@@ -10,7 +10,7 @@ app.use(express.json());
 // Rutas
 const usersRoutes = require('../routes/users.routes');
 const professionalsRoutes = require('../routes/professionals.routes');
-const activity = require('../routes/registers/activityRegister');
+const activity = require('../routes/activities.routers');
 const daily = require('../routes/registers.routers');
 const emotion = require('../routes/emotions.routers');
 const sleep = require('../routes/sleeps.routers');

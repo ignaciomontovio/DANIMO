@@ -14,8 +14,12 @@ const ActivityRegisters = sequelize.define('ActivityRegisters', {
         unique: false
     },
     category: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM('Trabajo', 'Estudio', 'Hobby', 'Hogar'),
         allowNull: false
+    },
+    date: {
+        type: DataTypes.DATE,
+        allowNull: false,
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

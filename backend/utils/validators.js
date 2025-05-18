@@ -43,3 +43,12 @@ exports.validateDailyRegisterInput = (data) => {
     });
     return schema.validate(data);
 };
+
+// ---------------------- Chat --------------------------
+
+exports.validateChatInput = (data) => {
+    const schema = Joi.object({
+        message: Joi.string().required(),
+    });
+    return schema.validate(data);
+}

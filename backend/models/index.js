@@ -7,6 +7,7 @@ const MoodAlternators = require("./MoodAlternators");
 const Professionals = require("./Professionals");
 const SleepRegisters = require("./SleepRegisters");
 const Users = require("./Users");
+const UsersChats = require("./UsersChats");
 
 const models = {
     ActivityRegisters,
@@ -18,6 +19,7 @@ const models = {
     Professionals,
     SleepRegisters,
     Users,
+    UsersChats,
 };
 
 // Relaciones entre modelos

@@ -1,13 +1,13 @@
 // chatgptConversation.js
 
 const axios = require('axios');
-const promptFile = require('prompt')
+const promptFile = require('./prompt')
 
 class ChatGPTConversation {
     constructor(apiKey, systemPrompt = promptFile.prompt) {
         this.apiKey = apiKey;
         this.apiUrl = 'https://api.openai.com/v1/chat/completions';
-        this.model = 'gpt-4'; // O usa 'gpt-3.5-turbo' si prefieres
+        this.model = 'GPT-3.5-turbo'; // gpt-4 o usa 'gpt-3.5-turbo' si prefieres
         this.messages = [
             { role: 'system', content: systemPrompt }
         ];

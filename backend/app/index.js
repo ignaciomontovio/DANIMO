@@ -14,6 +14,7 @@ const activity = require('../routes/registers/activityRegister');
 const daily = require('../routes/registers.routers');
 const emotion = require('../routes/registers/emotionRegister');
 const sleep = require('../routes/registers/sleepRegister');
+const chat = require('../routes/chat.routes');
 
 //const apiRoutes = require('../routes/api.routes');
 //const chatRoutes = require('../routes/chat.routes');
@@ -26,6 +27,7 @@ app.use('/professionalsAuth', professionalsRoutes);
 app.use('/activity', activity)
 app.use('/daily', daily)
 app.use('/emotion', emotion)
-app.use('/sleep', sleep)
+
+app.use('/dani', chat)
 
 module.exports = app;

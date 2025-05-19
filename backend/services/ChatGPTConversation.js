@@ -1,13 +1,13 @@
 // chatgptConversation.js
 
 const axios = require('axios');
-const promptFile = require('prompt')
+const promptFile = require('./prompt')
 
 class ChatGPTConversation {
     constructor(apiKey, systemPrompt = promptFile.prompt) {
         this.apiKey = apiKey;
         this.apiUrl = 'https://api.openai.com/v1/chat/completions';
-        this.model = 'gpt-4'; // O usa 'gpt-3.5-turbo' si prefieres
+        this.model = 'gpt-3.5-turbo'; // gpt-4 o usa 'gpt-3.5-turbo' si prefieres
         this.messages = [
             { role: 'system', content: systemPrompt }
         ];
@@ -15,6 +15,8 @@ class ChatGPTConversation {
 
     async sendMessage(userInput) {
         // Agrega mensaje del usuario
+        console.log("Mensaje del usuario:", userInput);
+
         this.messages.push({ role: 'user', content: userInput });
 
         try {

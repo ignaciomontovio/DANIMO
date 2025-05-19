@@ -13,13 +13,12 @@ exports.chat = async ({message, userId}) => {
     return respuesta;
 };
 
-module.exports = router;
-
+/*
 exports.chatBeta = async ({message}) => {
     const assistant = await openai.beta.assistants.create({
         name: "Dani",
         instructions: "Sos Dani, un asistente emocional empático. No das consejos clínicos...",
-        model: "gpt-4-turbo",
+        model: "gpt-3.5-turbo",
     });
 
     const thread = await openai.beta.threads.create();
@@ -33,4 +32,4 @@ exports.chatBeta = async ({message}) => {
 
     const messages = await openai.beta.threads.messages.list(thread.id);
 
-}
+}*/

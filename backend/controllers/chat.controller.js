@@ -8,8 +8,9 @@ exports.chat = async (req, res) => {
         return res.status(400).json({error: error.details[0].message});
     }
     try {
-        await chat(req.body.message, req.userId);
-        res.json({message: '¡Mensaje enviado correctamente!'});
+        const {message} = req.body;
+        const response = await chat({message: message, userId: req.userId});
+        res.json({message: response});
     } catch (err) {
         console.error('❌ Error en /chat:', err);
         return res.status(500).json({error: 'Error al crear mensaje'});

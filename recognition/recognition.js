@@ -5,7 +5,7 @@ const path = require('path');
 async function detectEmotion(imagePath) {
     return new Promise((resolve, reject) => {
         //ruta del script de python que usa deepface para determinar emocion
-        const scriptPath = path.resolve(__dirname, '../../emotionRecognition/recognition.py');
+        const scriptPath = path.resolve(__dirname, '../emotionRecognition/recognition.py');
 
         //spawn permite la creación de un proceso hijo.
         // le mando el script y la ruta de la imagen como argumento
@@ -42,7 +42,7 @@ async function detectEmotion(imagePath) {
 (async () => {
     //ruta de la imagen que va a usar el script. 
     //PARA DESPUES: ver como obtener la foto de la camara
-    const imagePath = path.resolve(__dirname, '../../emotionRecognition/Cara2.jpg');
+    const imagePath = path.resolve(__dirname, '../emotionRecognition/Cara2.jpg');
 
     try {
         const emotion = await detectEmotion(imagePath);

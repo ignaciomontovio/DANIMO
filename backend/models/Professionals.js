@@ -34,11 +34,16 @@ const Professionals = sequelize.define('Professionals', {
         type: DataTypes.ENUM('Psicologo', 'Psiquiatra'),
         allowNull: false
     },
+    birthDate:{
+        type: DataTypes.DATE,
+        allowNull: false,
+        unique: false
+    },
     /* MATRICULA. Ver mas adelante
     license: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: false
     }*/
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

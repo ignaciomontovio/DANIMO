@@ -29,7 +29,12 @@ const Users = sequelize.define('Users', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         unique: false
-    }
+    },
+    birthDate:{
+        type: DataTypes.DATE,
+        allowNull: false,
+        unique: false
+    },
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt

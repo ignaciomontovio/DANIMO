@@ -3,14 +3,19 @@ const { v4: uuidv4 } = require('uuid');
 const { hashPassword, comparePassword } = require('../utils/password');
 const { signToken } = require('../utils/jwt');
 const { verifyGoogleToken } = require('../utils/google');
+const { isAdult } = require('../utils/date');
+const { date } = require('joi');
 
 const findUserByEmail = async (email) => {
     return await Users.findOne({ where: { email } });
 };
 
-exports.registerUser = async ({ firstName, lastName, email, password }) => {
+exports.registerUser = async ({ firstName, lastName, email, password, birthDate }) => {
     const userExists = await findUserByEmail(email);
     if (userExists) throw new Error('Usuario ya existe.');
+    
+    const adult = isAdult({date: birthDate});
+    if (!adult) throw new Error('Usuario no puede registrarse siendo menor de edad.');
 
     const passwordHash = await hashPassword(password);
 
@@ -20,7 +25,8 @@ exports.registerUser = async ({ firstName, lastName, email, password }) => {
         lastName,
         email,
         password: passwordHash,
-        hasGoogleAccount: false
+        hasGoogleAccount: false,
+        birthDate: birthDate
     });
 
     return '¡Usuario registrado correctamente!';
@@ -49,7 +55,8 @@ exports.googleLogin = async (googleJWT) => {
             firstName,
             lastName,
             email,
-            hasGoogleAccount: true
+            hasGoogleAccount: true,
+            birthDate: new Date('2000-01-01') // 🎯 Fecha por defecto modificar cuando se tenga todo listo
         });
 
         return { message: '¡Usuario registrado con Google!', token: signToken({ user: user.user }) };

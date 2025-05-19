@@ -1,8 +1,8 @@
 const service = require('../services/professionals.service');
-const { validateRegisterInput, validateLoginInput, validateGoogleToken } = require('../utils/validators');
+const { validateRegisterInputProf, validateLoginInputProf, validateGoogleTokenProf } = require('../utils/validators');
 
 exports.registerProfessional = async (req, res) => {
-    const { error } = validateRegisterInput(req.body);
+    const { error } = validateRegisterInputProf(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     try {
@@ -15,7 +15,7 @@ exports.registerProfessional = async (req, res) => {
 };
 
 exports.loginProfessional = async (req, res) => {
-    const { error } = validateLoginInput(req.body);
+    const { error } = validateLoginInputProf(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     try {
@@ -27,7 +27,7 @@ exports.loginProfessional = async (req, res) => {
 };
 
 exports.googleLogin = async (req, res) => {
-    const { error } = validateGoogleToken(req.body);
+    const { error } = validateGoogleTokenProf(req.body);
     if (error) return res.status(400).json({ error: 'Token inválido' });
 
     try {

@@ -9,7 +9,7 @@ const findProfessionalByEmail = async (email) => {
     return await Professionals.findOne({ where: { email } });
 };
 
-exports.registerProfessional = async ({ firstName, lastName, email, password, profession, birthDate }) => {
+exports.registerProfessional = async ({ firstName, lastName, email, password, profession, birthDate, gender }) => {
     const existing = await findProfessionalByEmail(email);
     if (existing) throw new Error('Profesional ya existe.');
 
@@ -23,7 +23,8 @@ exports.registerProfessional = async ({ firstName, lastName, email, password, pr
         password: passwordHash,
         hasGoogleAccount: false,
         profession: profession,
-        birthDate: birthDate
+        birthDate: birthDate,
+        ...(gender && { gender })
     });
 
     return '¡Profesional registrado correctamente!';

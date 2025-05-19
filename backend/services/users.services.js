@@ -10,7 +10,7 @@ const findUserByEmail = async (email) => {
     return await Users.findOne({ where: { email } });
 };
 
-exports.registerUser = async ({ firstName, lastName, email, password, birthDate }) => {
+exports.registerUser = async ({ firstName, lastName, email, password, birthDate, gender }) => {
     const userExists = await findUserByEmail(email);
     if (userExists) throw new Error('Usuario ya existe.');
     
@@ -26,7 +26,8 @@ exports.registerUser = async ({ firstName, lastName, email, password, birthDate 
         email,
         password: passwordHash,
         hasGoogleAccount: false,
-        birthDate: birthDate
+        birthDate: birthDate,
+        ...(gender && { gender })
     });
 
     return '¡Usuario registrado correctamente!';

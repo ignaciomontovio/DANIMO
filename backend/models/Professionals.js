@@ -39,6 +39,11 @@ const Professionals = sequelize.define('Professionals', {
         allowNull: false,
         unique: false
     },
+    gender: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: false
+    },
     /* MATRICULA. Ver mas adelante
     license: {
         type: DataTypes.STRING,

@@ -35,6 +35,11 @@ const Users = sequelize.define('Users', {
         allowNull: false,
         unique: false
     },
+    gender: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: false
+    },
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt

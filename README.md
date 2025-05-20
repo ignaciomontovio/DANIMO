@@ -13,3 +13,14 @@ Cosas que me pidió instalar para ejecutar el script python de reconocimiento de
 pip install opencv-python
 pip install deepface
 pip install tf-keras
+
+
+Levantar con postgre
+sudo apt install postgresql postgresql-contrib
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+
+
+sudo -u postgres psql -f ./schemaPostgre.sql
+npm install pg pg-hstore
+DB_PORT=5432

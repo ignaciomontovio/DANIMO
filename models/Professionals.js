@@ -36,12 +36,12 @@ const Professionals = sequelize.define('Professionals', {
     },
     birthDate:{
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
         unique: false
     },
     gender: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        type: DataTypes.ENUM('Masculino', 'Femenino','No Binario','Prefiero no decir'),
+        allowNull: false,
         unique: false
     },
     /* MATRICULA. Ver mas adelante

@@ -8,8 +8,8 @@ exports.validateRegisterInputProf = (data) => Joi.object({
     lastName: Joi.string().alphanum().min(3).max(30).required(),
     email: Joi.string().email().required(),
     profession: Joi.string().valid('Psicologo', 'Psiquiatra').required(),
-    birthDate: Joi.date().iso().required(),
-    gender: Joi.string().optional()
+    birthDate: Joi.date().iso().optional(),
+    gender: Joi.string().valid('Masculino', 'Femenino','No Binario','Prefiero no decir').required()
 }).validate(data);
 
 exports.validateLoginInputProf = (data) => Joi.object({
@@ -26,8 +26,8 @@ exports.validateRegisterInput = (data) => Joi.object({
     firstName: Joi.string().alphanum().min(3).max(30).required(),
     lastName: Joi.string().alphanum().min(3).max(30).required(),
     email: Joi.string().email().required(),
-    birthDate: Joi.date().iso().required(),
-    gender: Joi.string().optional()
+    birthDate: Joi.date().iso().optional(),
+    gender: Joi.string().valid('Masculino', 'Femenino','No Binario','Prefiero no decir').required()
 }).validate(data);
 
 exports.validateLoginInput = (data) => Joi.object({

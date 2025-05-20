@@ -26,8 +26,8 @@ exports.registerUser = async ({ firstName, lastName, email, password, birthDate,
         email,
         password: passwordHash,
         hasGoogleAccount: false,
-        birthDate: birthDate,
-        ...(gender && { gender })
+        ...(birthDate && { birthDate}),
+        gender
     });
 
     return '¡Usuario registrado correctamente!';
@@ -57,7 +57,8 @@ exports.googleLogin = async (googleJWT) => {
             lastName,
             email,
             hasGoogleAccount: true,
-            birthDate: new Date('2000-01-01') // 🎯 Fecha por defecto modificar cuando se tenga todo listo
+            ...(birthDate && { birthDate}), 
+            gender
         });
 
         return { message: '¡Usuario registrado con Google!', token: signToken({ user: user.user }) };

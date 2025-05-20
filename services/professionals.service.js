@@ -13,8 +13,8 @@ exports.registerProfessional = async ({ firstName, lastName, email, password, pr
     const existing = await findProfessionalByEmail(email);
     if (existing) throw new Error('Profesional ya existe.');
 
-    const adult = isAdult({date: birthDate});
-        if (!adult) throw new Error('Profesional no puede registrarse siendo menor de edad.');
+    //const adult = isAdult({date: birthDate});
+    //    if (!adult) throw new Error('Profesional no puede registrarse siendo menor de edad.');
 
     const passwordHash = await hashPassword(password);
     await Professionals.create({
@@ -23,8 +23,8 @@ exports.registerProfessional = async ({ firstName, lastName, email, password, pr
         password: passwordHash,
         hasGoogleAccount: false,
         profession: profession,
-        birthDate: birthDate,
-        ...(gender && { gender })
+        ...(birthDate && { birthDate}),
+        gender
     });
 
     return '¡Profesional registrado correctamente!';
@@ -53,7 +53,8 @@ exports.googleLogin = async (googleJWT) => {
             firstName, lastName, email,
             hasGoogleAccount: true,
             profession: "Psicologo",
-            birthDate: new Date('2000-01-01') // 🎯 Fecha por defecto modificar cuando se tenga todo listo
+            ...(birthDate && { birthDate}), 
+            gender
         });
         return { message: '¡Registrado con Google!', token: signToken({ user: professional.user }) };
     }

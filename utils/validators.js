@@ -100,3 +100,12 @@ exports.validateChatInput = (data) => {
     });
     return schema.validate(data);
 }
+
+// ----------------------Quotes--------------------------
+
+exports.validateQuoteInput = (data) => {
+    const schema = Joi.object({
+        id: Joi.number().integer().min(1).max(100).required()
+    });
+    return schema.validate(data);
+};

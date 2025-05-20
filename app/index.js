@@ -16,6 +16,7 @@ const emotion = require('../routes/emotions.routers');
 const sleep = require('../routes/sleeps.routers');
 const contact = require('../routes/contacts.routers');
 const chat = require('../routes/chat.routes');
+const quote = require('../routes/quotes.routers');
 
 //const apiRoutes = require('../routes/api.routes');
 //const chatRoutes = require('../routes/chat.routes');
@@ -29,7 +30,8 @@ app.use('/activity', activity)
 app.use('/daily', daily)
 app.use('/emotion', emotion)
 app.use('/sleep', sleep)
-app.use('/contact', contact)
+app.use('/contact', contact),
+app.use('/quote',quote),
 app.use('/dani', chat)
 
 module.exports = app;

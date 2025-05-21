@@ -1,6 +1,11 @@
+const { UsersChats } = require('../models/UsersChats')
+const OpenAI = require('openai');
+const openai = new OpenAI({
+    apiKey: process.env.CHATGPT_API_KEY,
+});
+const {prompt} = require('../services/prompt')
 
-
-const createAssistant = async () => {
+exports.createAssistant = async () => {
     try {
         const assistant = await openai.beta.assistants.create({
             name: 'Dani',
@@ -14,12 +19,12 @@ const createAssistant = async () => {
     }
 };
 
-const findOrCreateThread = async (userId) => {
+exports.findOrCreateThread = async ({userId}) => {
     try {
         const userChat = await UsersChats.findOne({
             where: {
                 userId: userId,
-            },
+            }
         });
 
         if (!userChat) {
@@ -42,7 +47,7 @@ const findOrCreateThread = async (userId) => {
 /**
  * Polling para esperar la finalización del run con un control de tiempo.
  */
-const waitForRunCompletion = async (threadId, runId, maxWaitTime = 60000) => {
+exports.waitForRunCompletion = async (threadId, runId, maxWaitTime = 60000) => {
     const interval = 1000; // Tiempo en milisegundos entre intentos
     let elapsed = 0;
 

@@ -9,7 +9,7 @@ const UsersChats = sequelize.define('UsersChats', {
     },
     userId: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
         unique: true,
     }
 }, {

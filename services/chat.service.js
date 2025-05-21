@@ -1,35 +1,56 @@
 const express = require('express');
+const { validateDaniResponse } = require('../utils/validators');
 const router = express.Router();
+const OpenAI = require('openai');
+const openai = new OpenAI({
+    apiKey: process.env.CHATGPT_API_KEY,
+});
 
 const ChatGPTConversation = require('./ChatGPTConversation');
 
 const CHATGPT_API_KEY = process.env.CHATGPT_API_KEY
+const {prompt} = require('./prompt')
 
-const dani = new ChatGPTConversation(CHATGPT_API_KEY, "Eres Dani, un acompañante emocional para jóvenes de 18 a 30 años. Respondes con calidez, claridad y empatía.");
+const dani = new ChatGPTConversation(CHATGPT_API_KEY, prompt);
 
 exports.chat = async ({message, userId}) => {
-    const respuesta = await dani.sendMessage(message);
-    console.log("Dani:", respuesta);
+    const response = await dani.sendMessage(message);
+    const {error} = validateDaniResponse({data:response})
+    if (error) {
+        throw new Error("Formato de respuesta inválido de ChatGPT. " + error.details[0].message);
+    }
     return respuesta;
 };
 
+
 /*
-exports.chatBeta = async ({message}) => {
+exports.chat = async ({message, userId}) => {
+
     const assistant = await openai.beta.assistants.create({
         name: "Dani",
-        instructions: "Sos Dani, un asistente emocional empático. No das consejos clínicos...",
+        instructions: prompt,
         model: "gpt-3.5-turbo",
     });
 
     const thread = await openai.beta.threads.create();
     await openai.beta.threads.messages.create(thread.id, {
         role: "user",
-        content: "Hola, me siento raro desde la mudanza",
+        content: message,
     });
+
     const run = await openai.beta.threads.runs.create(thread.id, {
         assistant_id: assistant.id,
     });
 
-    const messages = await openai.beta.threads.messages.list(thread.id);
+    let status;
+    do {
+        const currentRun = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+        status = currentRun.status;
+        await new Promise(r => setTimeout(r, 1000)); // esperar 1 segundo
+    } while (status !== "completed");
 
-}*/
+    const response = await openai.beta.threads.messages.list(thread.id);
+    return response;
+}
+
+ */

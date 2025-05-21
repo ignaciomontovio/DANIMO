@@ -101,6 +101,20 @@ exports.validateChatInput = (data) => {
     return schema.validate(data);
 }
 
+exports.validateDaniResponse = (data) => {
+    const schema = Joi.object({
+        rta_para_usuario: Joi.string().required(),
+        fecha_importante: Joi.string().isoDate().allow(null),
+        descripcion_fecha_importante: Joi.string().allow(null),
+        emocion_predominante: Joi.string()
+            .valid("alegría", "tristeza", "miedo", "ira", "sorpresa", "asco", "confianza", "anticipación")
+            .required(),
+        categoria_de_riesgo: Joi.number().integer().min(1).max(5).required(),
+        token_consumidos: Joi.number().integer().min(0).required()
+    });
+
+    return schema.validate(data);
+};
 // ----------------------Quotes--------------------------
 
 exports.validateQuoteInput = (data) => {

@@ -1,5 +1,6 @@
 const usersService = require('../services/users.services');
 const { validateRegisterInput, validateLoginInput, validateGoogleToken } = require('../utils/validators');
+const { signToken, verifyToken, signRefreshToken } = require('../utils/jwt'); // NO SE SI ESTA BIEN IMPORTAR ESTO, PERO NO ANDA SI NO LO HAGO
 
 exports.registerUser = async (req, res) => {
     const { error } = validateRegisterInput(req.body);
@@ -19,10 +20,26 @@ exports.loginUser = async (req, res) => {
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     try {
-        const token = await usersService.loginUser(req.body);
+        const token = await usersService.loginUser(req.body, res); // ⬅️ pasamos `res`
         res.status(200).json({ message: 'Login completado con éxito', token });
     } catch (err) {
         res.status(400).json({ error: err.message });
+    }
+};
+
+// 🔸 NUEVO controlador
+exports.refreshToken = async (req, res) => {
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+        return res.status(401).json({ message: 'No se encontró refresh token' });
+    }
+
+    try {
+        const decoded = verifyToken(refreshToken);
+        const newAccessToken = signToken({ userId: decoded.userId });
+        res.status(200).json({ message: 'Refresh token obtenido con éxito',token: newAccessToken });
+    } catch (err) {
+        return res.status(401).json({ message: 'Refresh token inválido o expirado' });
     }
 };
 

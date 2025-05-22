@@ -1,7 +1,7 @@
 const Users = require('../models/Users');
 const { v4: uuidv4 } = require('uuid');
 const { hashPassword, comparePassword } = require('../utils/password');
-const { signToken } = require('../utils/jwt');
+const { signToken, signRefreshToken } = require('../utils/jwt'); // ⬅️ se importa también signRefreshToken
 const { verifyGoogleToken } = require('../utils/google');
 const { isAdult } = require('../utils/date');
 const { date } = require('joi');
@@ -14,8 +14,8 @@ exports.registerUser = async ({ firstName, lastName, email, password, birthDate,
     const userExists = await findUserByEmail(email);
     if (userExists) throw new Error('Usuario ya existe.');
     
-    const adult = isAdult({date: birthDate});
-    if (!adult) throw new Error('Usuario no puede registrarse siendo menor de edad.');
+    //const adult = isAdult({date: birthDate});
+    //if (!adult) throw new Error('Usuario no puede registrarse siendo menor de edad.');
 
     const passwordHash = await hashPassword(password);
 
@@ -33,7 +33,7 @@ exports.registerUser = async ({ firstName, lastName, email, password, birthDate,
     return '¡Usuario registrado correctamente!';
 };
 
-exports.loginUser = async ({ email, password }) => {
+exports.loginUser = async ({ email, password }, res) => { // ⬅️ pasamos también `res`
     const user = await findUserByEmail(email);
     if (!user) throw new Error('Usuario inexistente.');
     if (user.hasGoogleAccount) throw new Error('Solo puede iniciar sesión con Google.');
@@ -41,7 +41,18 @@ exports.loginUser = async ({ email, password }) => {
     const isValid = await comparePassword(password, user.password);
     if (!isValid) throw new Error('Contraseña incorrecta.');
 
-    return signToken({ userId: user.id });
+    const accessToken = signToken({ userId: user.id });
+    const refreshToken = signRefreshToken({ userId: user.id });
+
+    // 🔸 NUEVO: guardamos refresh token en cookie
+    res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: true, 
+        sameSite: 'Strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 días
+    });
+
+    return accessToken;
 };
 
 exports.googleLogin = async (googleJWT) => {

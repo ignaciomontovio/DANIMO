@@ -1,11 +1,13 @@
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser'); // Importo cookie parser
 
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser()); // lo necesito para poder parsear cookies
 
 // Rutas
 const usersRoutes = require('../routes/users.routes');

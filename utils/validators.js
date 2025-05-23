@@ -40,13 +40,15 @@ exports.validateGoogleToken = (data) => Joi.object({
 }).validate(data);
 
 // ----------------------Registers --------------------------
-
+// No sera necesario validarlo porque la fecha la obtenemos nosotros
+/*
 exports.validateDailyRegisterInput = (data) => {
     const schema = Joi.object({
         date: Joi.required(),
     });
     return schema.validate(data);
 };
+*/
 
 // ----------------------Emotions --------------------------
 

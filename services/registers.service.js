@@ -24,7 +24,7 @@ const findDailyRegisterByDateAndUser = async (date, userId) => {
 
 export async function createDailyRegister(date, userId ) {
     const dailyRegister = await findDailyRegisterByDateAndUser(date, userId)
-    console.log(dailyRegister)
+    //console.log(dailyRegister)
     if(dailyRegister) throw new Error('Ya hay un registro para este usuario y fecha.');
 
     await DailyRegisters.create({

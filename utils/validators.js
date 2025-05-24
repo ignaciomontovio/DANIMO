@@ -3,26 +3,7 @@ const Joi = require('joi');
 // ------------------------ Professionals --------------------------
 
 exports.validateRegisterInputProf = (data) => Joi.object({
-    password: Joi.string().min(5).max(15).required(),
-    firstName: Joi.string().alphanum().min(3).max(30).required(),
-    lastName: Joi.string().alphanum().min(3).max(30).required(),
-    email: Joi.string().email().required(),
-    profession: Joi.string().valid('Psicologo', 'Psiquiatra').required(),
-    birthDate: Joi.date().iso().optional(),
-    gender: Joi.string().valid('Masculino', 'Femenino','No Binario','Prefiero no decir').required()
-}).validate(data);
-
-exports.validateLoginInputProf = (data) => Joi.object({
-    email: Joi.string().min(3).max(40).required(),
-    password: Joi.string().min(5).max(15).required(),
-}).validate(data);
-
-exports.validateGoogleTokenProf = (data) => Joi.object({
-    googleJWT: Joi.required()
-}).validate(data);
-// ------------------------ Users --------------------------------
-exports.validateRegisterInput = (data) => Joi.object({
-    password: Joi.string() .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\={};:"|,.<>?]).{8,}$'))
+    password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\={};:"|,.<>?]).{8,}$'))
         .required()
         .messages({
             'any.required': 'La contraseña es obligatoria.',
@@ -36,6 +17,44 @@ exports.validateRegisterInput = (data) => Joi.object({
             'any.required': 'El apellido es obligatorio.'
         }),
     email: Joi.string().email().required().messages({
+            'any.required': 'El email es obligatorio.',
+            'string.email': 'El email no es válido.',
+            'string.empty': 'El email es obligatorio.'
+        }),
+    profession: Joi.string().valid('Psicologo', 'Psiquiatra').required(),
+    birthDate: Joi.date().iso().optional(),
+    gender: Joi.string().valid('Masculino', 'Femenino','No Binario','Prefiero no decir').required()
+}).validate(data);
+
+exports.validateLoginInputProf = (data) => Joi.object({
+    email: Joi.string().email().required().messages({
+            'any.required': 'El email es obligatorio.',
+            'string.email': 'El email no es válido.',
+            'string.empty': 'El email es obligatorio.'
+        }),
+    password: Joi.string().min(5).max(15).required(),
+}).validate(data);
+
+exports.validateGoogleTokenProf = (data) => Joi.object({
+    googleJWT: Joi.required()
+}).validate(data);
+// ------------------------ Users --------------------------------
+exports.validateRegisterInput = (data) => Joi.object({
+    password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\={};:"|,.<>?]).{8,}$'))
+        .required()
+        .messages({
+            'any.required': 'La contraseña es obligatoria.',
+            'string.empty': 'La contraseña es obligatoria.',
+            'string.pattern.base': 'La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un símbolo.',
+        }),
+    firstName: Joi.string().alphanum().min(3).max(30).required().messages({
+            'any.required': 'El nombre es obligatorio.'
+        }),
+    lastName: Joi.string().alphanum().min(3).max(30).required().messages({
+            'any.required': 'El apellido es obligatorio.'
+        }),
+    email: Joi.string().email().required().messages({
+            'any.required': 'El email es obligatorio.',
             'string.email': 'El email no es válido.',
             'string.empty': 'El email es obligatorio.'
         }),
@@ -45,6 +64,7 @@ exports.validateRegisterInput = (data) => Joi.object({
 
 exports.validateLoginInput = (data) => Joi.object({
     email: Joi.string().email().required().messages({
+            'any.required': 'El email es obligatorio.',
             'string.email': 'El email no es válido.',
             'string.empty': 'El email es obligatorio.'
         }),

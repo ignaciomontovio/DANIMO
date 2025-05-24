@@ -2,9 +2,12 @@ const express = require('express');
 const { validateDaniResponse } = require('../utils/validators');
 const router = express.Router();
 const OpenAI = require('openai');
+//Tuve que poner esto para que no me de error en los tests.
+if (process.env.NODE_ENV !== 'test') {
 const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY,
 });
+}
 
 const ChatGPTConversation = require('./ChatGPTConversation');
 

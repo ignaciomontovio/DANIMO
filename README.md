@@ -26,9 +26,7 @@ npm install pg pg-hstore
 DB_PORT=5432
 
 
-Ejecutar tests automatizados
-
-Instalar complementos necesarios
+Para poder ejecutar tests automatizados
 
 1. Ejecutar npm install --save-dev mocha chai supertest
 2. Ejecutar npm install --save-dev sqlite3

@@ -12,10 +12,10 @@ exports.createSleepRegister = async (req, res) => {
 
     const { hoursOfSleep, nightmares } = req.body;
     const userId = req.userId; // asegúrate que el middleware lo setea correctamente
-    const date = new Date();
+    const today = new Date();
 
     try {
-        const dailyRegister = await findDailyRegisterByDateAndUser(date, userId);
+        const dailyRegister = await findDailyRegisterByDateAndUser(today, userId);
 
         if (!dailyRegister) {
             return res.status(404).json({ error: 'No hay un registro diario para hoy.' });

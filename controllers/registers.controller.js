@@ -11,9 +11,9 @@ exports.createDailyRegister = async (req, res) => {
     }
     */
     //Obtengo la fecha actual
-    const date = new Date();
+    const today = new Date();
     try {
-        await service.createDailyRegister(date, req.userId);
+        await service.createDailyRegister(today, req.userId);
         res.json({message: '¡Registro diario creado correctamente!'});
     } catch (err) {
         console.error('❌ Error en /daily:', err);

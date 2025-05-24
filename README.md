@@ -24,3 +24,16 @@ sudo systemctl enable postgresql
 sudo -u postgres psql -f ./schemaPostgre.sql
 npm install pg pg-hstore
 DB_PORT=5432
+
+
+Ejecutar tests automatizados
+
+Instalar complementos necesarios
+
+1. Ejecutar npm install --save-dev mocha chai supertest
+2. Ejecutar npm install --save-dev sqlite3
+3. Ejecutar npm install --save-dev cross-env
+4. Poner NODE_ENV='test' en archivo .env
+5. Asegurarse que dentro de package.json en la seccion de scripts este definido "test": "cross-env NODE_ENV=test mocha \"test/**/*.test.js\""
+6. Ejecutar npm test
+

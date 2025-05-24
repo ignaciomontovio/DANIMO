@@ -78,7 +78,7 @@ exports.validateActivityRegisterInput = (data) => {
         name: Joi.string().min(1).max(100).required(),
         category: Joi.string().valid('Trabajo', 'Estudio', 'Hobby', 'Hogar').required(),
         date: Joi.date().iso().required(),
-        dailyRegisterId: Joi.string().pattern(/^U-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i).required(),
+        //dailyRegisterId: Joi.string().pattern(/^U-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i).required(),
     });
     return schema.validate(data);
 };

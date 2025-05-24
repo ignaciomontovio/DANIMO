@@ -22,16 +22,32 @@ exports.validateGoogleTokenProf = (data) => Joi.object({
 }).validate(data);
 // ------------------------ Users --------------------------------
 exports.validateRegisterInput = (data) => Joi.object({
-    password: Joi.string().min(5).max(15).required(),
-    firstName: Joi.string().alphanum().min(3).max(30).required(),
-    lastName: Joi.string().alphanum().min(3).max(30).required(),
-    email: Joi.string().email().required(),
+    password: Joi.string() .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\={};:"|,.<>?]).{8,}$'))
+        .required()
+        .messages({
+            'any.required': 'La contraseña es obligatoria.',
+            'string.empty': 'La contraseña es obligatoria.',
+            'string.pattern.base': 'La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un símbolo.',
+        }),
+    firstName: Joi.string().alphanum().min(3).max(30).required().messages({
+            'any.required': 'El nombre es obligatorio.'
+        }),
+    lastName: Joi.string().alphanum().min(3).max(30).required().messages({
+            'any.required': 'El apellido es obligatorio.'
+        }),
+    email: Joi.string().email().required().messages({
+            'string.email': 'El email no es válido.',
+            'string.empty': 'El email es obligatorio.'
+        }),
     birthDate: Joi.date().iso().optional(),
     gender: Joi.string().valid('Masculino', 'Femenino','No Binario','Prefiero no decir').required()
 }).validate(data);
 
 exports.validateLoginInput = (data) => Joi.object({
-    email: Joi.string().min(3).max(40).required(),
+    email: Joi.string().email().required().messages({
+            'string.email': 'El email no es válido.',
+            'string.empty': 'El email es obligatorio.'
+        }),
     password: Joi.string().min(5).max(15).required(),
 }).validate(data);
 

@@ -10,6 +10,14 @@ const EmotionRegisters = sequelize.define('EmotionRegisters', {
     emotion: {
         type: DataTypes.ENUM('Alegria', 'Tristeza', 'Miedo', 'Ira', 'Sorpresa', 'Anticipacion', 'Confianza', 'Asco'),
         allowNull: false,
+    },
+    intensity: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    isPredominant: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

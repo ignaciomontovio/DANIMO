@@ -43,8 +43,8 @@ module.exports = (models) => {
         foreignKey: "professionalId",
     });
 
-    // Registro diario 1:1 Registro de emoción
-    DailyRegisters.hasOne(EmotionRegisters, {
+    // Registro diario 1:N Registro de emoción
+    DailyRegisters.hasMany(EmotionRegisters, {
         foreignKey: "dailyRegisterId",
         as: "EmotionRegister",
     });

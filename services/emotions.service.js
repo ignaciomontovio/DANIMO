@@ -1,13 +1,29 @@
 import EmotionRegisters from '../models/EmotionRegisters.js';
 import { v4 as uuidv4 } from 'uuid';
 
-export async function createEmotionRegister(emotion, intensity, isPredominant ,dailyRegisterId ) {
+export async function createEmotionRegister(emotion, intensity, isPredominant, dailyRegisterId) {
+    if (isPredominant) {
+        // Buscar si ya hay una emoción predominante para este registro diario
+        const predominantEmotion = await EmotionRegisters.findOne({
+            where: {
+                dailyRegisterId,
+                isPredominant: true
+            }
+        });
+
+        if (predominantEmotion) {
+            // Si existe, desmarcarla
+            await predominantEmotion.update({ isPredominant: false });
+        }
+    }
+
+    // Insertar la nueva emoción
     await EmotionRegisters.create({
         id: `U-${uuidv4()}`,
-        emotion: emotion,
-        intensity: intensity,
-        isPredominant: isPredominant,
-        dailyRegisterId: dailyRegisterId
+        emotion,
+        intensity,
+        isPredominant,
+        dailyRegisterId
     });
 }
 

@@ -5,7 +5,7 @@ import { Op } from 'sequelize';
 
 import { v4 as uuidv4 } from 'uuid';
 
-const findDailyRegisterByDateAndUser = async (date, userId) => {
+export const findDailyRegisterByDateAndUser = async (date, userId) => {
     const startOfDay = new Date(date);
     startOfDay.setHours(0, 0, 0, 0);
 

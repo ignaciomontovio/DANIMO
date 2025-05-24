@@ -16,6 +16,11 @@ const SleepRegisters = sequelize.define('SleepRegisters', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         unique: false
+    },
+    dailyRegisterId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true // ✅ Esto impide múltiples registros con el mismo dailyRegisterId
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

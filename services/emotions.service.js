@@ -10,3 +10,12 @@ export async function createEmotionRegister(emotion, intensity, isPredominant ,d
         dailyRegisterId: dailyRegisterId
     });
 }
+
+export async function findPredominantEmotion(dailyRegisterId) {
+    return await EmotionRegisters.findOne({
+        where: {
+            dailyRegisterId,
+            isPredominant: true
+        }
+    });
+}

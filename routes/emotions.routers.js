@@ -5,4 +5,6 @@ const middleware = require('../middleware/middleware'); // importar el middlewar
 
 router.post('/entry', middleware, controller.createEmotionRegister)
 
+router.get('/predominant', middleware, controller.getPredominantEmotion);
+
 module.exports = router;

@@ -24,3 +24,27 @@ exports.createEmotionRegister = async (req, res) => {
         return res.status(500).json({error: 'Error al registrar emocion'});
     }
 }
+
+exports.getPredominantEmotion = async (req, res) => {
+    const userId = req.userId;
+    const today = new Date();
+
+    try {
+        const dailyRegister = await findDailyRegisterByDateAndUser(today, userId);
+
+        if (!dailyRegister) {
+            return res.status(404).json({ error: 'No hay un registro diario para hoy.' });
+        }
+
+        const predominantEmotion = await service.findPredominantEmotion(dailyRegister.id);
+
+        if (!predominantEmotion) {
+            return res.status(404).json({ error: 'No hay una emoción predominante registrada para hoy.' });
+        }
+
+        return res.json({message: 'Emocion predominante',emotion: predominantEmotion});
+    } catch (err) {
+        console.error('❌ Error en /predominant:', err);
+        return res.status(500).json({ error: 'Error al obtener la emoción predominante' });
+    }
+};

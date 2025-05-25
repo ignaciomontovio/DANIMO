@@ -1,24 +1,7 @@
 const request = require('supertest');
 const { expect } = require('chai');
 const app = require('../app');
-const { init } = require('../config/database');
-
-let sequelize;
-
-//Tengo que pasarle el jwt_secret porque sino no puede hacer bien el login
-//se podria investigar una forma mejor para pasarselo
-process.env.JWT_SECRET = 'your_jwt_secret';
-
-//necesito definir las funciones before y after para poder inicializar el sequelize
-before(async function () {
-    process.env.NODE_ENV = 'test'; // usar SQLite en memoria
-    sequelize = init();
-    await sequelize.sync({ force: true });
-});
-
-after(async function () {
-    await sequelize.close();
-});
+require('./setupTestDB'); // Importa el setup
 
 describe('Usuarios - Endpoints', () => {
     describe('POST /auth/register', () => {

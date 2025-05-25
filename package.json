@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test mocha \"test/**/*.test.js\""
+    "test": "cross-env NODE_ENV=test mocha \"test/**/*.test.js\"",
+    "test:users": "cross-env NODE_ENV=test mocha test/users.test.js",
+    "test:professionals": "cross-env NODE_ENV=test mocha test/professionals.test.js"
   },
   "keywords": [],
   "author": "",

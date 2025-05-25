@@ -1,6 +1,7 @@
 const usersService = require('../services/users.services');
-const { validateRegisterInput, validateLoginInput, validateGoogleToken } = require('../utils/validators');
-const { signToken, verifyToken, signRefreshToken } = require('../utils/jwt'); // NO SE SI ESTA BIEN IMPORTAR ESTO, PERO NO ANDA SI NO LO HAGO
+const { validateRegisterInput, validateLoginInput, validateGoogleToken, validateForgotPassword, validateResetPassword} = require('../utils/validators');
+const { signToken, verifyToken, signRefreshToken } = require('../utils/jwt');
+const {token} = require("mysql/lib/protocol/Auth"); // NO SE SI ESTA BIEN IMPORTAR ESTO, PERO NO ANDA SI NO LO HAGO
 
 exports.registerUser = async (req, res) => {
     const { error } = validateRegisterInput(req.body);
@@ -49,6 +50,32 @@ exports.googleLogin = async (req, res) => {
 
     try {
         const result = await usersService.googleLogin(req.body.googleJWT);
+        res.status(200).json(result);
+    } catch (err) {
+        console.error('❌ Google login error:', err);
+        res.status(401).json({ error: err.message });
+    }
+};
+
+exports.forgotPassword = async (req, res) => {
+    const { error } = validateForgotPassword(req.body);
+    if (error) return res.status(400).json({ error: 'Email invalido' });
+
+    try {
+        const result = await usersService.forgotPassword(req.body.email);
+        res.status(200).json(result);
+    } catch (err) {
+        console.error('❌ Google login error:', err);
+        res.status(401).json({ error: err.message });
+    }
+};
+
+exports.resetPassword = async (req, res) => {
+    const { error } = validateResetPassword(req.body);
+    if (error) return res.status(400).json({ error: 'token o contrasena invalida' });
+    try {
+        const {tokenId, password} = req.body
+        const result = await usersService.resetPassword(tokenId, password);
         res.status(200).json(result);
     } catch (err) {
         console.error('❌ Google login error:', err);

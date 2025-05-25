@@ -9,6 +9,7 @@ const Quotes = require("./Quotes");
 const SleepRegisters = require("./SleepRegisters");
 const Users = require("./Users");
 const UsersChats = require("./UsersChats");
+const RecoveryTokens = require("./RecoveryTokens");
 
 const models = {
     ActivityRegisters,
@@ -22,6 +23,7 @@ const models = {
     SleepRegisters,
     Users,
     UsersChats,
+    RecoveryTokens,
 };
 
 // Relaciones entre modelos

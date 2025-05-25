@@ -1,11 +1,11 @@
 const Users = require('../models/Users');
+const RecoveryTokens = require('../models/RecoveryTokens');
 const { v4: uuidv4 } = require('uuid');
 const { hashPassword, comparePassword } = require('../utils/password');
 const { signToken, signRefreshToken } = require('../utils/jwt'); // ⬅️ se importa también signRefreshToken
 const { verifyGoogleToken } = require('../utils/google');
-const { isAdult } = require('../utils/date');
-const { date } = require('joi');
-
+const sendEmail = require("../utils/sendEmail");
+const TWO_HOURS = 1000 * 60 * 60 * 2;
 const findUserByEmail = async (email) => {
     return await Users.findOne({ where: { email } });
 };
@@ -76,4 +76,37 @@ exports.googleLogin = async (googleJWT) => {
     }
 
     return { message: 'Login con Google exitoso', token: signToken({ user: user.user }) };
+};
+
+exports.forgotPassword = async ( email ) => { // ⬅️ pasamos también `res`
+    const user = await findUserByEmail(email);
+    if (!user) return res.status(404).send("Usuario no encontrado");
+    const token = "R-"+uuidv4()
+    const resetUrl = `https://danimo.onrender.com/reset-password/${token}`;
+    await RecoveryTokens.destroy({ where: { userId: user.id } })
+    await RecoveryTokens.create({
+        tokenId: token,
+        expirationDate: Date.now() + TWO_HOURS,
+        userId: user.id
+    })
+    await sendEmail(email, "Recupera tu contraseña", `Haz clic aquí: ${resetUrl}`)
+    return "Email enviado con éxito";
+};
+
+exports.resetPassword = async ( tokenId, password ) => {
+    const recoveryToken = await RecoveryTokens.findOne({ where: { tokenId },
+        include: [{
+            model: Users, // Hace referencia al modelo de usuarios
+            as: 'User'   // Alias definido en la relación, si lo hay
+        }]
+    })
+    if(recoveryToken === null) throw new Error("Token no encontrado");
+    const {_, expirationDate} = recoveryToken
+    if (expirationDate < Date.now()) throw new Error("Token expirado");
+    Users.update(
+        { password: await hashPassword(password) },
+        { where: { id: recoveryToken.userId } }
+    )
+
+    return "Contraseña cambiada con exito";
 };

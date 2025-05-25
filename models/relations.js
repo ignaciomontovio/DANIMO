@@ -8,7 +8,8 @@ module.exports = (models) => {
         EmotionRegisters,
         SleepRegisters,
         ActivityRegisters,
-        MoodAlternators
+        MoodAlternators,
+        RecoveryTokens
     } = models;
 
     // Usuario 1:N Medicaciones
@@ -89,6 +90,10 @@ module.exports = (models) => {
         as: "MoodAlternators",
     });
     MoodAlternators.belongsTo(Users, {
+        foreignKey: "userId",
+        as: "User",
+    });
+    RecoveryTokens.belongsTo(Users, {
         foreignKey: "userId",
         as: "User",
     });

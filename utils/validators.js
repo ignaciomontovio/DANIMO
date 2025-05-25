@@ -75,6 +75,18 @@ exports.validateGoogleToken = (data) => Joi.object({
     googleJWT: Joi.required()
 }).validate(data);
 
+exports.validateForgotPassword = (data) => Joi.object({
+    email: Joi.string().email().required().messages({
+        'any.required': 'El email es obligatorio.',
+        'string.email': 'El email no es válido.',
+        'string.empty': 'El email es obligatorio.'
+    })}).validate(data);
+
+exports.validateResetPassword = (data) => Joi.object({
+    tokenId: Joi.string().required(),
+    password: Joi.string().min(5).max(15).required(),
+}).validate(data);
+
 // ----------------------Registers --------------------------
 // No sera necesario validarlo porque la fecha la obtenemos nosotros
 /*

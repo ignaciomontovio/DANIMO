@@ -1,6 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database').init()
 
+const isTestEnv = process.env.NODE_ENV === 'test';
+
 const EmotionRegisters = sequelize.define('EmotionRegisters', {
     id: {
         type: DataTypes.STRING,
@@ -21,7 +23,7 @@ const EmotionRegisters = sequelize.define('EmotionRegisters', {
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente
-    timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt
+    timestamps: isTestEnv // Que cree las timestamps en el entorno de test
 });
 
 module.exports = EmotionRegisters;

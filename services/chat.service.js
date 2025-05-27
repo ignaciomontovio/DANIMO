@@ -3,6 +3,7 @@ const { validateDaniResponse } = require('../utils/validators');
 const axios = require('axios');
 const { v4: generateUUID } = require('uuid');
 const { prompt } = require('./prompt');
+const { format } = require('date-fns');
 require('dotenv').config();
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
@@ -46,7 +47,7 @@ async function compileConversationHistory(userId, currentMessage) {
 
     messages.push({
         role: 'user',
-        content: `${currentMessage}. Debes responder con el template de salida.`
+        content: `${currentMessage}. Debes responder con el template de salida. La fecha de hoy es ` + format(new Date(), 'yyyy-MM-dd'),
     });
 
     return messages;
@@ -61,7 +62,7 @@ async function sendMessageToOpenAI(messages) {
         };
 
         const response = await axios.post(OPENAI_API_URL, {
-            model: 'gpt-3.5-turbo',
+            model: 'gpt-3.5-turbo', //gpt-3.5-turbo | gpt-3.5-turbo-16k | gpt-4 | gpt-4-32k | gpt-4-32k | gpt-4-0125-preview
             messages,
         }, { headers });
 

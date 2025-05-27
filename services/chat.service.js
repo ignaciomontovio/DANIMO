@@ -13,10 +13,8 @@ exports.chat = async ({message, userId}) => {
             .sort((a, b) => a.messageDate - b.messageDate)
             .forEach(element => (messages.push({role: element.type, content: element.text})))
     messages.push({role: 'user', content: message + ". Debes responder con el template de salida."})
-    console.log(messages)
 
     const reply = await sendMessage(messages)
-    console.log(messages)
 
     await Conversations.create({
         id: "C-" + v4(),
@@ -49,12 +47,8 @@ async function sendMessage(messages) {
             }
         });
         const reply = response.data.choices[0].message.content;
-        console.log("REPLY " + reply)
         const parsedReply = JSON.parse(reply);
-
-        console.log(reply)
         const {error} = validateDaniResponse(parsedReply)
-
         if (error) {
             throw new Error(error.details[0].message)
         }

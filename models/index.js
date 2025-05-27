@@ -8,9 +8,9 @@ const Professionals = require("./Professionals");
 const Quotes = require("./Quotes");
 const SleepRegisters = require("./SleepRegisters");
 const Users = require("./Users");
-const UsersChats = require("./UsersChats");
 const RecoveryTokens = require("./RecoveryTokens");
 const TypeActivities = require("./TypeActivities");
+const Conversations = require("./Conversations");
 
 const models = {
     ActivityRegisters,
@@ -23,9 +23,9 @@ const models = {
     Quotes,
     SleepRegisters,
     Users,
-    UsersChats,
     RecoveryTokens,
-    TypeActivities
+    TypeActivities,
+    Conversations
 };
 
 // Relaciones entre modelos

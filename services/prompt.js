@@ -35,4 +35,4 @@ export const prompt = "Acción\n" +
     "  \"emocionPredominante\": \"[Una de las 8 emociones básicas: alegría, tristeza, miedo, ira, sorpresa, asco, confianza, anticipación]\",\n" +
     "  \"categoriaDeRiesgo\": \"[Un número entero entre 1 y 5 donde 1 es sin riesgo y 5 es riesgo muy alto]\",\n" +
     "  \"tokenConsumidos\": \"[Número aproximado de tokens utilizados en esta respuesta (puede ser estimado)]\"\n" +
-    "}\n"
+    "}"

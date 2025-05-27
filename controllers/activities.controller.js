@@ -1,6 +1,7 @@
 const { validateActivityRegisterInput } = require('../utils/validators');
 const service = require('../services/activities.service');
 const { findDailyRegisterByDateAndUser } = require('../services/registers.service');
+const { getAllTypeActivities } = require('../services/activities.service');
 
 exports.createActivityRegister = async (req, res) => {
     const {error} = validateActivityRegisterInput(req.body);
@@ -25,3 +26,13 @@ exports.createActivityRegister = async (req, res) => {
         return res.status(500).json({error: 'Error al registrar actividad'});
     }
 }
+
+exports.getTypeActivities = async (req, res) => {
+    try {
+        const activities = await getAllTypeActivities();
+        res.json(activities);
+    } catch (err) {
+        console.error('❌ Error al obtener actividades:', err);
+        res.status(500).json({ error: 'Error al obtener actividades' });
+    }
+};

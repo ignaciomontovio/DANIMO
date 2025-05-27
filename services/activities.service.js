@@ -1,5 +1,6 @@
 import ActivityRegisters from '../models/ActivityRegisters.js';
 import { v4 as uuidv4 } from 'uuid';
+import TypeActivities from '../models/TypeActivities.js';
 
 export async function createActivityRegister(name, category, date, dailyRegisterId) {
     await ActivityRegisters.create({
@@ -9,4 +10,8 @@ export async function createActivityRegister(name, category, date, dailyRegister
         date: date,
         dailyRegisterId: dailyRegisterId,
     });
+}
+
+export async function getAllTypeActivities() {
+    return await TypeActivities.findAll();
 }

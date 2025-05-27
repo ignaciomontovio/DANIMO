@@ -169,13 +169,15 @@ exports.validateDaniResponse = (data) => {
         rtaParaUsuario: Joi.string().required(),
         fechaImportante: Joi.string().isoDate().allow(null).allow('null'),
         descripcionFechaImportante: Joi.string().allow(null),
+        /*
         emocionPredominante: Joi.string()
             .valid("alegría", "tristeza", "miedo", "ira", "sorpresa", "asco", "confianza", "anticipación", "neutral")
             .allow(null)
             .allow('null'),
-        categoriaDeRiesgo: Joi.number().integer().min(1).max(5).allow(null)
-            .allow('null'),
-        tokenConsumidos: Joi.number().integer().min(0).required()
+        tokenConsumidos: Joi.number().integer().min(0).required(),
+
+         */
+        categoriaDeRiesgo: Joi.number().integer().min(1).max(5)
     });
 
     return schema.validate(data);

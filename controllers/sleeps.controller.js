@@ -10,7 +10,7 @@ exports.createSleepRegister = async (req, res) => {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { hoursOfSleep, nightmares } = req.body;
+    const { hoursOfSleep, quality } = req.body;
     const userId = req.userId; // asegúrate que el middleware lo setea correctamente
     const today = new Date();
 
@@ -21,7 +21,7 @@ exports.createSleepRegister = async (req, res) => {
             return res.status(404).json({ error: 'No hay un registro diario para hoy.' });
         }
 
-        await service.createSleepRegister(hoursOfSleep, nightmares, dailyRegister.id);
+        await service.createSleepRegister(hoursOfSleep, quality, dailyRegister.id);
         res.json({ message: '¡Sueño registrado correctamente!' });
     } catch (err) {
         console.error('❌ Error en /sleep:', err);

@@ -12,10 +12,9 @@ const SleepRegisters = sequelize.define('SleepRegisters', {
         allowNull: true,
         unique: false,
     },
-    nightmares: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        unique: false
+    quality: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
     dailyRegisterId: {
         type: DataTypes.STRING,

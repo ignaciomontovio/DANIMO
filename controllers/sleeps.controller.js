@@ -10,9 +10,12 @@ exports.createSleepRegister = async (req, res) => {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { hoursOfSleep, quality } = req.body;
+    const { bedtime, wake, quality } = req.body;
     const userId = req.userId; // asegúrate que el middleware lo setea correctamente
     const today = new Date();
+
+     // calcular horas de sueño
+    const hoursOfSleep = (new Date(wake) - new Date(bedtime)) / (1000 * 60 * 60);
 
     try {
         const dailyRegister = await findDailyRegisterByDateAndUser(today, userId);

@@ -114,7 +114,17 @@ exports.validateEmotionRegisterInput = (data) => {
 
 exports.validateSleepRegisterInput = (data) => {
     const schema = Joi.object({
-        hoursOfSleep: Joi.number().integer().min(0).required(),
+        bedtime: Joi.date().required()
+            .messages({
+                'date.base': `"bedtime" debe ser una fecha válida`,
+                'any.required': `"bedtime" es obligatorio`
+            }),
+        wake: Joi.date().greater(Joi.ref('bedtime')).required()
+            .messages({
+                'date.base': `"wake" debe ser una fecha válida`,
+                'date.greater': `"wake" debe ser posterior a "bedtime"`,
+                'any.required': `"wake" es obligatorio`
+            }),
         quality: Joi.number().integer().min(1).max(5).required()
         //dailyRegisterId: Joi.string().pattern(/^U-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i).required()
     });

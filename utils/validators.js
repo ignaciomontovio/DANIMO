@@ -11,27 +11,27 @@ exports.validateRegisterInputProf = (data) => Joi.object({
             'string.pattern.base': 'La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un símbolo.',
         }),
     firstName: Joi.string().alphanum().min(3).max(30).required().messages({
-            'any.required': 'El nombre es obligatorio.'
-        }),
+        'any.required': 'El nombre es obligatorio.'
+    }),
     lastName: Joi.string().alphanum().min(3).max(30).required().messages({
-            'any.required': 'El apellido es obligatorio.'
-        }),
+        'any.required': 'El apellido es obligatorio.'
+    }),
     email: Joi.string().email().required().messages({
-            'any.required': 'El email es obligatorio.',
-            'string.email': 'El email no es válido.',
-            'string.empty': 'El email es obligatorio.'
-        }),
+        'any.required': 'El email es obligatorio.',
+        'string.email': 'El email no es válido.',
+        'string.empty': 'El email es obligatorio.'
+    }),
     profession: Joi.string().valid('Psicologo', 'Psiquiatra').required(),
     birthDate: Joi.date().iso().optional(),
-    gender: Joi.string().valid('Masculino', 'Femenino','No Binario','Prefiero no decir').required()
+    gender: Joi.string().valid('Masculino', 'Femenino', 'No Binario', 'Prefiero no decir').required()
 }).validate(data);
 
 exports.validateLoginInputProf = (data) => Joi.object({
     email: Joi.string().email().required().messages({
-            'any.required': 'El email es obligatorio.',
-            'string.email': 'El email no es válido.',
-            'string.empty': 'El email es obligatorio.'
-        }),
+        'any.required': 'El email es obligatorio.',
+        'string.email': 'El email no es válido.',
+        'string.empty': 'El email es obligatorio.'
+    }),
     password: Joi.string().min(5).max(15).required(),
 }).validate(data);
 
@@ -48,26 +48,26 @@ exports.validateRegisterInput = (data) => Joi.object({
             'string.pattern.base': 'La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un símbolo.',
         }),
     firstName: Joi.string().alphanum().min(3).max(30).required().messages({
-            'any.required': 'El nombre es obligatorio.'
-        }),
+        'any.required': 'El nombre es obligatorio.'
+    }),
     lastName: Joi.string().alphanum().min(3).max(30).required().messages({
-            'any.required': 'El apellido es obligatorio.'
-        }),
+        'any.required': 'El apellido es obligatorio.'
+    }),
     email: Joi.string().email().required().messages({
-            'any.required': 'El email es obligatorio.',
-            'string.email': 'El email no es válido.',
-            'string.empty': 'El email es obligatorio.'
-        }),
+        'any.required': 'El email es obligatorio.',
+        'string.email': 'El email no es válido.',
+        'string.empty': 'El email es obligatorio.'
+    }),
     birthDate: Joi.date().iso().optional(),
-    gender: Joi.string().valid('Masculino', 'Femenino','No Binario','Prefiero no decir').required()
+    gender: Joi.string().valid('Masculino', 'Femenino', 'No Binario', 'Prefiero no decir').required()
 }).validate(data);
 
 exports.validateLoginInput = (data) => Joi.object({
     email: Joi.string().email().required().messages({
-            'any.required': 'El email es obligatorio.',
-            'string.email': 'El email no es válido.',
-            'string.empty': 'El email es obligatorio.'
-        }),
+        'any.required': 'El email es obligatorio.',
+        'string.email': 'El email no es válido.',
+        'string.empty': 'El email es obligatorio.'
+    }),
     password: Joi.string().min(5).max(15).required(),
 }).validate(data);
 
@@ -80,7 +80,8 @@ exports.validateForgotPassword = (data) => Joi.object({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
         'string.empty': 'El email es obligatorio.'
-    })}).validate(data);
+    })
+}).validate(data);
 
 exports.validateResetPassword = (data) => Joi.object({
     tokenId: Joi.string().required(),
@@ -169,9 +170,11 @@ exports.validateDaniResponse = (data) => {
         fechaImportante: Joi.string().isoDate().allow(null).allow('null'),
         descripcionFechaImportante: Joi.string().allow(null),
         emocionPredominante: Joi.string()
-            .valid("alegría", "tristeza", "miedo", "ira", "sorpresa", "asco", "confianza", "anticipación")
-            .required(),
-        categoriaDeRiesgo: Joi.number().integer().min(1).max(5).required(),
+            .valid("alegría", "tristeza", "miedo", "ira", "sorpresa", "asco", "confianza", "anticipación", "neutral")
+            .allow(null)
+            .allow('null'),
+        categoriaDeRiesgo: Joi.number().integer().min(1).max(5).allow(null)
+            .allow('null'),
         tokenConsumidos: Joi.number().integer().min(0).required()
     });
 

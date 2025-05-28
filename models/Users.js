@@ -40,6 +40,14 @@ const Users = sequelize.define('Users', {
         allowNull: false,
         unique: false
     },
+    occupation: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    livesWith: {
+        type: DataTypes.STRING,
+        allowNull: true
+    }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt

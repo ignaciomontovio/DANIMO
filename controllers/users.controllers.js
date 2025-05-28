@@ -65,7 +65,7 @@ exports.forgotPassword = async (req, res) => {
         const result = await usersService.forgotPassword(req.body.email);
         res.status(200).json(result);
     } catch (err) {
-        console.error('❌ Google login error:', err);
+        console.error('❌ Error recuperando contraseña:', err);
         res.status(401).json({ error: err.message });
     }
 };
@@ -78,7 +78,7 @@ exports.resetPassword = async (req, res) => {
         const result = await usersService.resetPassword(tokenId, password);
         res.status(200).json(result);
     } catch (err) {
-        console.error('❌ Google login error:', err);
+        console.error('❌ Error reseteando contraseña:', err);
         res.status(401).json({ error: err.message });
     }
 };

@@ -1,5 +1,5 @@
 const usersService = require('../services/users.services');
-const { validateRegisterInput, validateLoginInput, validateGoogleToken, validateForgotPassword, validateResetPassword} = require('../utils/validators');
+const { validateRegisterInput, validateLoginInput, validateGoogleToken, validateForgotPassword, validateResetPassword, validateUpdateInput} = require('../utils/validators');
 const { signToken, verifyToken, signRefreshToken } = require('../utils/jwt');
 const {token} = require("mysql/lib/protocol/Auth"); // NO SE SI ESTA BIEN IMPORTAR ESTO, PERO NO ANDA SI NO LO HAGO
 
@@ -80,5 +80,20 @@ exports.resetPassword = async (req, res) => {
     } catch (err) {
         console.error('❌ Google login error:', err);
         res.status(401).json({ error: err.message });
+    }
+};
+
+exports.updateUserProfile = async (req, res) => {
+    const { error } = validateUpdateInput(req.body);
+    if (error) return res.status(400).json({ error: error.details[0].message });
+    try {
+        const userId = req.userId; // viene del middleware
+        const updates = req.body;
+
+        await usersService.updateUserProfile(userId, updates);
+        res.json({ message: 'Perfil actualizado correctamente' });
+    } catch (err) {
+        console.error('❌ Error al actualizar perfil:', err);
+        res.status(500).json({ error: 'No se pudo actualizar el perfil' });
     }
 };

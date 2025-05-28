@@ -88,6 +88,16 @@ exports.validateResetPassword = (data) => Joi.object({
     password: Joi.string().min(5).max(15).required(),
 }).validate(data);
 
+exports.validateUpdateInput = (data) => Joi.object({
+    firstName: Joi.string().optional(),
+    lastName: Joi.string().optional(),
+    occupation: Joi.string().optional(),
+    gender: Joi.string()
+        .valid('Masculino', 'Femenino', 'No Binario', 'Prefiero no decir')
+        .optional(),
+    birthDate: Joi.date().iso().optional(),
+    livesWith: Joi.string().optional()
+}).validate(data);
 // ----------------------Registers --------------------------
 // No sera necesario validarlo porque la fecha la obtenemos nosotros
 /*

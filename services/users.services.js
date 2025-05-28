@@ -110,3 +110,10 @@ exports.resetPassword = async ( tokenId, password ) => {
 
     return "Contraseña cambiada con exito";
 };
+
+exports.updateUserProfile = async (userId, updates) => {
+    const user = await Users.findByPk(userId);
+    if (!user) throw new Error('Usuario no encontrado');
+
+    await user.update(updates);
+}

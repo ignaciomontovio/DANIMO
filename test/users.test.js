@@ -1,6 +1,9 @@
 const request = require('supertest');
 const { expect } = require('chai');
 const app = require('../app');
+const { v4: uuidv4 } = require('uuid');
+const jwt = require('jsonwebtoken');
+const { Users } = require('../models');
 require('./setupTestDB'); // Importa el setup
 
 describe('Usuarios - Endpoints', () => {
@@ -199,4 +202,50 @@ describe('Usuarios - Endpoints', () => {
         expect(res.body.message).to.equal('Login completado con éxito');
     });
     });
+
+    describe('PATCH /update-profile', () => {
+    let token;
+    let userId;
+
+    before(async () => {
+        // Guardamos el console.log original
+        originalConsoleLog = console.log;
+        // Reemplazamos con una función vacía
+        console.log = () => {};
+        // Crear usuario manualmente
+        const user = await Users.create({
+            id: `U-${uuidv4()}`,
+            firstName: 'Perfil',
+            lastName: 'Editable',
+            email: 'perfil@example.com',
+            password: 'Passw0rd!',
+            gender: 'Femenino',
+            hasGoogleAccount: false,
+        });
+
+        userId = user.id;
+        token = jwt.sign({ userId }, process.env.JWT_SECRET);
+    });
+
+    after(async () => {
+    // Restauramos el console.log original
+    console.log = originalConsoleLog;
+    });
+
+    it('debería actualizar el campo occupation del perfil', async () => {
+        const res = await request(app)
+            .patch('/auth/update-profile')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                occupation: 'QA Tester',
+            });
+
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('Perfil actualizado correctamente');
+
+        // Verificamos que el cambio se haya hecho en la base de datos
+        const updatedUser = await Users.findByPk(userId);
+        expect(updatedUser.occupation).to.equal('QA Tester');
+    });
+});
 });

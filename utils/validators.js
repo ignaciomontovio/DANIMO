@@ -88,6 +88,10 @@ exports.validateResetPassword = (data) => Joi.object({
     password: Joi.string().min(5).max(15).required(),
 }).validate(data);
 
+exports.validateToken = (data) => Joi.object({
+    tokenId: Joi.string().required(),
+}).validate(data);
+
 exports.validateUpdateInput = (data) => Joi.object({
     firstName: Joi.string().optional(),
     lastName: Joi.string().optional(),

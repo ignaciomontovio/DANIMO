@@ -1,7 +1,22 @@
+
 const usersService = require('../services/users.services');
-const { validateRegisterInput, validateLoginInput, validateGoogleToken, validateForgotPassword, validateResetPassword, validateUpdateInput} = require('../utils/validators');
+const { validateRegisterInput, validateLoginInput, validateGoogleToken, validateForgotPassword, validateResetPassword, validateUpdateInput,
+    validateToken
+} = require('../utils/validators');
 const { signToken, verifyToken, signRefreshToken } = require('../utils/jwt');
 const {token} = require("mysql/lib/protocol/Auth"); // NO SE SI ESTA BIEN IMPORTAR ESTO, PERO NO ANDA SI NO LO HAGO
+
+exports.validateToken = async (req, res) => {
+    const { error } = validateToken(req.body);
+    if (error) return res.status(400).json({ error: error.details[0].message });
+    try {
+        const response = await usersService.validateToken(req.body);
+        res.json({ response });
+    } catch (err) {
+        console.error('❌ Invalid token:', err);
+        res.status(500).json({ error: err.message });
+    }
+}
 
 exports.registerUser = async (req, res) => {
     const { error } = validateRegisterInput(req.body);

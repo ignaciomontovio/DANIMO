@@ -9,4 +9,6 @@ router.get('/obtain', middleware, controller.getEmergencyContacts);
 
 router.patch('/update', middleware, controller.updateEmergencyContact);
 
+router.delete('/delete', middleware, controller.deleteEmergencyContact);
+
 module.exports = router;

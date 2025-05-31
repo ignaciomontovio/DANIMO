@@ -35,7 +35,18 @@ export async function updateEmergencyContact(userId, currentName, updates) {
         where: { userId, name: currentName }
     });
 
-    if (!contact) throw new Error('Usuario no encontrado');
+    if (!contact) throw new Error('Contacto no encontrado');
 
     await contact.update(updates);
+}
+
+export async function deleteEmergencyContact(name, userId) {
+    const contact = await EmergencyContacts.findOne({
+        where: { name, userId }
+    });
+    
+    if (!contact) {
+        throw new Error('Contacto no encontrado');
+    }
+    await contact.destroy();
 }

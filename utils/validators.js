@@ -180,6 +180,13 @@ exports.validateUpdateEmergencyContactInput = (data) => {
     return schema.validate(data);
 };
 
+exports.validateDeleteEmergencyContactInput = (data) => {
+    const schema = Joi.object({
+        name: Joi.string().min(1).max(100).required()
+    });
+    return schema.validate(data);
+};
+
 
 // ---------------------- Chat --------------------------
 

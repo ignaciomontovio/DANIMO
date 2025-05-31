@@ -1,4 +1,4 @@
-const { validateEmergencyContactInput, validateUpdateEmergencyContactInput } = require('../utils/validators');
+const { validateEmergencyContactInput, validateUpdateEmergencyContactInput, validateDeleteEmergencyContactInput } = require('../utils/validators');
 const service = require('../services/contacts.service');
 
 exports.createEmergencyContact = async (req, res) => {
@@ -42,5 +42,21 @@ exports.updateEmergencyContact = async (req, res) => {
     } catch (err) {
         console.error('❌ Error al actualizar contacto:', err);
         res.status(500).json({ error: 'No se pudo actualizar el contacto' });
+    }
+};
+
+exports.deleteEmergencyContact = async (req, res) => {
+    const { error } = validateDeleteEmergencyContactInput(req.body);
+    if (error) return res.status(400).json({ error: error.details[0].message });
+
+    const { name } = req.body;
+    const userId = req.userId;
+    
+    try {
+        await service.deleteEmergencyContact(name, userId);
+        res.json({ message: 'Contacto de emergencia eliminado correctamente' });
+    } catch (err) {
+        console.error('❌ Error al eliminar contacto de emergencia:', err);
+        res.status(500).json({ error: 'No se pudo eliminar el contacto de emergencia' });
     }
 };

@@ -29,3 +29,13 @@ export async function createEmergencyContact(name, phoneNumber ,userId ) {
         userId: userId
     });
 }
+
+export async function updateEmergencyContact(userId, currentName, updates) {
+    const contact = await EmergencyContacts.findOne({
+        where: { userId, name: currentName }
+    });
+
+    if (!contact) throw new Error('Usuario no encontrado');
+
+    await contact.update(updates);
+}

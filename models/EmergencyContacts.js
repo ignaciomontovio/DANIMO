@@ -4,8 +4,7 @@ const sequelize = require('../config/database').init()
 const EmergencyContacts = sequelize.define('EmergencyContacts', {
     name: {
         type: DataTypes.STRING,
-        allowNull: false,
-        primaryKey: true
+        allowNull: false
     },
     phoneNumber: {
         type: DataTypes.STRING,

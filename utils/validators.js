@@ -168,6 +168,18 @@ exports.validateEmergencyContactInput = (data) => {
     return schema.validate(data);
 };
 
+exports.validateUpdateEmergencyContactInput = (data) => {
+    const schema = Joi.object({
+        currentName: Joi.string().min(1).max(100).required()
+            .messages({ 'any.required': 'El nombre actual del contacto es obligatorio' }),
+
+        name: Joi.string().min(1).max(100),
+        phoneNumber: Joi.string().min(1).max(18),
+    }).or('name', 'phoneNumber') // al menos uno debe estar
+
+    return schema.validate(data);
+};
+
 
 // ---------------------- Chat --------------------------
 

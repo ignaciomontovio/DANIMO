@@ -1,6 +1,7 @@
 const { validateEmotionRegisterInput } = require('../utils/validators');
 const service = require('../services/emotions.service');
 const { findDailyRegisterByDateAndUser } = require('../services/registers.service');
+const { getAllTypeEmotions } = require('../services/emotions.service');
 
 exports.createEmotionRegister = async (req, res) => {
     const {error} = validateEmotionRegisterInput(req.body);
@@ -46,5 +47,15 @@ exports.getPredominantEmotion = async (req, res) => {
     } catch (err) {
         console.error('❌ Error en /predominant:', err);
         return res.status(500).json({ error: 'Error al obtener la emoción predominante' });
+    }
+};
+
+exports.getTypeEmotions = async (req, res) => {
+    try {
+        const emotions = await getAllTypeEmotions();
+        res.json(emotions);
+    } catch (err) {
+        console.error('❌ Error al obtener actividades:', err);
+        res.status(500).json({ error: 'Error al obtener actividades' });
     }
 };

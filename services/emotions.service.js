@@ -1,5 +1,6 @@
 import EmotionRegisters from '../models/EmotionRegisters.js';
 import { v4 as uuidv4 } from 'uuid';
+import TypeEmotions from '../models/TypeEmotions.js';
 
 export async function createEmotionRegister(emotion, intensity, isPredominant, dailyRegisterId) {
     if (isPredominant) {
@@ -34,4 +35,8 @@ export async function findPredominantEmotion(dailyRegisterId) {
             isPredominant: true
         }
     });
+}
+
+export async function getAllTypeEmotions() {
+    return await TypeEmotions.findAll();
 }

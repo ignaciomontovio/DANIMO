@@ -7,4 +7,6 @@ router.post('/entry', middleware, controller.createEmotionRegister)
 
 router.get('/predominant', middleware, controller.getPredominantEmotion);
 
+router.get('/types', controller.getTypeEmotions);
+
 module.exports = router;

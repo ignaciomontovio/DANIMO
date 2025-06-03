@@ -9,13 +9,9 @@ const EmotionRegisters = sequelize.define('EmotionRegisters', {
         allowNull: false,
         primaryKey: true
     },
-    emotion: {
-        type: DataTypes.ENUM('Alegria', 'Tristeza', 'Miedo', 'Ira', 'Sorpresa', 'Anticipacion', 'Confianza', 'Asco'),
+    date: {
+        type: DataTypes.DATE,
         allowNull: false,
-    },
-    intensity: {
-        type: DataTypes.INTEGER,
-        allowNull: false
     },
     isPredominant: {
         type: DataTypes.BOOLEAN,

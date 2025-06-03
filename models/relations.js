@@ -102,14 +102,17 @@ module.exports = (models) => {
 
     //Registro emocion 1:1 Tipo emocion
     EmotionRegisters.belongsTo(TypeEmotions, {
-    foreignKey: {
-        name: 'emotionId',
-        allowNull: false
-    },
-    as: 'emotion'
+        foreignKey: {
+            name: 'emotionName',
+            allowNull: false,
+        },
+        targetKey: 'name', // 👉 indicamos que hace match con la PK 'name'
+        as: 'emotion'
     });
+
     TypeEmotions.hasMany(EmotionRegisters, {
-        foreignKey: 'emotionId',
+        foreignKey: 'emotionName',
+        sourceKey: 'name',
         as: 'emotionRegisters'
     });
 
@@ -128,18 +131,17 @@ module.exports = (models) => {
 
     // EmotionRegisters N:M → TypeActivities
     EmotionRegisters.belongsToMany(TypeActivities, {
-        through: 'EmotionRegistersActivities',
-        as: 'activities',
+        through: 'EmotionRegister_Activities',
         foreignKey: 'emotionRegisterId',
-        otherKey: 'activityId',
-        timestamps: false
+        otherKey: 'activityName', // 👉 match con `TypeActivities.name`
+        as: 'activities'
     });
+
     TypeActivities.belongsToMany(EmotionRegisters, {
-        through: 'EmotionRegistersActivities',
-        as: 'emotionRegisters',
-        foreignKey: 'activityId',
+        through: 'EmotionRegister_Activities',
+        foreignKey: 'activityName', // 👉 este es el nuevo FK
         otherKey: 'emotionRegisterId',
-        timestamps: false
+        as: 'emotionRegisters'
     });
 
     // Usuario 1:N Registros de emocion

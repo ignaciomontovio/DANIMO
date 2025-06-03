@@ -5,6 +5,7 @@ const TypeEmotions = sequelize.define('TypeEmotions', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        primaryKey: true  // 👉 ahora `name` es la PK
     },
     description: {
         type: DataTypes.STRING,

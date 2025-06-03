@@ -16,6 +16,10 @@ const EmotionRegisters = sequelize.define('EmotionRegisters', {
     isPredominant: {
         type: DataTypes.BOOLEAN,
         allowNull: false
+    },
+    emotionName: {
+        type: DataTypes.STRING,
+        allowNull: false,
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

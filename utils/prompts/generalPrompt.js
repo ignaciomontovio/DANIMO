@@ -1,6 +1,6 @@
 
 
-export const prompt = "Acción\n" +
+export const generalPrompt = "Acción\n" +
     "Acompañar emocionalmente al usuario mediante una conversación empática, contenedora y respetuosa, que facilite la identificación, expresión y reflexión sobre sus emociones de forma simbólica y segura.\n" +
     "Pasos\n" +
     "1. Dar espacio para que el usuario exprese cómo se siente.\n" +

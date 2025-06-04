@@ -192,7 +192,7 @@ exports.validateDeleteEmergencyContactInput = (data) => {
 
 exports.validateChatInput = (data) => {
     const schema = Joi.object({
-        message: Joi.string().required(),
+        message: Joi.string().min(2).max(200).required(),
     });
     return schema.validate(data);
 }

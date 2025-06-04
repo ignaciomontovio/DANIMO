@@ -1,13 +1,19 @@
 const Conversations = require('../models/Conversations');
+const { validateMessageIntention } = require('./intentionChatMessage/chatIntentionRegex');
 const { validateDaniResponse } = require('../utils/validators');
+
 const axios = require('axios');
 const { v4: generateUUID } = require('uuid');
-const { prompt } = require('./prompt');
+const { generalPrompt } = require('../utils/prompts/generalPrompt');
 const { format } = require('date-fns');
 require('dotenv').config();
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const CHATGPT_API_KEY = process.env.CHATGPT_API_KEY;
+
+function validateMessageWithRegex(message) {
+    const containsLinks = validateMessageIntention.validate(message);
+}
 
 exports.chat = async ({ message, userId }) => {
     // Validamos que los parámetros de entrada sean correctos
@@ -16,6 +22,7 @@ exports.chat = async ({ message, userId }) => {
     }
 
     try {
+        const response = validateMessageWithRegex(message);
         // Obtén la conversación existente y genera el historial de mensajes
         const messages = await compileConversationHistory(userId, message);
 
@@ -34,7 +41,7 @@ exports.chat = async ({ message, userId }) => {
 
 // Función responsable de compilar el historial de conversación
 async function compileConversationHistory(userId, currentMessage) {
-    const messages = [{ role: 'system', content: prompt }];
+    const messages = [{ role: 'system', content: generalPrompt }];
 
     const conversations = await Conversations.findAll({ where: { userId } });
     if (conversations?.length > 0) {

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 exports.signToken = (payload) => {
     return jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: '15m', //ahora el token de ingreso expira en 15 minutos
+        expiresIn: '30d', //ahora el token de ingreso expira en 15 minutos
         algorithm: 'HS256'
     });
 };
@@ -10,7 +10,7 @@ exports.signToken = (payload) => {
 // 🔸 NUEVO: función para generar refresh token
 exports.signRefreshToken = (payload) => {
     return jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: '7d',
+        expiresIn: '30d',
         algorithm: 'HS256'
     });
 };

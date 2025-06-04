@@ -19,7 +19,7 @@ const sleep = require('../routes/sleeps.routers');
 const contact = require('../routes/contacts.routers');
 const chat = require('../routes/chat.routes');
 const quote = require('../routes/quotes.routers');
-
+const sms = require('../routes/sms.routers');
 //const apiRoutes = require('../routes/api.routes');
 //const chatRoutes = require('../routes/chat.routes');
 
@@ -35,5 +35,6 @@ app.use('/sleep', sleep)
 app.use('/contact', contact),
 app.use('/quote',quote),
 app.use('/dani', chat)
+app.use('/sms', sms)
 
 module.exports = app;

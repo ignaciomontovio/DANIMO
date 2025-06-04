@@ -223,3 +223,13 @@ exports.validateQuoteInput = (data) => {
     });
     return schema.validate(data);
 };
+
+// ----------------------SMS--------------------------
+
+exports.validateSmsSending = (data) => {
+    const schema = Joi.object({
+        to: Joi.string().min(1).max(18).required(),
+        message: Joi.string().required()
+    });
+    return schema.validate(data);
+}

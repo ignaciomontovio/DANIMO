@@ -31,7 +31,8 @@ export async function createEmotionRegister({ userId, emotion, isPredominant, ac
     if (photo && typeof photo === 'string') {
         const photoInstance = await Photos.create({
             id: `P-${uuidv4()}`,
-            image: photo
+            image: photo,
+            emotionName: emotion
         });
         photoId = photoInstance.id;
     }

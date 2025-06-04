@@ -154,6 +154,21 @@ module.exports = (models) => {
         as: "User",
     });
 
+    // TypeEmotion 1:N Photos
+    Photos.belongsTo(TypeEmotions, {
+    foreignKey: {
+        name: 'emotionName',
+        allowNull: false
+    },
+    targetKey: 'name', // 👈 si la PK de TypeEmotions es 'name'
+    as: 'emotion'
+    });
+    TypeEmotions.hasMany(Photos, {
+    foreignKey: 'emotionName',
+    sourceKey: 'name', // 👈 si 'name' es la PK o campo único
+    as: 'photos'
+    });    
+
     // Usuario 1:N Alteradores de ánimo
     Users.hasMany(MoodAlternators, {
         foreignKey: "userId",

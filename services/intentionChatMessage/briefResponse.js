@@ -2,9 +2,9 @@ function cleanText(str) {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-export function briefResponse(texto) {
+export function briefResponse(message) {
     const cleanText = cleanText(
-        texto.toLowerCase().replace(/[^\w\s]/g, '').trim()
+        message.toLowerCase().replace(/[^\w\s]/g, '').trim()
     );
 
     const briefExpressions = [

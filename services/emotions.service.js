@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import TypeEmotions from '../models/TypeEmotions.js';
 import { Op } from 'sequelize';
 import TypeActivities from '../models/TypeActivities.js';
+import Photos from '../models/Photos.js';
 
 export async function createEmotionRegister({ userId, emotion, isPredominant, activities, photo, date }) {
     const todayStart = new Date(date.setHours(0, 0, 0, 0));
@@ -24,12 +25,24 @@ export async function createEmotionRegister({ userId, emotion, isPredominant, ac
         }
     }
 
+    let photoId = null;
+
+    // ✅ Si viene la foto como string base64, la guardamos
+    if (photo && typeof photo === 'string') {
+        const photoInstance = await Photos.create({
+            id: `P-${uuidv4()}`,
+            image: photo,
+            emotionName: emotion
+        });
+        photoId = photoInstance.id;
+    }
+
     // 1. Creamos el registro sin las actividades todavía
     const register = await EmotionRegisters.create({
         id: `U-${uuidv4()}`,
         emotionName: emotion,
         isPredominant,
-        photoId: photo?.id || null,
+        photoId: photoId,
         date: new Date(),
         userId
     });

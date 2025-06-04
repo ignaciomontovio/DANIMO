@@ -90,6 +90,11 @@ exports.validateResetPassword = (data) => Joi.object({
 
 exports.validateToken = (data) => Joi.object({
     tokenId: Joi.string().required(),
+    email: Joi.string().email().required().messages({
+        'any.required': 'El email es obligatorio.',
+        'string.email': 'El email no es válido.',
+        'string.empty': 'El email es obligatorio.'
+    })
 }).validate(data);
 
 exports.validateUpdateInput = (data) => Joi.object({

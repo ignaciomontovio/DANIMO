@@ -13,11 +13,16 @@ const createError = require('http-errors');
 
 const crypto = require('crypto');
 
-exports.validateToken = async ({tokenId}) => {
+exports.validateToken = async ({tokenId, email}) => {
     const recoveryToken = await RecoveryTokens.findOne({
-        where: {tokenId: tokenId.toUpperCase()}
+        where: {tokenId: tokenId.toUpperCase()},
+        include: [{
+            model: Users, // Modelo de usuarios
+            as: 'User'   // Alias definido en la relación
+        }]
     })
-    if (recoveryToken === null) throw createError(404, "Token no encontrado");
+    if (recoveryToken === null) throw new createError(404, "Token no encontrado");
+    if (recoveryToken.User.email !== email) throw new Error("Token no pertenece al usuario o incorrecto.");
     if (recoveryToken.expirationDate < Date.now()) throw new Error("Token expirado");
     return "Token valido"
 }
@@ -87,7 +92,7 @@ exports.googleLogin = async (googleJWT) => {
 
 exports.forgotPassword = async (email) => { // ⬅️ pasamos también `res`
     const user = await findUserByEmail(email);
-    if (!user) return res.status(404).send("Usuario no encontrado");
+    if (!user) throw createError(404, "Usuario no encontrado");
     const token = generateRandomKey().toUpperCase()
     await RecoveryTokens.destroy({where: {userId: user.id}})
     await RecoveryTokens.create({

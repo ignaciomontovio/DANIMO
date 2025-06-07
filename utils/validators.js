@@ -144,9 +144,7 @@ exports.validateSleepRegisterInput = (data) => {
                 'date.base': `"wake" debe ser una fecha válida`,
                 'date.greater': `"wake" debe ser posterior a "bedtime"`,
                 'any.required': `"wake" es obligatorio`
-            }),
-        quality: Joi.number().integer().min(1).max(5).required()
-        //dailyRegisterId: Joi.string().pattern(/^U-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i).required()
+            })
     });
     return schema.validate(data);
 };

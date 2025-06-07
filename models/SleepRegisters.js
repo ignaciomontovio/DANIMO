@@ -13,7 +13,7 @@ const SleepRegisters = sequelize.define('SleepRegisters', {
         unique: false,
     },
     date: {
-        type: DataTypes.DATE, 
+        type: DataTypes.DATEONLY, 
         allowNull: false
     },
     userId: {

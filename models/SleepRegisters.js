@@ -12,14 +12,13 @@ const SleepRegisters = sequelize.define('SleepRegisters', {
         allowNull: true,
         unique: false,
     },
-    quality: {
-        type: DataTypes.INTEGER,
+    date: {
+        type: DataTypes.DATE, 
         allowNull: false
     },
-    dailyRegisterId: {
+    userId: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true // ✅ Esto impide múltiples registros con el mismo dailyRegisterId
+        allowNull: false
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

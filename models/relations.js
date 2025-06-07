@@ -169,6 +169,16 @@ module.exports = (models) => {
     as: 'photos'
     });    
 
+    //Usuario 1:N Registros de sueño
+    Users.hasMany(SleepRegisters, {
+        foreignKey: 'userId',
+        sourceKey: 'id'
+    });
+    SleepRegisters.belongsTo(Users, {
+        foreignKey: 'userId',
+        targetKey: 'id'
+    });
+
     // Usuario 1:N Alteradores de ánimo
     Users.hasMany(MoodAlternators, {
         foreignKey: "userId",

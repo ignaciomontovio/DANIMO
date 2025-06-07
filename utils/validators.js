@@ -236,3 +236,33 @@ exports.validateSmsSending = (data) => {
     });
     return schema.validate(data);
 }
+
+// ----------------------Medications--------------------------
+
+exports.validateMedicationInput = (data) => {
+    const schema = Joi.object({
+        startDate: Joi.date().required()
+            .messages({
+                'date.base': `"startDate" debe ser una fecha válida`,
+                'any.required': `"startDate" es obligatorio`
+            }),
+        endDate: Joi.date().greater(Joi.ref('startDate')).required()
+            .messages({
+                'date.base': `"endDate" debe ser una fecha válida`,
+                'date.greater': `"endDate" debe ser posterior a "startDate"`,
+                'any.required': `"endDate" es obligatorio`
+            }),
+        name: Joi.string().required()
+            .messages({
+                'string.base': `"name" debe ser un texto`,
+                'any.required': `"name" es obligatorio`
+            }),
+        dosage: Joi.string().required()
+            .messages({
+                'string.base': `"dosage" debe ser un texto`,
+                'any.required': `"dosage" es obligatorio`
+            })
+    });
+
+    return schema.validate(data);
+};

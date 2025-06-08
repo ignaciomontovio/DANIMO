@@ -2,7 +2,7 @@ const Conversations = require('../models/Conversations');
 const { validateDaniResponse } = require('../utils/validators');
 const axios = require('axios');
 const { v4: generateUUID } = require('uuid');
-const { prompt } = require('./prompt');
+const { generalPrompt } = require('../utils/prompts/generalPrompt');
 const { format } = require('date-fns');
 require('dotenv').config();
 
@@ -34,7 +34,7 @@ exports.chat = async ({ message, userId }) => {
 
 // Función responsable de compilar el historial de conversación
 async function compileConversationHistory(userId, currentMessage) {
-    const messages = [{ role: 'system', content: prompt }];
+    const messages = [{ role: 'system', content: generalPrompt }];
 
     const conversations = await Conversations.findAll({ where: { userId } });
     if (conversations?.length > 0) {

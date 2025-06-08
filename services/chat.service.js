@@ -1,5 +1,6 @@
 const Conversations = require('../models/Conversations');
 const { validateDaniResponse } = require('../utils/validators');
+const { validateMessageIntention } = require('./messageIntention/messageIntentionService');
 const axios = require('axios');
 const { v4: generateUUID } = require('uuid');
 const { generalPrompt } = require('../utils/prompts/generalPrompt');
@@ -16,6 +17,15 @@ exports.chat = async ({ message, userId }) => {
     }
 
     try {
+        const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference} = validateMessageIntention(message);
+        console.log(`--- Análisis de Intención del Mensaje ---
+        ¿Riesgo de suicidio?         : ${hasSuicideRisk}
+        ¿Contiene enlaces?           : ${containsLinks}
+        ¿Es una respuesta breve?     : ${isBriefResponse}
+        ¿Hace referencia a una fecha?: ${hasADateReference}
+        -----------------------------------------
+        `);
+
         // Obtén la conversación existente y genera el historial de mensajes
         const messages = await compileConversationHistory(userId, message);
 

@@ -1,4 +1,4 @@
-const { cleanMessage } = require('../../utils/textNormalize');
+import { cleanMessage } from '../../utils/textNormalize.js';
 
 export function containsDateReference(text) {
     const cleaned = cleanMessage(text);

@@ -1,4 +1,4 @@
-const {cleanMessage} = require('../../utils/textNormalize');
+import { cleanMessage } from '../../utils/textNormalize.js';
 
 export function suicideRiskDetection(texto) {
     const limpio = cleanMessage(texto)

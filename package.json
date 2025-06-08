@@ -4,7 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "cross-env NODE_ENV=test mocha \"test/**/*.test.js\"",
+    "test:users": "cross-env NODE_ENV=test mocha test/users.test.js",
+    "test:professionals": "cross-env NODE_ENV=test mocha test/professionals.test.js",
+    "test:dailyRegisters": "cross-env NODE_ENV=test mocha test/dailyRegisters.test.js",
+    "test:sleepRegisters": "cross-env NODE_ENV=test mocha test/sleepRegisters.test.js",
+    "test:activityRegisters": "cross-env NODE_ENV=test mocha test/activityRegisters.test.js",
+    "test:emotionRegisters": "cross-env NODE_ENV=test mocha test/emotionRegisters.test.js"
   },
   "keywords": [],
   "author": "",

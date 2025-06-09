@@ -1,16 +1,28 @@
 import { cleanMessage } from '../../utils/textNormalize.js';
 
-export function briefResponse(message) {
-    const cleanText = cleanMessage(message)
+export function briefResponse(text) {
+    const cleaned = cleanMessage(text);
+    const words = cleaned.split(/\s+/);
 
-    const briefExpressions = [
-        'ok', 'bien', 'todo bien', 'normal', 'no se', 'mas o menos',
-        'meh', 'igual que siempre', 'como siempre', 'da igual',
-        'ni bien ni mal', 'supongo', 'lo mismo', 'nada nuevo'
+    const briefWords = [
+        'ok', 'bien', 'normal', 'meh', 'supongo',
+        'da igual', 'lo mismo', 'igual', 'nada', 'nuevo', 'todo', 'si', 'no', 'se', 'mas', 'menos'
     ];
 
-    // Detecta si el mensaje completo coincide con alguna expresión escueta
-    return briefExpressions.some((frase) =>
-        cleanText === frase || cleanText.includes(frase)
-    ) &&  cleanText.length < 20;
+    const briefPhrases = [
+        ['todo', 'bien'],
+        ['mas', 'o', 'menos'],
+        ['igual', 'que', 'siempre'],
+        ['como', 'siempre'],
+        ['ni', 'bien', 'ni', 'mal'],
+        ['lo', 'mismo'],
+        ['nada', 'nuevo']
+    ];
+
+    const wordMatch = words.some(word => briefWords.includes(word));
+    const phraseMatch = briefPhrases.some(phrase =>
+        phrase.every(p => words.includes(p))
+    );
+
+    return (wordMatch || phraseMatch) && cleaned.length < 20;
 }

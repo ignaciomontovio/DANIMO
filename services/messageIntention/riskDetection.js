@@ -33,7 +33,7 @@ export function suicideRiskDetection(texto) {
         ['vida', 'no', 'sentido'],
         ['no', 'valgo', 'nada'],
         ['nadie', 'me', 'necesita'],
-        ['nadie', 'me', 'extrañaria'],
+        ['nadie', 'me', 'extranaria'],
         ['todo', 'mejor', 'sin', 'mi'],
         ['siento', 'estorbo'],
         ['soy', 'carga'],
@@ -41,7 +41,7 @@ export function suicideRiskDetection(texto) {
 
         // Conductas preparatorias o señales indirectas
         ['me', 'despido'],
-        ['no', 'estaré', 'mañana'],
+        ['no', 'estare', 'manana'],
         ['gracias', 'todo', 'adios'],
         ['no', 'voy', 'volver'],
         ['pienso', 'dejar', 'todo'],
@@ -52,7 +52,7 @@ export function suicideRiskDetection(texto) {
         ['ya', 'lo', 'decidi'],
 
         // Ambigüedad emocional profunda
-        ['siento', 'vacío'],
+        ['siento', 'vacio'],
         ['nada', 'importa'],
         ['sin', 'esperanza'],
         ['no', 'siento', 'nada'],

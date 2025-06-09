@@ -27,7 +27,7 @@ function init() {
                 {
                     host: process.env.DB_HOST,
                     port: process.env.DB_PORT,
-                    dialect: "mysql", //"postgres" o "mysql"
+                    dialect: "postgres", //"postgres" o "mysql"
                     logging: logger,
                 }
             );

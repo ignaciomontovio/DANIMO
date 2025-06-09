@@ -6,6 +6,10 @@ const EmergencyContacts = sequelize.define('EmergencyContacts', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    who: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     phoneNumber: {
         type: DataTypes.STRING,
         allowNull: false,

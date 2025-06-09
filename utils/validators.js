@@ -185,7 +185,7 @@ exports.validateUpdateEmergencyContactInput = (data) => {
 
 exports.validateDeleteEmergencyContactInput = (data) => {
     const schema = Joi.object({
-        name: Joi.string().min(1).max(100).required()
+    phoneNumber: Joi.string().required()
     });
     return schema.validate(data);
 };

@@ -47,14 +47,13 @@ exports.deleteEmergencyContact = async (req, res) => {
     const { error } = validateDeleteEmergencyContactInput(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
-    const { name } = req.body;
-    const userId = req.userId;
-    
+    const { phoneNumber } = req.body;
+
     try {
-        await service.deleteEmergencyContact(name, userId);
-        res.json({ message: 'Contacto de emergencia eliminado correctamente' });
+    await service.deleteEmergencyContact(phoneNumber, req.userId);
+    res.json({ message: 'Contacto de emergencia eliminado correctamente' });
     } catch (err) {
-        console.error('❌ Error al eliminar contacto de emergencia:', err);
-        res.status(500).json({ error: 'No se pudo eliminar el contacto de emergencia' });
+    console.error('❌ Error al eliminar contacto de emergencia:', err);
+    res.status(500).json({ error: err.message });
     }
 };

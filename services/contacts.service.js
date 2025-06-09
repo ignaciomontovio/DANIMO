@@ -35,13 +35,12 @@ export async function updateEmergencyContact(userId, currentPhoneNumber, updates
     await contact.update(updates);
 }
 
-export async function deleteEmergencyContact(name, userId) {
+export async function deleteEmergencyContact(phoneNumber, userId) {
     const contact = await EmergencyContacts.findOne({
-        where: { name, userId }
+    where: { phoneNumber, userId }
     });
-    
-    if (!contact) {
-        throw new Error('Contacto no encontrado');
-    }
+
+    if (!contact) throw new Error('Contacto no encontrado');
+
     await contact.destroy();
 }

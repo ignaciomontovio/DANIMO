@@ -28,19 +28,18 @@ exports.updateEmergencyContact = async (req, res) => {
     const { error } = validateUpdateEmergencyContactInput(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
-    const userId = req.userId;
-    const { currentName, name, phoneNumber } = req.body;
+    const { currentPhoneNumber, name, phoneNumber, who } = req.body;
+    const updates = {};
+    if (name) updates.name = name;
+    if (phoneNumber) updates.phoneNumber = phoneNumber;
+    if (who) updates.who = who;
 
     try {
-        const updates = {};
-        if (name) updates.name = name;
-        if (phoneNumber) updates.phoneNumber = phoneNumber;
-
-        await service.updateEmergencyContact(userId, currentName, updates);
-        res.json({ message: 'Contacto actualizado correctamente' });
+    await service.updateEmergencyContact(req.userId, currentPhoneNumber, updates);
+    res.json({ message: 'Contacto actualizado correctamente' });
     } catch (err) {
-        console.error('❌ Error al actualizar contacto:', err);
-        res.status(500).json({ error: 'No se pudo actualizar el contacto' });
+    console.error('❌ Error al actualizar contacto:', err);
+    res.status(500).json({ error: err.message });
     }
 };
 

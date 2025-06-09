@@ -174,12 +174,11 @@ exports.validateEmergencyContactInput = (data) => {
 
 exports.validateUpdateEmergencyContactInput = (data) => {
     const schema = Joi.object({
-        currentName: Joi.string().min(1).max(100).required()
-            .messages({ 'any.required': 'El nombre actual del contacto es obligatorio' }),
-
-        name: Joi.string().min(1).max(100),
-        phoneNumber: Joi.string().min(1).max(18),
-    }).or('name', 'phoneNumber') // al menos uno debe estar
+    currentPhoneNumber: Joi.string().required(),
+    name: Joi.string().optional(),
+    phoneNumber: Joi.string().optional(),
+    who: Joi.string().optional()
+  }).or('name', 'phoneNumber', 'who'); // 👈 Esto asegura que al menos uno esté presente
 
     return schema.validate(data);
 };

@@ -25,9 +25,9 @@ export async function createEmergencyContact(name, phoneNumber, who, userId) {
     });
 }
 
-export async function updateEmergencyContact(userId, currentName, updates) {
+export async function updateEmergencyContact(userId, currentPhoneNumber, updates) {
     const contact = await EmergencyContacts.findOne({
-        where: { userId, name: currentName }
+    where: { phoneNumber: currentPhoneNumber, userId }
     });
 
     if (!contact) throw new Error('Contacto no encontrado');

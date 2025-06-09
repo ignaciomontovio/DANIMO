@@ -1,4 +1,4 @@
-const CONTAINS_LINKS_REGEX = '/https?:\/\/[^\s/$.?#].[^\s]*/gi'
+const CONTAINS_LINKS_REGEX = /https?:\/\/[^\s/$.?#].[^\s]*/gi
 const {suicideRiskDetection} = require('./riskDetection')
 const {briefResponse} = require('./briefResponse')
 const {containsDateReference} = require('./containsDateReference');

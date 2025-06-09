@@ -10,6 +10,22 @@ require('dotenv').config();
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const CHATGPT_API_KEY = process.env.CHATGPT_API_KEY;
 
+function evaluateSuicideRisk() {
+
+}
+
+function linkDefaultResponse() {
+    return "No se aceptan enlaces en este chat."
+}
+
+function logBriefResponse() {
+
+}
+
+function evaluateDateReference() {
+
+}
+
 exports.chat = async ({ message, userId }) => {
     // Validamos que los parámetros de entrada sean correctos
     if (!message || !userId) {
@@ -25,7 +41,20 @@ exports.chat = async ({ message, userId }) => {
         ¿Hace referencia a una fecha?: ${hasADateReference}
         -----------------------------------------
         `);
-
+        switch (true) {
+            case hasSuicideRisk === true:
+                evaluateSuicideRisk()
+                break
+            case containsLinks === true:
+                return linkDefaultResponse()
+                break
+            case isBriefResponse === true:
+                logBriefResponse()
+                break
+            case hasADateReference === true:
+                evaluateDateReference()
+                break
+        }
         // Obtén la conversación existente y genera el historial de mensajes
         const messages = await compileConversationHistory(userId, message);
 

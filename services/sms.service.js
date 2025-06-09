@@ -15,5 +15,5 @@ export async function sendMessage(to, message) {
         to: to
     });
 
-    res.json({success: true, sid: sms.sid});
+    return {success: true, sid: sms.sid};
 }

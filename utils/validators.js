@@ -167,6 +167,7 @@ exports.validateEmergencyContactInput = (data) => {
     const schema = Joi.object({
         name: Joi.string().min(1).max(100).required(),
         phoneNumber: Joi.string().min(1).max(18).required(),
+        who: Joi.string().required()
     });
     return schema.validate(data);
 };

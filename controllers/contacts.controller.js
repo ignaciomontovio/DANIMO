@@ -2,18 +2,17 @@ const { validateEmergencyContactInput, validateUpdateEmergencyContactInput, vali
 const service = require('../services/contacts.service');
 
 exports.createEmergencyContact = async (req, res) => {
-    const {error} = validateEmergencyContactInput(req.body);
-    if (error) {
-        return res.status(400).json({error: error.details[0].message});
-    }
+    const { error } = validateEmergencyContactInput(req.body);
+    if (error) return res.status(400).json({ error: error.details[0].message });
+
     try {
-        await service.createEmergencyContact(req.body.name, req.body.phoneNumber, req.userId);
-        res.json({message: '¡Contacto de emergencia creado correctamente!'});
+    await service.createEmergencyContact(req.body.name, req.body.phoneNumber, req.body.who, req.userId);
+    res.json({ message: '¡Contacto de emergencia creado correctamente!' });
     } catch (err) {
-        console.error('❌ Error en /contact:', err);
-        return res.status(500).json({error: 'Error al crear contacto de emergencia'});
+    console.error('❌ Error en /contact:', err);
+    return res.status(500).json({ error: err.message });
     }
-}
+};
 
 exports.getEmergencyContacts = async (req, res) => {
     try {

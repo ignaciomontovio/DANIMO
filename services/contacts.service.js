@@ -1,32 +1,27 @@
 import EmergencyContacts from '../models/EmergencyContacts.js';
 
-const findEmergencyContactByNameAndUser = async (name, userId) => {
+const findEmergencyContactByPhoneAndUser = async (phoneNumber, userId) => {
     return await EmergencyContacts.findOne({
-        where: {
-            name,
-            userId,
-        }
+    where: { phoneNumber, userId }
     });
 };
 
 export async function getEmergencyContacts(userId) {
-    const contacts = await EmergencyContacts.findAll({
-        where: { userId },
-        attributes: ['name', 'phoneNumber']  
+    return await EmergencyContacts.findAll({
+    where: { userId },
+    attributes: ['name', 'phoneNumber', 'who']
     });
-
-    return contacts;
 }
 
-export async function createEmergencyContact(name, phoneNumber ,userId ) {
-    const emergencyContact = await findEmergencyContactByNameAndUser(name, userId)
-    console.log(emergencyContact)
-    if(emergencyContact) throw new Error('Ya hay un contacto de emergencia con este nombre.');
+export async function createEmergencyContact(name, phoneNumber, who, userId) {
+    const exists = await findEmergencyContactByPhoneAndUser(phoneNumber, userId);
+    if (exists) throw new Error('Ya hay un contacto de emergencia con este número.');
 
     await EmergencyContacts.create({
-        name: name,
-        phoneNumber: phoneNumber,
-        userId: userId
+    name,
+    phoneNumber,
+    who,
+    userId
     });
 }
 

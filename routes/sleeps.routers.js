@@ -5,4 +5,6 @@ const middleware = require('../middleware/middleware'); // importar el middlewar
 
 router.post('/entry', middleware, controller.createSleepRegister); // usarlo acá
 
+router.get('/obtain', middleware, controller.getAllSleepRegisters);
+
 module.exports = router;

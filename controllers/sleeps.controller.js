@@ -31,3 +31,15 @@ exports.createSleepRegister = async (req, res) => {
         return res.status(500).json({ error: 'Error al registrar sueño' });
     }
 };
+
+exports.getAllSleepRegisters = async (req, res) => {
+    const userId = req.userId;
+
+    try {
+        const registers = await service.getSleepRegistersByUser(userId);
+        res.json({ message: 'Registros de sueño obtenidos con éxito', data: registers });
+    } catch (err) {
+        console.error('❌ Error en /obtain (sueño):', err);
+        res.status(500).json({ error: 'Error al obtener los registros de sueño' });
+    }
+};

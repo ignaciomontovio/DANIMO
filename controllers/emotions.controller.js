@@ -48,3 +48,16 @@ exports.getTypeEmotions = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener emociones' });
     }
 };
+
+exports.getAllEmotionRegisters = async (req, res) => {
+    const userId = req.userId;
+
+    try {
+        const registers = await service.getEmotionRegistersByUser(userId);
+
+        res.json({ message: 'Registros de emociones obtenidos con éxito', data: registers });
+    } catch (err) {
+        console.error('❌ Error en /obtain:', err);
+        res.status(500).json({ error: 'Error al obtener los registros de emociones' });
+    }
+};

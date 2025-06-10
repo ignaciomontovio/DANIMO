@@ -82,3 +82,23 @@ export async function findPredominantEmotion({ userId, date }) {
 export async function getAllTypeEmotions() {
     return await TypeEmotions.findAll();
 }
+
+export async function getEmotionRegistersByUser(userId) {
+    return await EmotionRegisters.findAll({
+        where: { userId },
+        include: [
+            {
+                model: TypeActivities,
+                as: 'activities',
+                through: { attributes: [] }, // evita mostrar la tabla intermedia
+                attributes: ['name']         // solo devuelve el nombre de la actividad
+            },
+            {
+                model: Photos,
+                as: 'photo',
+                attributes: ['image', 'emotionName'] // opcional, si quieres incluir foto
+            }
+        ],
+        order: [['date', 'DESC']]
+    });
+}

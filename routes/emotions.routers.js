@@ -9,4 +9,6 @@ router.get('/predominant', middleware, controller.getPredominantEmotion);
 
 router.get('/types', controller.getTypeEmotions);
 
+router.get('/obtain', middleware, controller.getAllEmotionRegisters);
+
 module.exports = router;

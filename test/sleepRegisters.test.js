@@ -3,13 +3,12 @@ const { expect } = require('chai');
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const app = require('../app');
-const { Users, DailyRegisters, SleepRegisters } = require('../models');
+const { Users, SleepRegisters } = require('../models');
 require('./setupTestDB');
 
 describe('Sleep Register Endpoints', () => {
     let token;
     let userId;
-    let dailyRegisterId;
     let originalConsoleError;
     let originalConsoleLog;
 
@@ -34,15 +33,6 @@ describe('Sleep Register Endpoints', () => {
 
         userId = user.id;
         token = jwt.sign({ userId }, process.env.JWT_SECRET);
-
-        // Crear un registro diario para hoy
-        const today = new Date();
-        dailyRegisterId = `D-${uuidv4()}`;
-        await DailyRegisters.create({
-        id: dailyRegisterId,
-        date: today,
-        userId: userId,
-        });
     });
 
     after(() => {
@@ -57,8 +47,7 @@ describe('Sleep Register Endpoints', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({
             bedtime: "2025-05-26T22:30:00.000Z",
-            wake: "2025-05-27T06:30:00.000Z",
-            quality: 4
+            wake: "2025-05-27T06:30:00.000Z"
         });
 
     expect(res.status).to.equal(200);
@@ -70,8 +59,7 @@ it('no debería insertar si falta bedtime', async () => {
         .post('/sleep/entry')
         .set('Authorization', `Bearer ${token}`)
         .send({
-            wake: "2025-05-27T06:30:00.000Z",
-            quality: 4
+            wake: "2025-05-27T06:30:00.000Z"
         });
 
     expect(res.status).to.equal(400);
@@ -83,25 +71,11 @@ it('no debería insertar si falta wake', async () => {
         .post('/sleep/entry')
         .set('Authorization', `Bearer ${token}`)
         .send({
-            bedtime: "2025-05-26T22:30:00.000Z",
-            quality: 4
+            bedtime: "2025-05-26T22:30:00.000Z"
         });
 
     expect(res.status).to.equal(400);
     expect(res.body.error).to.include('"wake"');
-});
-
-it('no debería insertar si falta quality', async () => {
-    const res = await request(app)
-        .post('/sleep/entry')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-            bedtime: "2025-05-26T22:30:00.000Z",
-            wake: "2025-05-27T06:30:00.000Z"
-        });
-
-    expect(res.status).to.equal(400);
-    expect(res.body.error).to.include('"quality"');
 });
 
 it('no debería insertar si wake es anterior a bedtime', async () => {
@@ -110,51 +84,42 @@ it('no debería insertar si wake es anterior a bedtime', async () => {
         .set('Authorization', `Bearer ${token}`)
         .send({
             bedtime: "2025-05-26T23:30:00.000Z",
-            wake: "2025-05-26T20:30:00.000Z",
-            quality: 3
+            wake: "2025-05-26T20:30:00.000Z"
         });
 
     expect(res.status).to.equal(400);
     expect(res.body.error).to.include('"wake" debe ser posterior a "bedtime"');
 });
 
-it('no debería insertar si no hay registro diario para el día', async () => {
-    const anotherUser = await Users.create({
-        id: `U-${uuidv4()}`,
-        firstName: 'NoDaily',
-        lastName: 'User',
-        email: 'nodaily@example.com',
-        password: 'Test1234!',
-        gender: 'Femenino',
-        hasGoogleAccount: false,
-    });
+it('no debería permitir dos registros de sueño para el mismo día', async () => {
+    // Limpiar registros existentes del usuario antes de esta prueba
+    await SleepRegisters.destroy({ where: { userId } });
 
-    const anotherToken = jwt.sign({ userId: anotherUser.id }, process.env.JWT_SECRET);
+    const sleepData = {
+        bedtime: "2025-05-27T01:00:00.000Z", // madrugada del 27
+        wake: "2025-05-27T08:00:00.000Z"
+    };
 
-    const res = await request(app)
+    // Primer registro (debería funcionar)
+    const firstRes = await request(app)
         .post('/sleep/entry')
-        .set('Authorization', `Bearer ${anotherToken}`)
-        .send({
-            bedtime: "2025-05-26T22:30:00.000Z",
-            wake: "2025-05-27T06:30:00.000Z",
-            quality: 4
-        });
+        .set('Authorization', `Bearer ${token}`)
+        .send(sleepData);
 
-    expect(res.status).to.equal(404);
-    expect(res.body.error).to.equal('No hay un registro diario para hoy.');
-});
+    expect(firstRes.status).to.equal(200);
+    expect(firstRes.body.message).to.equal('¡Sueño registrado correctamente!');
 
-it('no debería insertar si ya existe un registro de sueño para hoy', async () => {
-    const res = await request(app)
+    // Segundo registro el mismo día (debería fallar)
+    const secondRes = await request(app)
         .post('/sleep/entry')
         .set('Authorization', `Bearer ${token}`)
         .send({
-            bedtime: "2025-05-26T23:00:00.000Z",
-            wake: "2025-05-27T07:00:00.000Z",
-            quality: 5
+            bedtime: "2025-05-27T22:00:00.000Z",
+            wake: "2025-05-28T06:00:00.000Z"
         });
 
-    expect(res.status).to.equal(500);
-    expect(res.body.error).to.equal('Error al registrar sueño');
+    expect(secondRes.status).to.equal(409);
+    expect(secondRes.body.error).to.equal('Ya existe un registro de sueño para hoy.');
 });
+
 });

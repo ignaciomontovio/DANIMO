@@ -9,11 +9,11 @@ export async function emergencyButton(userId) {
     const emergencyContacts = await EmergencyContacts.findAll({
         where: {userId},
     })
-    emergencyContacts.forEach((contact) => {
+    for (const contact of emergencyContacts) {
         const msj = "Hola " + contact.name + ", esto es un mensaje de emergencia debido " +
             "a que " + user.firstName + " " + user.lastName + " ha solicitado ayuda."
-        sendMessage(contact.phoneNumber, msj)
-    })
+        await sendMessage(contact.phoneNumber, msj)
+    }
 }
 
 const findEmergencyContactByPhoneAndUser = async (phoneNumber, userId) => {

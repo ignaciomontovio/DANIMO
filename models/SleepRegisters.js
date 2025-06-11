@@ -8,7 +8,7 @@ const SleepRegisters = sequelize.define('SleepRegisters', {
         primaryKey: true
     },
     hoursOfSleep: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: true,
         unique: false,
     },

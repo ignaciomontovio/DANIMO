@@ -13,3 +13,10 @@ export async function createSleepRegister({ userId, hoursOfSleep, date }) {
 export async function findSleepRegisterByUserAndDate(userId, date) {
     return await SleepRegisters.findOne({ where: { userId, date } });
 }
+
+export async function getSleepRegistersByUser(userId) {
+    return await SleepRegisters.findAll({
+        where: { userId },
+        order: [['date', 'DESC']]
+    });
+}

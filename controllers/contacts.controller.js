@@ -57,3 +57,13 @@ exports.deleteEmergencyContact = async (req, res) => {
     res.status(500).json({ error: err.message });
     }
 };
+
+exports.emergencyButton = async (req, res) => {
+    try {
+        await service.emergencyButton(req.userId);
+        res.json({message: 'Se ha informado la emergencia a los contactos de emergencia'});
+    } catch (err) {
+        console.error('❌ Error al informar a los contactos de emergencia:', err);
+        res.status(500).json({error: err.message});
+    }
+};

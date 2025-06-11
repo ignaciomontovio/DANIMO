@@ -11,4 +11,6 @@ router.patch('/update', middleware, controller.updateEmergencyContact);
 
 router.delete('/delete', middleware, controller.deleteEmergencyContact);
 
+router.post('/button', middleware, controller.emergencyButton);
+
 module.exports = router;

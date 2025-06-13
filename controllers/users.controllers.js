@@ -19,11 +19,11 @@ exports.validateToken = async (req, res) => {
 }
 
 exports.registerUser = async (req, res) => {
-    const { error } = validateRegisterInput(req.body);
+    const { error, value } = validateRegisterInput(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     try {
-        const message = await usersService.registerUser(req.body);
+        const message = await usersService.registerUser(value);
         res.json({ message });
     } catch (err) {
         console.error('❌ Error en /register:', err);
@@ -32,11 +32,11 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-    const { error } = validateLoginInput(req.body);
+    const { error, value } = validateLoginInput(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     try {
-        const token = await usersService.loginUser(req.body, res); // ⬅️ pasamos `res`
+        const token = await usersService.loginUser(value, res); // ⬅️ pasamos `res`
         res.status(200).json({ message: 'Login completado con éxito', token });
     } catch (err) {
         res.status(400).json({ error: err.message });
@@ -73,11 +73,11 @@ exports.googleLogin = async (req, res) => {
 };
 
 exports.forgotPassword = async (req, res) => {
-    const { error } = validateForgotPassword(req.body);
+    const { error, value } = validateForgotPassword(req.body);
     if (error) return res.status(400).json({ error: 'Email invalido' });
 
     try {
-        const result = await usersService.forgotPassword(req.body.email);
+        const result = await usersService.forgotPassword(value.email);
         res.status(200).json(result);
     } catch (err) {
         console.error('❌ Error recuperando contraseña:', err);
@@ -86,10 +86,10 @@ exports.forgotPassword = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-    const { error } = validateResetPassword(req.body);
+    const { error, value } = validateResetPassword(req.body);
     if (error) return res.status(400).json({ error: 'token o contrasena invalida' });
     try {
-        const {tokenId, password} = req.body
+        const {tokenId, password} = value
         const result = await usersService.resetPassword(tokenId, password);
         res.status(200).json(result);
     } catch (err) {

@@ -10,6 +10,10 @@ const TypeEmotions = sequelize.define('TypeEmotions', {
     description: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    number:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

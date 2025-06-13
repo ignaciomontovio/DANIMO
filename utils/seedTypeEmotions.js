@@ -1,14 +1,12 @@
+const { number } = require('joi');
 const TypeEmotion = require('../models/TypeEmotions'); // o la ruta correspondiente
 
 const emotions = [
-    { name: 'Alegria', description: 'Sensación de bienestar, placer o satisfacción.' },
-    { name: 'Tristeza', description: 'Estado de pena, pérdida o desánimo.' },
-    { name: 'Ira', description: 'Respuesta emocional de enojo o frustración intensa.' },
-    { name: 'Miedo', description: 'Emoción ante una amenaza o peligro percibido.' },
-    { name: 'Asco', description: 'Rechazo fuerte hacia algo desagradable o repulsivo.' },
-    { name: 'Sorpresa', description: 'Reacción ante algo inesperado o repentino.' },
-    { name: 'Confianza', description: 'Sentimiento de seguridad o certeza en alguien o algo.' },
-    { name: 'Anticipacion', description: 'Expectativa ante algo futuro, con inquietud o preocupación.' }
+    { name: 'Alegria', description: 'Sensación de bienestar, placer o satisfacción.', number: 1 },
+    { name: 'Ansiedad', description: 'Expectativa ante algo futuro, con inquietud o preocupación.', number: 2 },
+    { name: 'Enojo', description: 'Movimiento del animo que suscita ira contra alguien.', number: 3 },
+    { name: 'Miedo', description: 'Angustia ante una amenaza o peligro percibido.', number: 4 },
+    { name: 'Tristeza', description: 'Estado de pena, pérdida o desánimo.', number: 5 }    
 ];
 
 const seedTypeEmotions = async () => {

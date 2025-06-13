@@ -16,7 +16,7 @@ exports.validateRegisterInputProf = (data) => Joi.object({
     lastName: Joi.string().alphanum().min(3).max(30).required().messages({
         'any.required': 'El apellido es obligatorio.'
     }),
-    email: Joi.string().email().required().messages({
+    email: Joi.string().email().lowercase().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
         'string.empty': 'El email es obligatorio.'
@@ -27,12 +27,11 @@ exports.validateRegisterInputProf = (data) => Joi.object({
 }).validate(data);
 
 exports.validateLoginInputProf = (data) => Joi.object({
-    email: Joi.string().email().required().messages({
+    email: Joi.string().email().lowercase().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
         'string.empty': 'El email es obligatorio.'
-    }),
-    password: Joi.string().min(5).max(15).required(),
+    }), password: Joi.string().min(5).max(15).required(),
 }).validate(data);
 
 exports.validateGoogleTokenProf = (data) => Joi.object({
@@ -53,7 +52,7 @@ exports.validateRegisterInput = (data) => Joi.object({
     lastName: Joi.string().alphanum().min(3).max(30).required().messages({
         'any.required': 'El apellido es obligatorio.'
     }),
-    email: Joi.string().email().required().messages({
+    email: Joi.string().lowercase().email().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
         'string.empty': 'El email es obligatorio.'
@@ -63,12 +62,11 @@ exports.validateRegisterInput = (data) => Joi.object({
 }).validate(data);
 
 exports.validateLoginInput = (data) => Joi.object({
-    email: Joi.string().email().required().messages({
+    email: Joi.string().lowercase().email().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
         'string.empty': 'El email es obligatorio.'
-    }),
-    password: Joi.string().min(5).max(15).required(),
+    }), password: Joi.string().min(5).max(15).required(),
 }).validate(data);
 
 exports.validateGoogleToken = (data) => Joi.object({
@@ -76,7 +74,7 @@ exports.validateGoogleToken = (data) => Joi.object({
 }).validate(data);
 
 exports.validateForgotPassword = (data) => Joi.object({
-    email: Joi.string().email().required().messages({
+    email: Joi.string().email().lowercase().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
         'string.empty': 'El email es obligatorio.'
@@ -84,13 +82,11 @@ exports.validateForgotPassword = (data) => Joi.object({
 }).validate(data);
 
 exports.validateResetPassword = (data) => Joi.object({
-    tokenId: Joi.string().required(),
-    password: Joi.string().min(5).max(15).required(),
+    tokenId: Joi.string().required(), password: Joi.string().min(5).max(15).required(),
 }).validate(data);
 
 exports.validateToken = (data) => Joi.object({
-    tokenId: Joi.string().required(),
-    email: Joi.string().email().required().messages({
+    tokenId: Joi.string().required(), email: Joi.string().email().lowercase().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
         'string.empty': 'El email es obligatorio.'
@@ -107,17 +103,6 @@ exports.validateUpdateInput = (data) => Joi.object({
     birthDate: Joi.date().iso().optional(),
     livesWith: Joi.string().optional()
 }).validate(data);
-// ----------------------Registers --------------------------
-// No sera necesario validarlo porque la fecha la obtenemos nosotros
-/*
-exports.validateDailyRegisterInput = (data) => {
-    const schema = Joi.object({
-        date: Joi.required(),
-    });
-    return schema.validate(data);
-};
-*/
-
 // ----------------------Emotions --------------------------
 
 exports.validateEmotionRegisterInput = (data) => {
@@ -136,10 +121,8 @@ exports.validateSleepRegisterInput = (data) => {
     const schema = Joi.object({
         bedtime: Joi.date().required()
             .messages({
-                'date.base': `"bedtime" debe ser una fecha válida`,
-                'any.required': `"bedtime" es obligatorio`
-            }),
-        wake: Joi.date().greater(Joi.ref('bedtime')).required()
+                'date.base': `"bedtime" debe ser una fecha válida`, 'any.required': `"bedtime" es obligatorio`
+            }), wake: Joi.date().greater(Joi.ref('bedtime')).required()
             .messages({
                 'date.base': `"wake" debe ser una fecha válida`,
                 'date.greater': `"wake" debe ser posterior a "bedtime"`,
@@ -155,8 +138,7 @@ exports.validateActivityRegisterInput = (data) => {
     const schema = Joi.object({
         name: Joi.string().min(1).max(100).required(),
         category: Joi.string().valid('Trabajo', 'Estudio', 'Hobby', 'Hogar').required(),
-        date: Joi.date().iso().required(),
-        //dailyRegisterId: Joi.string().pattern(/^U-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i).required(),
+        date: Joi.date().iso().required(), //dailyRegisterId: Joi.string().pattern(/^U-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i).required(),
     });
     return schema.validate(data);
 };
@@ -174,18 +156,18 @@ exports.validateEmergencyContactInput = (data) => {
 
 exports.validateUpdateEmergencyContactInput = (data) => {
     const schema = Joi.object({
-    currentPhoneNumber: Joi.string().required(),
-    name: Joi.string().optional(),
-    phoneNumber: Joi.string().optional(),
-    who: Joi.string().optional()
-  }).or('name', 'phoneNumber', 'who'); // 👈 Esto asegura que al menos uno esté presente
+        currentPhoneNumber: Joi.string().required(),
+        name: Joi.string().optional(),
+        phoneNumber: Joi.string().optional(),
+        who: Joi.string().optional()
+    }).or('name', 'phoneNumber', 'who'); // 👈 Esto asegura que al menos uno esté presente
 
     return schema.validate(data);
 };
 
 exports.validateDeleteEmergencyContactInput = (data) => {
     const schema = Joi.object({
-    phoneNumber: Joi.string().required()
+        phoneNumber: Joi.string().required()
     });
     return schema.validate(data);
 };
@@ -204,8 +186,7 @@ exports.validateDaniResponse = (data) => {
     const schema = Joi.object({
         rtaParaUsuario: Joi.string().required(),
         fechaImportante: Joi.string().isoDate().allow(null).allow('null'),
-        descripcionFechaImportante: Joi.string().allow(null),
-        /*
+        descripcionFechaImportante: Joi.string().allow(null), /*
         emocionPredominante: Joi.string()
             .valid("alegría", "tristeza", "miedo", "ira", "sorpresa", "asco", "confianza", "anticipación", "neutral")
             .allow(null)
@@ -231,8 +212,7 @@ exports.validateQuoteInput = (data) => {
 
 exports.validateSmsSending = (data) => {
     const schema = Joi.object({
-        to: Joi.string().min(1).max(18).required(),
-        message: Joi.string().required()
+        to: Joi.string().min(1).max(18).required(), message: Joi.string().required()
     });
     return schema.validate(data);
 }
@@ -243,24 +223,18 @@ exports.validateMedicationInput = (data) => {
     const schema = Joi.object({
         startDate: Joi.date().required()
             .messages({
-                'date.base': `"startDate" debe ser una fecha válida`,
-                'any.required': `"startDate" es obligatorio`
-            }),
-        endDate: Joi.date().greater(Joi.ref('startDate')).required()
+                'date.base': `"startDate" debe ser una fecha válida`, 'any.required': `"startDate" es obligatorio`
+            }), endDate: Joi.date().greater(Joi.ref('startDate')).required()
             .messages({
                 'date.base': `"endDate" debe ser una fecha válida`,
                 'date.greater': `"endDate" debe ser posterior a "startDate"`,
                 'any.required': `"endDate" es obligatorio`
-            }),
-        name: Joi.string().required()
+            }), name: Joi.string().required()
             .messages({
-                'string.base': `"name" debe ser un texto`,
-                'any.required': `"name" es obligatorio`
-            }),
-        dosage: Joi.string().required()
+                'string.base': `"name" debe ser un texto`, 'any.required': `"name" es obligatorio`
+            }), dosage: Joi.string().required()
             .messages({
-                'string.base': `"dosage" debe ser un texto`,
-                'any.required': `"dosage" es obligatorio`
+                'string.base': `"dosage" debe ser un texto`, 'any.required': `"dosage" es obligatorio`
             })
     });
 

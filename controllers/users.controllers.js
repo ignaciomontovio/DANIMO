@@ -7,10 +7,10 @@ const { signToken, verifyToken, signRefreshToken } = require('../utils/jwt');
 const {token} = require("mysql/lib/protocol/Auth"); // NO SE SI ESTA BIEN IMPORTAR ESTO, PERO NO ANDA SI NO LO HAGO
 
 exports.validateToken = async (req, res) => {
-    const { error } = validateToken(req.body);
+    const { error, value } = validateToken(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
     try {
-        const response = await usersService.validateToken(req.body);
+        const response = await usersService.validateToken(value);
         res.json({ response });
     } catch (err) {
         console.error('❌ Invalid token:', err);

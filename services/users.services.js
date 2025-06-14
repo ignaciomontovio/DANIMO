@@ -57,15 +57,12 @@ exports.loginUser = async ({email, password}, res) => { // ⬅️ pasamos tambi�
     const isValid = await comparePassword(password, user.password);
     if (!isValid) throw new Error('Contraseña incorrecta.');
 
-    const accessToken = signToken({userId: user.id});
-    const refreshToken = signRefreshToken({userId: user.id});
-
+    return signToken({userId: user.id});
+    //const refreshToken = signRefreshToken({userId: user.id});
     // 🔸 NUEVO: guardamos refresh token en cookie
-    res.cookie('refreshToken', refreshToken, {
-        httpOnly: true, secure: true, sameSite: 'Strict', maxAge: 7 * 24 * 60 * 60 * 1000 // 7 días
-    });
-
-    return accessToken;
+    //res.cookie('refreshToken', refreshToken, {
+    //    httpOnly: true, secure: true, sameSite: 'Strict', maxAge: 7 * 24 * 60 * 60 * 1000 // 7 días
+    //});
 };
 
 exports.googleLogin = async (googleJWT) => {

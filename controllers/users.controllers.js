@@ -49,7 +49,8 @@ exports.loginUser = async (req, res) => {
     }
 };
 
-// 🔸 NUEVO controlador
+// DEJO COMENTADO LO DE REFRESH TOKEN POR EL MOMENTO
+/*
 exports.refreshToken = async (req, res) => {
     const refreshToken = req.cookies?.refreshToken;
     if (!refreshToken) {
@@ -66,6 +67,7 @@ exports.refreshToken = async (req, res) => {
         return res.status(401).json({ message: 'Refresh token inválido o expirado' });
     }
 };
+*/
 
 exports.googleLogin = async (req, res) => {
     const { error } = validateGoogleToken(req.body);

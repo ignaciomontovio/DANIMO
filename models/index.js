@@ -1,5 +1,4 @@
 const ActivityRegisters = require("./ActivityRegisters");
-const DailyRegisters = require("./DailyRegisters");
 const EmergencyContacts = require("./EmergencyContacts");
 const EmotionRegisters = require("./EmotionRegisters");
 const Medications = require("./Medications");
@@ -16,7 +15,6 @@ const Photos = require("./Photos");
 
 const models = {
     ActivityRegisters,
-    DailyRegisters,
     EmergencyContacts,
     EmotionRegisters,
     Medications,

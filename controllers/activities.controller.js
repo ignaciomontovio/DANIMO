@@ -1,6 +1,6 @@
 const { validateActivityRegisterInput } = require('../utils/validators');
 const service = require('../services/activities.service');
-const { findDailyRegisterByDateAndUser } = require('../services/registers.service');
+//const { findDailyRegisterByDateAndUser } = require('../services/registers.service');
 const { getAllTypeActivities } = require('../services/activities.service');
 
 exports.createActivityRegister = async (req, res) => {

@@ -4,7 +4,6 @@ module.exports = (models) => {
         Medications,
         EmergencyContacts,
         Professionals,
-        DailyRegisters,
         EmotionRegisters,
         SleepRegisters,
         ActivityRegisters,
@@ -58,45 +57,6 @@ module.exports = (models) => {
     EmotionRegisters.belongsTo(DailyRegisters, {
         foreignKey: "dailyRegisterId",
         as: "DailyRegister",
-    });
-    */
-
-    // Registro diario 1:1 Registro de sueño
-    //Comentado
-    /*
-    DailyRegisters.hasOne(SleepRegisters, {
-        foreignKey: "dailyRegisterId",
-        as: "SleepRegister",
-    });
-    SleepRegisters.belongsTo(DailyRegisters, {
-        foreignKey: "dailyRegisterId",
-        as: "DailyRegister",
-    });
-    */
-
-    // Registro diario 1:N Actividades
-    //Comentado
-    /*
-    DailyRegisters.hasMany(ActivityRegisters, {
-        foreignKey: "dailyRegisterId",
-        as: "ActivityRegister",
-    });
-    ActivityRegisters.belongsTo(DailyRegisters, {
-        foreignKey: "dailyRegisterId",
-        as: "DailyRegister",
-    });
-    */
-
-    // Usuario 1:N Registro diario
-    //Comentado
-    /*
-    Users.hasMany(DailyRegisters, {
-        foreignKey: "userId",
-        as: "DailyRegisters",
-    });
-    DailyRegisters.belongsTo(Users, {
-        foreignKey: "userId",
-        as: "User",
     });
     */
 

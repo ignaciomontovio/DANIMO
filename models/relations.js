@@ -6,7 +6,6 @@ module.exports = (models) => {
         Professionals,
         EmotionRegisters,
         SleepRegisters,
-        ActivityRegisters,
         MoodAlternators,
         RecoveryTokens,
         Conversations,

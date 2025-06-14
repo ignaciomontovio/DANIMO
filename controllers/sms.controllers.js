@@ -9,6 +9,7 @@ exports.sendMessage = async (req, res) => {
     try {
         const { to, message } = req.body;
         await service.sendMessage(to, message);
+        console.log('✅ SMS enviado con éxito:');
         res.json({ message: 'Sms enviado correctamente' });
     } catch (err) {
         console.error('❌ Error enviando sms:', err);

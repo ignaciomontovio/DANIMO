@@ -41,7 +41,7 @@ exports.loginUser = async (req, res) => {
 
     try {
         const token = await usersService.loginUser(value);
-        console.log("✅ Login completado con éxito para el email " + value.email)
+        console.log("✅ Login completado con éxito para el usuario con email " + value.email)
         res.status(200).json({ message: 'Login completado con éxito', token });
     } catch (err) {
         console.error("❌ Error en /login para email " + value.email + " Error: " + err.message)
@@ -75,7 +75,7 @@ exports.googleLogin = async (req, res) => {
 
     try {
         const result = await usersService.googleLogin(req.body.googleJWT);
-        console.log("✅ Token de google validado con éxito")
+        console.log("✅ Token de google validado con éxito para el usuario")
         res.status(200).json(result);
     } catch (err) {
         console.error('❌ Error en google login:', err);

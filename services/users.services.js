@@ -49,7 +49,7 @@ exports.registerUser = async ({firstName, lastName, email, password, birthDate, 
     return '¡Usuario registrado correctamente!';
 };
 
-exports.loginUser = async ({email, password}, res) => { // ⬅️ pasamos también `res`
+exports.loginUser = async ({email, password}) => {
     const user = await findUserByEmail(email);
     if (!user) throw new Error('Usuario inexistente.');
     if (user.hasGoogleAccount) throw new Error('Solo puede iniciar sesión con Google.');

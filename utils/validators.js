@@ -118,8 +118,14 @@ exports.validateEmotionRegisterInput = (data) => {
                 'number.max': 'El número de emoción no puede ser mayor a 5.',
                 'any.required': 'El número de emoción es obligatorio.'
             }),
-        isPredominant: Joi.boolean().required(),
-        activities: Joi.array().items(Joi.string()).required(),
+        isPredominant: Joi.boolean().required().messages({
+            'boolean.base': 'El campo "isPredominant" debe ser booleano.',
+            'any.required': 'El campo "isPredominant" es obligatorio.'
+        }),
+        activities: Joi.array().items(Joi.string()).required().messages({
+                'array.base': 'El campo "activities" debe ser una lista.',
+                'any.required': 'Debe indicar al menos una actividad.'
+            }),
         photo: Joi.string().optional()
     });
     return schema.validate(data);

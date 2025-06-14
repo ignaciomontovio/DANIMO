@@ -8,7 +8,10 @@ const {token} = require("mysql/lib/protocol/Auth"); // NO SE SI ESTA BIEN IMPORT
 
 exports.validateToken = async (req, res) => {
     const { error, value } = validateToken(req.body);
-    if (error) return res.status(400).json({ error: error.details[0].message });
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: error.details[0].message });
+    }
     try {
         const response = await usersService.validateToken(value);
         console.log("✅ El token " + value.tokenId + " es un token válido.")
@@ -22,7 +25,7 @@ exports.validateToken = async (req, res) => {
 exports.registerUser = async (req, res) => {
     const { error, value } = validateRegisterInput(req.body);
     if (error) {
-        console.error("Error in joi validation Error:" + error.details[0].message)
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
         return res.status(400).json({ error: error.details[0].message });
     }
     try {
@@ -37,7 +40,10 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
     const { error, value } = validateLoginInput(req.body);
-    if (error) return res.status(400).json({ error: error.details[0].message });
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: error.details[0].message });
+    }
 
     try {
         const token = await usersService.loginUser(value);
@@ -71,7 +77,10 @@ exports.refreshToken = async (req, res) => {
 
 exports.googleLogin = async (req, res) => {
     const { error } = validateGoogleToken(req.body);
-    if (error) return res.status(400).json({ error: 'Token inválido' });
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: 'Token inválido' });
+    }
 
     try {
         const result = await usersService.googleLogin(req.body.googleJWT);
@@ -85,7 +94,10 @@ exports.googleLogin = async (req, res) => {
 
 exports.forgotPassword = async (req, res) => {
     const { error, value } = validateForgotPassword(req.body);
-    if (error) return res.status(400).json({ error: 'Email invalido' });
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: 'Email invalido' });
+    }
 
     try {
         const result = await usersService.forgotPassword(value.email);
@@ -99,7 +111,10 @@ exports.forgotPassword = async (req, res) => {
 
 exports.resetPassword = async (req, res) => {
     const { error, value } = validateResetPassword(req.body);
-    if (error) return res.status(400).json({ error: 'token o contrasena invalida' });
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: 'token o contrasena invalida' });
+    }
     try {
         const {tokenId, password} = value
         const result = await usersService.resetPassword(tokenId, password);
@@ -113,7 +128,10 @@ exports.resetPassword = async (req, res) => {
 
 exports.updateUserProfile = async (req, res) => {
     const { error } = validateUpdateInput(req.body);
-    if (error) return res.status(400).json({ error: error.details[0].message });
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: error.details[0].message });
+    }
     try {
         const userId = req.userId; // viene del middleware
         const updates = req.body;

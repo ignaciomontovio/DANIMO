@@ -6,6 +6,7 @@ const service = require('../services/sleeps.service');
 exports.createSleepRegister = async (req, res) => {
     const { error } = validateSleepRegisterInput(req.body);
     if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
         return res.status(400).json({ error: error.details[0].message });
     }
 

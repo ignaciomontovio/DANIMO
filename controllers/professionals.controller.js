@@ -7,6 +7,7 @@ exports.registerProfessional = async (req, res) => {
 
     try {
         const result = await service.registerProfessional(value);
+        console.log("✅ Email " + value.email + " registrado correctamente")
         res.json({ message: result });
     } catch (err) {
         console.error('❌ Error en /register:', err);
@@ -20,6 +21,7 @@ exports.loginProfessional = async (req, res) => {
 
     try {
         const token = await service.loginProfessional(value);
+        console.log("✅ Login completado con éxito para el profesional con email " + value.email)
         res.status(200).json({ message: 'Login exitoso', token });
     } catch (err) {
         res.status(400).json({ error: err.message });
@@ -32,6 +34,7 @@ exports.googleLogin = async (req, res) => {
 
     try {
         const result = await service.googleLogin(req.body.googleJWT);
+        console.log("✅ Token de google validado con éxito para el profesional")
         res.status(200).json(result);
     } catch (err) {
         console.error('❌ Google login error:', err);

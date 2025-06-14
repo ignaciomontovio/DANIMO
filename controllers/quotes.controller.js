@@ -7,7 +7,8 @@ exports.getQuote = async (req, res) => {
         return res.status(400).json({error: error.details[0].message});
     }
     try { 
-        const quote = await service.getQuote(req.body.id); 
+        const quote = await service.getQuote(req.body.id);
+        console.log('✅ Frases cargadas existosamente ');
         res.json(quote);
     } catch (err) {
         console.error('❌ Error al obtener frase:', err.message);

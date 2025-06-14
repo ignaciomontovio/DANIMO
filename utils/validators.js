@@ -107,7 +107,17 @@ exports.validateUpdateInput = (data) => Joi.object({
 
 exports.validateEmotionRegisterInput = (data) => {
     const schema = Joi.object({
-        emotion: Joi.string().valid('Alegria', 'Tristeza', 'Miedo', 'Ira', 'Sorpresa', 'Anticipacion', 'Confianza', 'Asco').required(),
+        emotion: Joi.number()
+            .integer()
+            .min(1)
+            .max(5)
+            .required()
+            .messages({
+                'number.base': 'El campo emoción debe ser un número.',
+                'number.min': 'El número de emoción debe ser al menos 1.',
+                'number.max': 'El número de emoción no puede ser mayor a 5.',
+                'any.required': 'El número de emoción es obligatorio.'
+            }),
         isPredominant: Joi.boolean().required(),
         activities: Joi.array().items(Joi.string()).required(),
         photo: Joi.string().optional()

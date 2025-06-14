@@ -2,7 +2,6 @@
 
 const { validateSleepRegisterInput } = require('../utils/validators');
 const service = require('../services/sleeps.service');
-const { findDailyRegisterByDateAndUser } = require('../services/registers.service');
 
 exports.createSleepRegister = async (req, res) => {
     const { error } = validateSleepRegisterInput(req.body);

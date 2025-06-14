@@ -4,6 +4,7 @@ const service = require('../services/quotes.service');
 exports.getQuote = async (req, res) => {
     const {error} = validateQuoteInput(req.body);
     if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
         return res.status(400).json({error: error.details[0].message});
     }
     try { 

@@ -3,7 +3,10 @@ const { validateRegisterInputProf, validateLoginInputProf, validateGoogleTokenPr
 
 exports.registerProfessional = async (req, res) => {
     const { error, value } = validateRegisterInputProf(req.body);
-    if (error) return res.status(400).json({ error: error.details[0].message });
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: error.details[0].message });
+    }
 
     try {
         const result = await service.registerProfessional(value);
@@ -17,7 +20,10 @@ exports.registerProfessional = async (req, res) => {
 
 exports.loginProfessional = async (req, res) => {
     const { error, value } = validateLoginInputProf(req.body);
-    if (error) return res.status(400).json({ error: error.details[0].message });
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: error.details[0].message });
+    }
 
     try {
         const token = await service.loginProfessional(value);
@@ -30,8 +36,10 @@ exports.loginProfessional = async (req, res) => {
 
 exports.googleLogin = async (req, res) => {
     const { error } = validateGoogleTokenProf(req.body);
-    if (error) return res.status(400).json({ error: 'Token inválido' });
-
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: 'Token inválido' });
+    }
     try {
         const result = await service.googleLogin(req.body.googleJWT);
         console.log("✅ Token de google validado con éxito para el profesional")

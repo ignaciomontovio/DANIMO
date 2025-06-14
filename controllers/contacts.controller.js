@@ -8,6 +8,7 @@ const service = require('../services/contacts.service');
 exports.createEmergencyContact = async (req, res) => {
   const {error} = validateEmergencyContactInput(req.body);
   if (error) {
+    console.error("❌ Error in joi validation Error:" + error.details[0].message)
     return res.status(400).json({error: error.details[0].message});
   }
 
@@ -35,6 +36,7 @@ exports.getEmergencyContacts = async (req, res) => {
 exports.updateEmergencyContact = async (req, res) => {
   const {error} = validateUpdateEmergencyContactInput(req.body);
   if (error) {
+    console.error("❌ Error in joi validation Error:" + error.details[0].message)
     return res.status(400).json({error: error.details[0].message});
   }
 
@@ -63,6 +65,7 @@ exports.updateEmergencyContact = async (req, res) => {
 exports.deleteEmergencyContact = async (req, res) => {
   const {error} = validateDeleteEmergencyContactInput(req.body);
   if (error) {
+    console.error("❌ Error in joi validation Error:" + error.details[0].message)
     return res.status(400).json({error: error.details[0].message});
   }
 
@@ -80,6 +83,7 @@ exports.deleteEmergencyContact = async (req, res) => {
 exports.emergencyButton = async (req, res) => {
   try {
     await service.emergencyButton(req.userId);
+    console.log(`✅ Se ha informado la emergencia a los contactos de emergencia`);
     res.json(
         {message: 'Se ha informado la emergencia a los contactos de emergencia'});
   } catch (err) {

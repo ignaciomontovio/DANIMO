@@ -118,8 +118,14 @@ exports.validateEmotionRegisterInput = (data) => {
                 'number.max': 'El número de emoción no puede ser mayor a 5.',
                 'any.required': 'El número de emoción es obligatorio.'
             }),
-        isPredominant: Joi.boolean().required(),
-        activities: Joi.array().items(Joi.string()).required(),
+        isPredominant: Joi.boolean().required().messages({
+            'boolean.base': 'El campo "isPredominant" debe ser booleano.',
+            'any.required': 'El campo "isPredominant" es obligatorio.'
+        }),
+        activities: Joi.array().items(Joi.string()).required().messages({
+                'array.base': 'El campo "activities" debe ser una lista.',
+                'any.required': 'Debe indicar al menos una actividad.'
+            }),
         photo: Joi.string().optional()
     });
     return schema.validate(data);
@@ -129,12 +135,13 @@ exports.validateEmotionRegisterInput = (data) => {
 
 exports.validateSleepRegisterInput = (data) => {
     const schema = Joi.object({
-        bedtime: Joi.date().required()
+        bedtime: Joi.date().iso().required()
             .messages({
-                'date.base': `"bedtime" debe ser una fecha válida`, 'any.required': `"bedtime" es obligatorio`
-            }), wake: Joi.date().greater(Joi.ref('bedtime')).required()
+                'date.base': `"bedtime" debe ser una fecha ISO válida (ej. 2025-06-13T22:50:00.000Z)`, 
+                'any.required': `"bedtime" es obligatorio`
+            }), wake: Joi.date().iso().greater(Joi.ref('bedtime')).required()
             .messages({
-                'date.base': `"wake" debe ser una fecha válida`,
+                'date.base': `"wake" debe ser una fecha ISO válida (ej. 2025-06-14T07:00:00.000Z)`,
                 'date.greater': `"wake" debe ser posterior a "bedtime"`,
                 'any.required': `"wake" es obligatorio`
             })

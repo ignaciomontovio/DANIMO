@@ -164,9 +164,21 @@ exports.validateActivityRegisterInput = (data) => {
 
 exports.validateEmergencyContactInput = (data) => {
     const schema = Joi.object({
-        name: Joi.string().min(1).max(100).required(),
-        phoneNumber: Joi.string().min(1).max(18).required(),
-        who: Joi.string().required()
+        name: Joi.string().min(1).max(100).required().messages({
+                'string.base': 'El nombre debe ser un texto.',
+                'string.empty': 'El nombre no puede estar vacío.',
+                'any.required': 'El nombre es obligatorio.'}),
+        phoneNumber: Joi.string().min(1).max(18).required().messages({
+                'string.base': 'El número de teléfono debe ser un texto.',
+                'string.empty': 'El número de teléfono no puede estar vacío.',
+                'string.max': 'El número de teléfono no puede superar los 18 caracteres.',
+                'any.required': 'El número de teléfono es obligatorio.'
+            }),
+        who: Joi.string().required().messages({
+                'string.base': 'El campo "¿quién es?" debe ser un texto.',
+                'string.empty': 'El campo "¿quién es?" no puede estar vacío.',
+                'any.required': 'El campo "¿quién es?" es obligatorio.'
+            })
     });
     return schema.validate(data);
 };

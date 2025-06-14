@@ -21,6 +21,7 @@ exports.createSleepRegister = async (req, res) => {
     try {
         const existing = await service.findSleepRegisterByUserAndDate(userId, date);
         if (existing) {
+            console.warn(`⚠️ Registro de sueño ya existente para userId=${userId} en fecha=${date}`);
             return res.status(409).json({ error: 'Ya existe un registro de sueño para hoy.' });
         }
 
@@ -28,7 +29,7 @@ exports.createSleepRegister = async (req, res) => {
         console.log("✅ Sueño registrado correctamente para el usuario " + userId)
         res.json({ message: '¡Sueño registrado correctamente!' });
     } catch (err) {
-        console.error('❌ Error al registrar sueño:', err);
+        console.error('❌ Error en createSleepRegister:', err);
         return res.status(500).json({ error: 'Error al registrar sueño' });
     }
 };

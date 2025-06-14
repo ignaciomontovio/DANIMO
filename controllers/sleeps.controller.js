@@ -24,6 +24,7 @@ exports.createSleepRegister = async (req, res) => {
         }
 
         await service.createSleepRegister({ userId, hoursOfSleep, date });
+        console.log("✅ Sueño registrado correctamente para el usuario " + userId)
         res.json({ message: '¡Sueño registrado correctamente!' });
     } catch (err) {
         console.error('❌ Error al registrar sueño:', err);
@@ -33,9 +34,9 @@ exports.createSleepRegister = async (req, res) => {
 
 exports.getAllSleepRegisters = async (req, res) => {
     const userId = req.userId;
-
     try {
         const registers = await service.getSleepRegistersByUser(userId);
+        console.log("✅ Los registros de sueño han sido devueltos correctamente para el usuario " + userId)
         res.json({ message: 'Registros de sueño obtenidos con éxito', data: registers });
     } catch (err) {
         console.error('❌ Error en /obtain (sueño):', err);

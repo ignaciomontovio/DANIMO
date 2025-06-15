@@ -7,6 +7,7 @@ export async function createMedication({ userId, startDate, endDate, name, dosag
         startDate,
         endDate,
         name,
-        dosage
+        dosage,
+        active: true
     });
 }

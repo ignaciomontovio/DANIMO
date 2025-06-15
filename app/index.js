@@ -29,10 +29,10 @@ app.use('/professionalsAuth', professionalsRoutes);
 app.use('/activity', activity)
 app.use('/emotion', emotion)
 app.use('/sleep', sleep)
-app.use('/contact', contact),
-app.use('/quote',quote),
+app.use('/contact', contact)
+app.use('/quote',quote)
 app.use('/dani', chat)
-app.use('/sms', sms),
+app.use('/sms', sms)
 app.use('/medication',medication)
 
 export default app;

@@ -1,9 +1,9 @@
 // sleeps.controller.js
 
-const { validateSleepRegisterInput } = require('../utils/validators');
-const service = require('../services/sleeps.service');
+import { validateSleepRegisterInput } from '../utils/validators.js';
+import * as service from '../services/sleeps.service.js';
 
-exports.createSleepRegister = async (req, res) => {
+export const createSleepRegister = async (req, res) => {
     const { error } = validateSleepRegisterInput(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)
@@ -34,7 +34,7 @@ exports.createSleepRegister = async (req, res) => {
     }
 };
 
-exports.getAllSleepRegisters = async (req, res) => {
+export const getAllSleepRegisters = async (req, res) => {
     const userId = req.userId;
     try {
         const registers = await service.getSleepRegistersByUser(userId);

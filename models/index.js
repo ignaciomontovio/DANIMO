@@ -1,16 +1,17 @@
-const EmergencyContacts = require("./EmergencyContacts");
-const EmotionRegisters = require("./EmotionRegisters");
-const Medications = require("./Medications");
-const MoodAlternators = require("./MoodAlternators");
-const Professionals = require("./Professionals");
-const Quotes = require("./Quotes");
-const SleepRegisters = require("./SleepRegisters");
-const Users = require("./Users");
-const RecoveryTokens = require("./RecoveryTokens");
-const TypeActivities = require("./TypeActivities");
-const TypeEmotions = require("./TypeEmotions");
-const Conversations = require("./Conversations");
-const Photos = require("./Photos");
+import EmergencyContacts from "./EmergencyContacts.js";
+import EmotionRegisters from "./EmotionRegisters.js";
+import Medications from "./Medications.js";
+import MoodAlternators from "./MoodAlternators.js";
+import Professionals from "./Professionals.js";
+import Quotes from "./Quotes.js";
+import SleepRegisters from "./SleepRegisters.js";
+import Users from "./Users.js";
+import RecoveryTokens from "./RecoveryTokens.js";
+import TypeActivities from "./TypeActivities.js";
+import TypeEmotions from "./TypeEmotions.js";
+import Conversations from "./Conversations.js";
+import Photos from "./Photos.js";
+import defineRelations from "./relations.js";
 
 const models = {
     EmergencyContacts,
@@ -28,7 +29,6 @@ const models = {
     Photos
 };
 
-// Relaciones entre modelos
-require("./relations")(models); // define relaciones
+defineRelations(models); // define relaciones
 
-module.exports = models;
+export default models;

@@ -1,10 +1,10 @@
-const request = require('supertest');
-const { expect } = require('chai');
-const app = require('../app');
-const { v4: uuidv4 } = require('uuid');
-const jwt = require('jsonwebtoken');
-const { Users } = require('../models');
-require('./setupTestDB'); // Importa el setup
+import request from 'supertest';
+import { expect } from 'chai';
+import app from '../app';
+import { v4 as uuidv4 } from 'uuid';
+import jwt from 'jsonwebtoken';
+import { Users } from '../models';
+import './setupTestDB'; // Importa el setup
 
 describe('Usuarios - Endpoints', () => {
     describe('POST /auth/register', () => {
@@ -209,7 +209,7 @@ describe('Usuarios - Endpoints', () => {
 
     before(async () => {
         // Guardamos el console.log original
-        originalConsoleLog = console.log;
+        //originalConsoleLog = console.log;
         // Reemplazamos con una función vacía
         console.log = () => {};
         // Crear usuario manualmente
@@ -247,5 +247,4 @@ describe('Usuarios - Endpoints', () => {
         const updatedUser = await Users.findByPk(userId);
         expect(updatedUser.occupation).to.equal('QA Tester');
     });
-});
-});
+})})

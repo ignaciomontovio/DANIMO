@@ -1,5 +1,4 @@
-const { number } = require('joi');
-const TypeEmotion = require('../models/TypeEmotions'); // o la ruta correspondiente
+import TypeEmotion from '../models/TypeEmotions.js';
 
 const emotions = [
     { name: 'Alegria', description: 'Sensación de bienestar, placer o satisfacción.', number: 1 },
@@ -10,18 +9,17 @@ const emotions = [
 ];
 
 const seedTypeEmotions = async () => {
-try {
-    const count = await TypeEmotion.count(); 
-
-    if (count === 0) {
-    await TypeEmotion.bulkCreate(emotions);
-    console.log('Type emotions creada correctamente');
-    } else {
-    console.log('La tabla TypeEmotions ya contiene datos. No se insertó nada.');
+    try {
+        const count = await TypeEmotion.count();
+        if (count === 0) {
+            await TypeEmotion.bulkCreate(emotions);
+            console.log('Type emotions creada correctamente');
+        } else {
+            console.log('La tabla TypeEmotions ya contiene datos. No se insertó nada.');
+        }
+    } catch (err) {
+        console.error('Error al insertar emociones:', err);
     }
-} catch (err) {
-    console.error('Error al insertar emociones:', err);
-}
 };
 
-module.exports = seedTypeEmotions;
+export default seedTypeEmotions;

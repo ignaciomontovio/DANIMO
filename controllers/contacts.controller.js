@@ -1,11 +1,11 @@
-const {
+import {
   validateEmergencyContactInput,
   validateUpdateEmergencyContactInput,
   validateDeleteEmergencyContactInput
-} = require('../utils/validators');
-const service = require('../services/contacts.service');
+} from '../utils/validators.js';
+import * as service from '../services/contacts.service.js';
 
-exports.createEmergencyContact = async (req, res) => {
+export const createEmergencyContact = async (req, res) => {
   const { error } = validateEmergencyContactInput(req.body);
   if (error) {
     console.error("❌ Error in joi validation Error:" + error.details[0].message)
@@ -23,7 +23,7 @@ exports.createEmergencyContact = async (req, res) => {
   }
 };
 
-exports.getEmergencyContacts = async (req, res) => {
+export const getEmergencyContacts = async (req, res) => {
   try {
     const contacts = await service.getEmergencyContacts(req.userId);
     console.log(`✅ Contactos de emergencia obtenidos para el usuario ${req.userId}`);
@@ -35,7 +35,7 @@ exports.getEmergencyContacts = async (req, res) => {
   }
 };
 
-exports.updateEmergencyContact = async (req, res) => {
+export const updateEmergencyContact = async (req, res) => {
   const { error } = validateUpdateEmergencyContactInput(req.body);
   if (error) {
     console.error("❌ Error in joi validation Error:" + error.details[0].message)
@@ -65,7 +65,7 @@ exports.updateEmergencyContact = async (req, res) => {
   }
 };
 
-exports.deleteEmergencyContact = async (req, res) => {
+export const deleteEmergencyContact = async (req, res) => {
   const { error } = validateDeleteEmergencyContactInput(req.body);
   if (error) {
     console.error("❌ Error in joi validation Error:" + error.details[0].message)
@@ -84,7 +84,7 @@ exports.deleteEmergencyContact = async (req, res) => {
   }
 };
 
-exports.emergencyButton = async (req, res) => {
+export const emergencyButton = async (req, res) => {
   try {
     await service.emergencyButton(req.userId);
     console.log(`✅ Se ha informado la emergencia a los contactos de emergencia`);

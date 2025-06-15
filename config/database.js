@@ -1,4 +1,6 @@
-const { Sequelize } = require("sequelize");
+import dotenv from 'dotenv';
+dotenv.config();
+import { Sequelize } from "sequelize";
 
 let sequelizeInstance = null;
 
@@ -36,4 +38,4 @@ function init() {
     return sequelizeInstance;
 }
 
-module.exports = { init };
+export { init };

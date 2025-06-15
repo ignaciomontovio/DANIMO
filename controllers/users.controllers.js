@@ -1,12 +1,16 @@
-
-const usersService = require('../services/users.services');
-const { validateRegisterInput, validateLoginInput, validateGoogleToken, validateForgotPassword, validateResetPassword, validateUpdateInput,
+import * as usersService from '../services/users.services.js';
+import {
+    validateRegisterInput,
+    validateLoginInput,
+    validateGoogleToken,
+    validateForgotPassword,
+    validateResetPassword,
+    validateUpdateInput,
     validateToken
-} = require('../utils/validators');
-const { signToken, verifyToken, signRefreshToken } = require('../utils/jwt');
-const {token} = require("mysql/lib/protocol/Auth"); // NO SE SI ESTA BIEN IMPORTAR ESTO, PERO NO ANDA SI NO LO HAGO
+} from '../utils/validators.js';
+import { signToken, verifyToken, signRefreshToken } from '../utils/jwt.js';
 
-exports.validateToken = async (req, res) => {
+export const validateTokenController = async (req, res) => {
     const { error, value } = validateToken(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)
@@ -22,7 +26,7 @@ exports.validateToken = async (req, res) => {
     }
 }
 
-exports.registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
     const { error, value } = validateRegisterInput(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)
@@ -38,7 +42,7 @@ exports.registerUser = async (req, res) => {
     }
 };
 
-exports.loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
     const { error, value } = validateLoginInput(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)
@@ -57,7 +61,7 @@ exports.loginUser = async (req, res) => {
 
 // DEJO COMENTADO LO DE REFRESH TOKEN POR EL MOMENTO
 /*
-exports.refreshToken = async (req, res) => {
+export const refreshToken = async (req, res) => {
     const refreshToken = req.cookies?.refreshToken;
     if (!refreshToken) {
         console.error("Error en validacion de joi Error:" + error.details[0].message)
@@ -75,7 +79,7 @@ exports.refreshToken = async (req, res) => {
 };
 */
 
-exports.googleLogin = async (req, res) => {
+export const googleLogin = async (req, res) => {
     const { error } = validateGoogleToken(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)
@@ -92,7 +96,7 @@ exports.googleLogin = async (req, res) => {
     }
 };
 
-exports.forgotPassword = async (req, res) => {
+export const forgotPassword = async (req, res) => {
     const { error, value } = validateForgotPassword(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)
@@ -109,7 +113,7 @@ exports.forgotPassword = async (req, res) => {
     }
 };
 
-exports.resetPassword = async (req, res) => {
+export const resetPassword = async (req, res) => {
     const { error, value } = validateResetPassword(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)
@@ -126,7 +130,7 @@ exports.resetPassword = async (req, res) => {
     }
 };
 
-exports.updateUserProfile = async (req, res) => {
+export const updateUserProfile = async (req, res) => {
     const { error } = validateUpdateInput(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)

@@ -1,16 +1,17 @@
-require('dotenv').config();
-const app = require('./app');
-const { testConnection, syncDatabase } = require('./config/sync');
-const seedQuotesIfEmpty = require('./utils/seedQuotes');
-const seedTypeActivities = require('./utils/seedTypeActivities');
-const seedTypeEmotions = require('./utils/seedTypeEmotions');
+import dotenv from 'dotenv';
+dotenv.config();
+import app from './app/index.js';
+import { testConnection, syncDatabase } from './config/sync.js';
+import seedQuotesIfEmpty from './utils/seedQuotes.js';
+import seedTypeActivities from './utils/seedTypeActivities.js';
+import seedTypeEmotions from './utils/seedTypeEmotions.js';
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
     await testConnection();
-    //await syncDatabase({ force: true }); //Para que la base se cree desde 0
-    await syncDatabase(); // usa alter por defecto
+    await syncDatabase({ force: true }); //Para que la base se cree desde 0
+    //await syncDatabase(); // usa alter por defecto
     await seedQuotesIfEmpty();
     await seedTypeActivities();
     await seedTypeEmotions();

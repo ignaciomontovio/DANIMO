@@ -1,7 +1,7 @@
-const service = require('../services/professionals.service');
-const { validateRegisterInputProf, validateLoginInputProf, validateGoogleTokenProf } = require('../utils/validators');
+import * as service from '../services/professionals.service.js';
+import { validateRegisterInputProf, validateLoginInputProf, validateGoogleTokenProf } from '../utils/validators.js';
 
-exports.registerProfessional = async (req, res) => {
+export const registerProfessional = async (req, res) => {
     const { error, value } = validateRegisterInputProf(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)
@@ -18,7 +18,7 @@ exports.registerProfessional = async (req, res) => {
     }
 };
 
-exports.loginProfessional = async (req, res) => {
+export const loginProfessional = async (req, res) => {
     const { error, value } = validateLoginInputProf(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)
@@ -34,7 +34,7 @@ exports.loginProfessional = async (req, res) => {
     }
 };
 
-exports.googleLogin = async (req, res) => {
+export const googleLogin = async (req, res) => {
     const { error } = validateGoogleTokenProf(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)

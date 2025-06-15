@@ -1,10 +1,9 @@
-const { validateEmotionRegisterInput } = require('../utils/validators');
-const service = require('../services/emotions.service');
-const { getAllTypeEmotions } = require('../services/emotions.service');
-const { TypeEmotions } = require('../models');
+import { validateEmotionRegisterInput } from '../utils/validators.js';
+import * as service from '../services/emotions.service.js';
+import TypeEmotions from '../models/TypeEmotions.js';
 
 
-exports.createEmotionRegister = async (req, res) => {
+export const createEmotionRegister = async (req, res) => {
     const { error } = validateEmotionRegisterInput(req.body);
     if (error) {
         console.warn('⚠️ Validación fallida en createEmotionRegister:', error.details[0].message);
@@ -36,7 +35,7 @@ exports.createEmotionRegister = async (req, res) => {
     }
 };
 
-exports.getPredominantEmotion = async (req, res) => {
+export const getPredominantEmotion = async (req, res) => {
     const userId = req.userId;
     const date = new Date();
 
@@ -56,9 +55,9 @@ exports.getPredominantEmotion = async (req, res) => {
     }
 };
 
-exports.getTypeEmotions = async (req, res) => {
+export const getTypeEmotions = async (req, res) => {
     try {
-        const emotions = await getAllTypeEmotions();
+        const emotions = await service.getAllTypeEmotions();
         console.log(`✅ ${emotions.length} emociones obtenidas`);
         res.json(emotions);
     } catch (err) {
@@ -67,7 +66,7 @@ exports.getTypeEmotions = async (req, res) => {
     }
 };
 
-exports.getAllEmotionRegisters = async (req, res) => {
+export const getAllEmotionRegisters = async (req, res) => {
     const userId = req.userId;
 
     try {

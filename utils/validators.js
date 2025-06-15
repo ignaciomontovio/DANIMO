@@ -1,8 +1,8 @@
-const Joi = require('joi');
+import Joi from 'joi';
 
 // ------------------------ Professionals --------------------------
 
-exports.validateRegisterInputProf = (data) => Joi.object({
+export const validateRegisterInputProf = (data) => Joi.object({
     password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\={};:"|,.<>?]).{8,}$'))
         .required()
         .messages({
@@ -19,26 +19,26 @@ exports.validateRegisterInputProf = (data) => Joi.object({
     email: Joi.string().email().lowercase().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
-        'string.empty': 'El email es obligatorio.'
+        'string.empty': 'El email es obligatoria.'
     }),
     profession: Joi.string().valid('Psicologo', 'Psiquiatra').required(),
     birthDate: Joi.date().iso().optional(),
     gender: Joi.string().valid('Masculino', 'Femenino', 'No Binario', 'Prefiero no decir').required()
 }).validate(data);
 
-exports.validateLoginInputProf = (data) => Joi.object({
+export const validateLoginInputProf = (data) => Joi.object({
     email: Joi.string().email().lowercase().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
-        'string.empty': 'El email es obligatorio.'
+        'string.empty': 'El email es obligatoria.'
     }), password: Joi.string().min(5).max(15).required(),
 }).validate(data);
 
-exports.validateGoogleTokenProf = (data) => Joi.object({
+export const validateGoogleTokenProf = (data) => Joi.object({
     googleJWT: Joi.required()
 }).validate(data);
 // ------------------------ Users --------------------------------
-exports.validateRegisterInput = (data) => Joi.object({
+export const validateRegisterInput = (data) => Joi.object({
     password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\={};:"|,.<>?]).{8,}$'))
         .required()
         .messages({
@@ -55,45 +55,45 @@ exports.validateRegisterInput = (data) => Joi.object({
     email: Joi.string().lowercase().email().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
-        'string.empty': 'El email es obligatorio.'
+        'string.empty': 'El email es obligatoria.'
     }),
     birthDate: Joi.date().iso().optional(),
     gender: Joi.string().valid('Masculino', 'Femenino', 'No Binario', 'Prefiero no decir').required()
 }).validate(data);
 
-exports.validateLoginInput = (data) => Joi.object({
+export const validateLoginInput = (data) => Joi.object({
     email: Joi.string().lowercase().email().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
-        'string.empty': 'El email es obligatorio.'
+        'string.empty': 'El email es obligatoria.'
     }), password: Joi.string().min(5).max(15).required(),
 }).validate(data);
 
-exports.validateGoogleToken = (data) => Joi.object({
+export const validateGoogleToken = (data) => Joi.object({
     googleJWT: Joi.required()
 }).validate(data);
 
-exports.validateForgotPassword = (data) => Joi.object({
+export const validateForgotPassword = (data) => Joi.object({
     email: Joi.string().email().lowercase().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
-        'string.empty': 'El email es obligatorio.'
+        'string.empty': 'El email es obligatoria.'
     })
 }).validate(data);
 
-exports.validateResetPassword = (data) => Joi.object({
+export const validateResetPassword = (data) => Joi.object({
     tokenId: Joi.string().required(), password: Joi.string().min(5).max(15).required(),
 }).validate(data);
 
-exports.validateToken = (data) => Joi.object({
+export const validateToken = (data) => Joi.object({
     tokenId: Joi.string().required(), email: Joi.string().email().lowercase().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
-        'string.empty': 'El email es obligatorio.'
+        'string.empty': 'El email es obligatoria.'
     })
 }).validate(data);
 
-exports.validateUpdateInput = (data) => Joi.object({
+export const validateUpdateInput = (data) => Joi.object({
     firstName: Joi.string().optional(),
     lastName: Joi.string().optional(),
     occupation: Joi.string().optional(),
@@ -105,7 +105,7 @@ exports.validateUpdateInput = (data) => Joi.object({
 }).validate(data);
 // ----------------------Emotions --------------------------
 
-exports.validateEmotionRegisterInput = (data) => {
+export const validateEmotionRegisterInput = (data) => {
     const schema = Joi.object({
         emotion: Joi.number()
             .integer()
@@ -133,7 +133,7 @@ exports.validateEmotionRegisterInput = (data) => {
 
 // ----------------------Sleeps --------------------------
 
-exports.validateSleepRegisterInput = (data) => {
+export const validateSleepRegisterInput = (data) => {
     const schema = Joi.object({
         bedtime: Joi.date().iso().required()
             .messages({
@@ -151,7 +151,7 @@ exports.validateSleepRegisterInput = (data) => {
 
 // ----------------------Activities --------------------------
 
-exports.validateActivityRegisterInput = (data) => {
+export const validateActivityRegisterInput = (data) => {
     const schema = Joi.object({
         name: Joi.string().min(1).max(100).required(),
         category: Joi.string().valid('Trabajo', 'Estudio', 'Hobby', 'Hogar').required(),
@@ -162,7 +162,7 @@ exports.validateActivityRegisterInput = (data) => {
 
 // ----------------------Emergency Contacts --------------------------
 
-exports.validateEmergencyContactInput = (data) => {
+export const validateEmergencyContactInput = (data) => {
     const schema = Joi.object({
         name: Joi.string().min(1).max(100).required().messages({
                 'string.base': 'El nombre debe ser un texto.',
@@ -183,7 +183,7 @@ exports.validateEmergencyContactInput = (data) => {
     return schema.validate(data);
 };
 
-exports.validateUpdateEmergencyContactInput = (data) => {
+export const validateUpdateEmergencyContactInput = (data) => {
     const schema = Joi.object({
         currentPhoneNumber: Joi.string().required(),
         name: Joi.string().optional(),
@@ -194,7 +194,7 @@ exports.validateUpdateEmergencyContactInput = (data) => {
     return schema.validate(data);
 };
 
-exports.validateDeleteEmergencyContactInput = (data) => {
+export const validateDeleteEmergencyContactInput = (data) => {
     const schema = Joi.object({
         phoneNumber: Joi.string().required()
     });
@@ -204,14 +204,14 @@ exports.validateDeleteEmergencyContactInput = (data) => {
 
 // ---------------------- Chat --------------------------
 
-exports.validateChatInput = (data) => {
+export const validateChatInput = (data) => {
     const schema = Joi.object({
         message: Joi.string().required(),
     });
     return schema.validate(data);
 }
 
-exports.validateDaniResponse = (data) => {
+export const validateDaniResponse = (data) => {
     const schema = Joi.object({
         rtaParaUsuario: Joi.string().required(),
         fechaImportante: Joi.string().isoDate().allow(null).allow('null'),
@@ -229,7 +229,7 @@ exports.validateDaniResponse = (data) => {
     return schema.validate(data);
 };
 
-exports.validateDaniSuicideRiskResponse = (data) => {
+export const validateDaniSuicideRiskResponse = (data) => {
     const schema = Joi.object({
         suicideRiskDetected: Joi.string().lowercase().valid('true', 'false').required(),
     });
@@ -238,7 +238,7 @@ exports.validateDaniSuicideRiskResponse = (data) => {
 };
 // ----------------------Quotes--------------------------
 
-exports.validateQuoteInput = (data) => {
+export const validateQuoteInput = (data) => {
     const schema = Joi.object({
         id: Joi.number().integer().min(1).max(100).required()
     });
@@ -247,7 +247,7 @@ exports.validateQuoteInput = (data) => {
 
 // ----------------------SMS--------------------------
 
-exports.validateSmsSending = (data) => {
+export const validateSmsSending = (data) => {
     const schema = Joi.object({
         to: Joi.string().min(1).max(18).required(), message: Joi.string().required()
     });
@@ -256,7 +256,7 @@ exports.validateSmsSending = (data) => {
 
 // ----------------------Medications--------------------------
 
-exports.validateMedicationInput = (data) => {
+export const validateMedicationInput = (data) => {
     const schema = Joi.object({
         startDate: Joi.date().required()
             .messages({

@@ -1,19 +1,19 @@
-const Users = require('../models/Users');
-const RecoveryTokens = require('../models/RecoveryTokens');
-const {v4: uuidv4} = require('uuid');
-const {hashPassword, comparePassword} = require('../utils/password');
-const {signToken, signRefreshToken} = require('../utils/jwt'); // ⬅️ se importa también signRefreshToken
-const {verifyGoogleToken} = require('../utils/google');
-const sendEmail = require("../utils/sendEmail");
+import Users from '../models/Users.js';
+import RecoveryTokens from '../models/RecoveryTokens.js';
+import { v4 as uuidv4 } from 'uuid';
+import { hashPassword, comparePassword } from '../utils/password.js';
+import { signToken, signRefreshToken } from '../utils/jwt.js';
+import { verifyGoogleToken } from '../utils/google.js';
+import sendEmail from '../utils/sendEmail.js';
+import createError from 'http-errors';
+import crypto from 'crypto';
+
 const TWO_HOURS = 1000 * 60 * 60 * 2;
 const findUserByEmail = async (email) => {
     return await Users.findOne({where: {email}});
 };
-const createError = require('http-errors');
 
-const crypto = require('crypto');
-
-exports.validateToken = async ({tokenId, email}) => {
+export async function validateToken({tokenId, email}) {
     const recoveryToken = await RecoveryTokens.findOne({
         where: {tokenId: tokenId.toUpperCase()},
         include: [{
@@ -27,7 +27,7 @@ exports.validateToken = async ({tokenId, email}) => {
     return "Token valido"
 }
 
-exports.registerUser = async ({firstName, lastName, email, password, birthDate, gender}) => {
+export async function registerUser({firstName, lastName, email, password, birthDate, gender}) {
     const userExists = await findUserByEmail(email);
     if (userExists) throw new Error('Usuario ya existe.');
 
@@ -49,7 +49,7 @@ exports.registerUser = async ({firstName, lastName, email, password, birthDate, 
     return '¡Usuario registrado correctamente!';
 };
 
-exports.loginUser = async ({email, password}) => {
+export async function loginUser({email, password}) {
     const user = await findUserByEmail(email);
     if (!user) throw new Error('Usuario inexistente.');
     if (user.hasGoogleAccount) throw new Error('Solo puede iniciar sesión con Google.');
@@ -65,7 +65,7 @@ exports.loginUser = async ({email, password}) => {
     //});
 };
 
-exports.googleLogin = async (googleJWT) => {
+export async function googleLogin(googleJWT) {
     const userData = await verifyGoogleToken(googleJWT);
     const {firstName, lastName, email} = userData;
 
@@ -87,7 +87,7 @@ exports.googleLogin = async (googleJWT) => {
     return {message: 'Login con Google exitoso', token: signToken({user: user.user})};
 };
 
-exports.forgotPassword = async (email) => { // ⬅️ pasamos también `res`
+export async function forgotPassword(email) { // ⬅️ pasamos también `res`
     const user = await findUserByEmail(email);
     if (!user) throw createError(404, "Usuario no encontrado");
     const token = generateRandomKey().toUpperCase()
@@ -99,7 +99,7 @@ exports.forgotPassword = async (email) => { // ⬅️ pasamos también `res`
     return "Email enviado con éxito";
 };
 
-exports.resetPassword = async (tokenId, password) => {
+export async function resetPassword(tokenId, password) {
     const recoveryToken = await RecoveryTokens.findOne({
         where: {tokenId: tokenId.toUpperCase()}, include: [{
             model: Users, // Hace referencia al modelo de usuarios
@@ -114,7 +114,7 @@ exports.resetPassword = async (tokenId, password) => {
     return "Contraseña cambiada con exito";
 };
 
-exports.updateUserProfile = async (userId, updates) => {
+export async function updateUserProfile(userId, updates) {
     const user = await Users.findByPk(userId);
     if (!user) throw new Error('Usuario no encontrado');
 

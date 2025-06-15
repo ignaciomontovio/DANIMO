@@ -1,10 +1,10 @@
-const express = require('express');
+import express from 'express';
+import * as controller from '../controllers/sleeps.controller.js';
+import middleware from '../middleware/middleware.js';
+
 const router = express.Router();
-const controller = require('../controllers/sleeps.controller');
-const middleware = require('../middleware/middleware'); // importar el middleware
 
-router.post('/entry', middleware, controller.createSleepRegister); // usarlo acá
-
+router.post('/entry', middleware, controller.createSleepRegister);
 router.get('/obtain', middleware, controller.getAllSleepRegisters);
 
-module.exports = router;
+export default router;

@@ -1,7 +1,7 @@
-const request = require('supertest');
-const { expect } = require('chai');
-const app = require('../app');
-require('./setupTestDB'); // Importa el setup
+import request from 'supertest';
+import { expect } from 'chai';
+import app from '../app';
+import './setupTestDB';
 
 describe('Profesionales - Endpoints', () => {
     describe('POST /professionalsAuth/registerProf', () => {

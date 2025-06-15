@@ -1,10 +1,10 @@
-const request = require('supertest');
-const { expect } = require('chai');
-const { v4: uuidv4 } = require('uuid');
-const jwt = require('jsonwebtoken');
-const app = require('../app');
-const { Users, SleepRegisters } = require('../models');
-require('./setupTestDB');
+import request from 'supertest';
+import { expect } from 'chai';
+import { v4 as uuidv4 } from 'uuid';
+import jwt from 'jsonwebtoken';
+import app from '../app';
+import { Users, SleepRegisters } from '../models';
+import './setupTestDB';
 
 describe('Sleep Register Endpoints', () => {
     let token;

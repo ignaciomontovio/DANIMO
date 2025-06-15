@@ -1,7 +1,7 @@
-const { validateMedicationInput } = require('../utils/validators');
-const service = require('../services/medications.service');
+import { validateMedicationInput } from '../utils/validators.js';
+import * as service from '../services/medications.service.js';
 
-exports.createMedication = async (req, res) => {
+export const createMedication = async (req, res) => {
     const { error } = validateMedicationInput(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)

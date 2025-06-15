@@ -1,28 +1,28 @@
-const express = require('express');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
 /*
 Comento cookie parser por ahora
 */
-//const cookieParser = require('cookie-parser'); 
+// import cookieParser from 'cookie-parser';
 
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-//app.use(cookieParser()); // lo necesito para poder parsear cookies
+// app.use(cookieParser()); // lo necesito para poder parsear cookies
 
 // Rutas
-const usersRoutes = require('../routes/users.routes');
-const professionalsRoutes = require('../routes/professionals.routes');
-const activity = require('../routes/activities.routers');
-const emotion = require('../routes/emotions.routers');
-const sleep = require('../routes/sleeps.routers');
-const contact = require('../routes/contacts.routers');
-const chat = require('../routes/chat.routes');
-const quote = require('../routes/quotes.routers');
-const sms = require('../routes/sms.routers');
-const medication = require('../routes/medications.routers')
+import usersRoutes from '../routes/users.routes.js';
+import professionalsRoutes from '../routes/professionals.routes.js';
+import activity from '../routes/activities.routers.js';
+import emotion from '../routes/emotions.routers.js';
+import sleep from '../routes/sleeps.routers.js';
+import contact from '../routes/contacts.routers.js';
+import chat from '../routes/chat.routes.js';
+import quote from '../routes/quotes.routers.js';
+import sms from '../routes/sms.routers.js';
+import medication from '../routes/medications.routers.js';
 
 app.use('/auth', usersRoutes);
 app.use('/professionalsAuth', professionalsRoutes);
@@ -35,4 +35,4 @@ app.use('/dani', chat)
 app.use('/sms', sms),
 app.use('/medication',medication)
 
-module.exports = app;
+export default app;

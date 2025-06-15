@@ -1,5 +1,6 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database').init()
+import { DataTypes } from 'sequelize';
+import { init } from '../config/database.js';
+const sequelize = init();
 
 const isTestEnv = process.env.NODE_ENV === 'test';
 
@@ -26,4 +27,4 @@ const EmotionRegisters = sequelize.define('EmotionRegisters', {
     timestamps: isTestEnv // Que cree las timestamps en el entorno de test
 });
 
-module.exports = EmotionRegisters;
+export default EmotionRegisters;

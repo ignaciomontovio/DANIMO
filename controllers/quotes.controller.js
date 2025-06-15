@@ -1,7 +1,7 @@
-const { validateQuoteInput } = require('../utils/validators');
-const service = require('../services/quotes.service');
+import { validateQuoteInput } from '../utils/validators.js';
+import * as service from '../services/quotes.service.js';
 
-exports.getQuote = async (req, res) => {
+export const getQuote = async (req, res) => {
     const {error} = validateQuoteInput(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)

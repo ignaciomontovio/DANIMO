@@ -1,15 +1,16 @@
-const CONTAINS_LINKS_REGEX = /https?:\/\/[^\s/$.?#].[^\s]*/gi
-const {suicideRiskDetection} = require('./riskDetection')
-const {briefResponse} = require('./briefResponse')
-const {containsDateReference} = require('./containsDateReference');
+import { suicideRiskDetection } from './riskDetection.js';
+import { briefResponse } from './briefResponse.js';
+import { containsDateReference } from './containsDateReference.js';
 
-exports.validateMessageIntention = (message) => {
-    const hasSuicideRisk = suicideRiskDetection(message)
-    const containsLinks = CONTAINS_LINKS_REGEX.test(message)
-    const isBriefResponse = briefResponse(message)
-    const hasADateReference = containsDateReference(message)
+const CONTAINS_LINKS_REGEX = /https?:\/\/[^\s/$.?#].[^\s]*/gi;
 
-    return {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference}
+export function validateMessageIntention(message) {
+    const hasSuicideRisk = suicideRiskDetection(message);
+    const containsLinks = CONTAINS_LINKS_REGEX.test(message);
+    const isBriefResponse = briefResponse(message);
+    const hasADateReference = containsDateReference(message);
+
+    return { hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference };
 }
 
-export const containsLinksResponse = 'No se aceptan enlaces en este chat.'
+export const containsLinksResponse = 'No se aceptan enlaces en este chat.';

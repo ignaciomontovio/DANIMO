@@ -18,6 +18,11 @@ const Medications = sequelize.define('Medications', {
     dosage: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

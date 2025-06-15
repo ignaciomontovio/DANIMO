@@ -1,8 +1,7 @@
-const { validateChatInput } = require('../utils/validators');
-const { chat } = require('../services/chat.service');
+import { validateChatInput } from '../utils/validators.js';
+import { chat } from '../services/chat.service.js';
 
-
-exports.chat = async (req, res) => {
+export const chatController = async (req, res) => {
     const {error, value} = validateChatInput(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)

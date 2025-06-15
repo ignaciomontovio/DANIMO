@@ -1,7 +1,6 @@
-//const { findDailyRegisterByDateAndUser } = require('../services/registers.service');
-const { getAllTypeActivities } = require('../services/activities.service');
+import { getAllTypeActivities } from '../services/activities.service.js';
 
-exports.getTypeActivities = async (req, res) => {
+export const getTypeActivities = async (req, res) => {
     try {
         const activities = await getAllTypeActivities();
         res.json(activities);

@@ -11,3 +11,5 @@ exports.validateMessageIntention = (message) => {
 
     return {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference}
 }
+
+export const containsLinksResponse = 'No se aceptan enlaces en este chat.'

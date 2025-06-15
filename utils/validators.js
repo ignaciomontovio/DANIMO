@@ -228,6 +228,14 @@ exports.validateDaniResponse = (data) => {
 
     return schema.validate(data);
 };
+
+exports.validateDaniSuicideRiskResponse = (data) => {
+    const schema = Joi.object({
+        suicideRiskDetected: Joi.string().lowercase().valid('true', 'false').required(),
+    });
+
+    return schema.validate(data);
+};
 // ----------------------Quotes--------------------------
 
 exports.validateQuoteInput = (data) => {

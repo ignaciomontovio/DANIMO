@@ -277,3 +277,15 @@ export const validateMedicationInput = (data) => {
 
     return schema.validate(data);
 };
+
+export const validateMedicationNameQuery = (data) => {
+    const schema = Joi.object({
+        name: Joi.string().required().messages({
+            'string.base': '"name" debe ser un texto',
+            'string.empty': '"name" no puede estar vacío',
+            'any.required': '"name" es obligatorio'
+        })
+    });
+
+    return schema.validate(data);
+};

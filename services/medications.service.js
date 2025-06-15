@@ -22,3 +22,13 @@ export async function getActiveMedicationsByUser(userId) {
         order: [['startDate', 'DESC']] // Opcional: ordenarlos por fecha de inicio
     });
 }
+
+export async function getMedicationDetailByName(userId, name) {
+    return await Medications.findOne({
+        where: {
+            userId,
+            name,
+            active: true
+        }
+    });
+}

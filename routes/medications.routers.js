@@ -8,4 +8,6 @@ router.post('/entry', authMiddleware, controller.createMedication);
 
 router.get('/obtain', authMiddleware, controller.getActiveMedications);
 
+router.get('/detail', authMiddleware, controller.getMedicationDetail);
+
 export default router;

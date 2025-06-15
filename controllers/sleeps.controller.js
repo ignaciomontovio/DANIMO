@@ -6,27 +6,25 @@ import * as service from '../services/sleeps.service.js';
 export const createSleepRegister = async (req, res) => {
     const { error } = validateSleepRegisterInput(req.body);
     if (error) {
-        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        console.error("❌ Error en validación Joi:", error.details[0].message);
         return res.status(400).json({ error: error.details[0].message });
     }
 
     const { bedtime, wake } = req.body;
     const userId = req.userId;
 
-    const dateObj = new Date(); // fecha actual
-    const date = dateObj.toISOString().split('T')[0]; // solo YYYY-MM-DD
-
-    const hoursOfSleep = (new Date(wake) - new Date(bedtime)) / (1000 * 60 * 60);
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
     try {
-        const existing = await service.findSleepRegisterByUserAndDate(userId, date);
+        const existing = await service.findSleepRegisterByUserAndDate(userId, today);
         if (existing) {
-            console.warn(`⚠️ Registro de sueño ya existente para userId=${userId} en fecha=${date}`);
+            console.warn(`⚠️ Registro ya existe para userId=${userId} en fecha=${today}`);
             return res.status(409).json({ error: 'Ya existe un registro de sueño para hoy.' });
         }
 
-        await service.createSleepRegister({ userId, hoursOfSleep, date });
-        console.log("✅ Sueño registrado correctamente para el usuario " + userId)
+        await service.createSleepRegister({ userId, bedtime, wake });
+
+        console.log(`✅ Sueño registrado correctamente para userId=${userId}`);
         res.json({ message: '¡Sueño registrado correctamente!' });
     } catch (err) {
         console.error('❌ Error en createSleepRegister:', err);

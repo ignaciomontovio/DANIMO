@@ -1,4 +1,4 @@
-module.exports = (models) => {
+const defineRelations = (models) => {
     const {
         Users,
         Medications,
@@ -156,3 +156,4 @@ module.exports = (models) => {
         as: "User",
     });
 };
+export default defineRelations;

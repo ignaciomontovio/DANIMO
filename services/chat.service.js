@@ -1,9 +1,9 @@
-import Conversations from '../models/Conversations';
-import { validateMessageIntention, containsLinksResponse } from './messageIntention/messageIntentionService';
+import Conversations from '../models/Conversations.js';
+import { validateMessageIntention, containsLinksResponse } from './messageIntention/messageIntentionService.js';
 import { v4 as generateUUID } from 'uuid';
-import { generalPrompt } from '../utils/prompts/generalPrompt';
-import { suicideRiskDefaultResponse } from '../utils/prompts/suicideRiskPrompt';
-import { userResponse, suicideRiskResponse } from './openai.service';
+import { generalPrompt } from '../utils/prompts/generalPrompt.js';
+import { suicideRiskDefaultResponse } from '../utils/prompts/suicideRiskPrompt.js';
+import { userResponse, suicideRiskResponse } from './openai.service.js';
 import { format } from 'date-fns';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -20,12 +20,11 @@ function evaluateDateReference(message) {
 
 }
 
-exports.chat = async ({message, userId}) => {
+export async function chat({message, userId}) {
     // Validamos que los parámetros de entrada sean correctos
     if (!message || !userId) {
         throw new Error('El mensaje y el userId son obligatorios');
     }
-
     try {
         const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference} = validateMessageIntention(message);
         console.log(`--- Análisis de Intención del Mensaje ---
@@ -51,13 +50,10 @@ exports.chat = async ({message, userId}) => {
         }
         // Obtén la conversación existente y genera el historial de mensajes
         const messages = await compileConversationHistory(userId, message);
-
         // Envía el mensaje a la API de OpenAI y obtiene la respuesta
         const assistantReply = await userResponse(messages);
-
         // Guarda el mensaje del usuario y la respuesta del asistente en la base de datos
         await saveMessagesToDB(userId, message, assistantReply);
-
         return assistantReply;
     } catch (error) {
         console.error('Error en el flujo del chat:', error.message);

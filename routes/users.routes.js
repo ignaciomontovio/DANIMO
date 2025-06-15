@@ -9,7 +9,7 @@ router.post('/login', usersController.loginUser);
 router.post('/google', usersController.googleLogin);
 //router.post('/refresh', usersController.refreshToken);
 router.post('/forgot-password', usersController.forgotPassword);
-router.post('/validate-token', usersController.validateToken);
+router.post('/validate-token', usersController.validateTokenController);
 router.post('/reset-password', usersController.resetPassword);
 router.patch('/update-profile', middleware, usersController.updateUserProfile);
 

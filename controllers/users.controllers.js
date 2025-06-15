@@ -10,7 +10,7 @@ import {
 } from '../utils/validators.js';
 import { signToken, verifyToken, signRefreshToken } from '../utils/jwt.js';
 
-export const validateToken = async (req, res) => {
+export const validateTokenController = async (req, res) => {
     const { error, value } = validateToken(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)

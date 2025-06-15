@@ -1,4 +1,3 @@
-continua
 import { DataTypes } from 'sequelize';
 import { init } from '../config/database.js';
 const sequelize = init();

@@ -1,5 +1,5 @@
-import { init } from './database';
-import * as models from '../models';
+import { init } from './database.js';
+import * as models from '../models/index.js';
 
 async function syncDatabase(syncOpts = { alter: true }) {
     const sequelize = init();

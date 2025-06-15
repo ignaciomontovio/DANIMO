@@ -4,6 +4,6 @@ import middleware from '../middleware/middleware.js';
 
 const router = express.Router();
 
-router.post('/chat', middleware, chatController.chat);
+router.post('/chat', middleware, chatController.chatController);
 
 export default router;

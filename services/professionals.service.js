@@ -1,14 +1,14 @@
-import Professionals from '../models/Professionals';
-import { hashPassword, comparePassword } from '../utils/password';
-import { signToken } from '../utils/jwt';
-import { verifyGoogleToken } from '../utils/google';
+import Professionals from '../models/Professionals.js';
+import { hashPassword, comparePassword } from '../utils/password.js';
+import { signToken } from '../utils/jwt.js';
+import { verifyGoogleToken } from '../utils/google.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const findProfessionalByEmail = async (email) => {
     return await Professionals.findOne({ where: { email } });
 };
 
-exports.registerProfessional = async ({ firstName, lastName, email, password, profession, birthDate, gender }) => {
+export async function registerProfessional({ firstName, lastName, email, password, profession, birthDate, gender }) {
     const existing = await findProfessionalByEmail(email);
     if (existing) throw new Error('Profesional ya existe.');
 
@@ -27,9 +27,9 @@ exports.registerProfessional = async ({ firstName, lastName, email, password, pr
     });
 
     return '¡Profesional registrado correctamente!';
-};
+}
 
-exports.loginProfessional = async ({ email, password }) => {
+export async function loginProfessional({ email, password }) {
     const professional = await findProfessionalByEmail(email);
     if (!professional) throw new Error('Profesional inexistente.');
     if (professional.hasGoogleAccount) throw new Error('Solo puede iniciar sesión con Google.');
@@ -38,9 +38,9 @@ exports.loginProfessional = async ({ email, password }) => {
     if (!isValid) throw new Error('Contraseña incorrecta.');
 
     return signToken({ user: professional.user });
-};
+}
 
-exports.googleLogin = async (googleJWT) => {
+export async function googleLogin(googleJWT) {
     const userData = await verifyGoogleToken(googleJWT);
     const { email, firstName, lastName } = userData;
 

@@ -1,9 +1,9 @@
-import {validateDaniSuicideRiskResponse} from "../utils/validators";
-import {suicideRiskPrompt} from "../utils/prompts/suicideRiskPrompt";
-import {importantDatePrompt} from "../utils/prompts/importantDatePrompt";
+import {validateDaniSuicideRiskResponse} from "../utils/validators.js";
+import {suicideRiskPrompt} from "../utils/prompts/suicideRiskPrompt.js";
+import {importantDatePrompt} from "../utils/prompts/importantDatePrompt.js";
 
 import axios from "axios";
-import { validateDaniResponse } from "../utils/validators";
+import { validateDaniResponse } from "../utils/validators.js";
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const CHATGPT_API_KEY = process.env.CHATGPT_API_KEY;

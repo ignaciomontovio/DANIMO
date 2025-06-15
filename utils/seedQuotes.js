@@ -1,5 +1,5 @@
 // seedQuotes.js
-const Quote = require('../models/Quotes'); // o la ruta correspondiente
+import Quote from '../models/Quotes.js';
 
 const initialQuotes = [
     { id: 1, quote: 'El éxito es la suma de pequeños esfuerzos repetidos día tras día.', author: 'Robert Collier' },
@@ -104,18 +104,16 @@ const initialQuotes = [
     { id: 100, quote: 'Todo lo que siempre has querido está al otro lado del miedo.', author: 'George Addair' }
 ];
 
-async function seedQuotesIfEmpty() {
+export default async function seedQuotesIfEmpty() {
     try {
         const count = await Quote.count();
         if (count === 0) {
-        await Quote.bulkCreate(initialQuotes);
-        console.log('Frases insertadas correctamente.');
+            await Quote.bulkCreate(initialQuotes);
+            console.log('Frases insertadas correctamente');
         } else {
-        console.log('Ya existen frases, no se insertó nada.');
+            console.log('La tabla Quotes ya contiene datos. No se insertó nada.');
         }
-    } catch (error) {
-        console.error('Error al insertar frases:', error);
+    } catch (err) {
+        console.error('Error al insertar frases:', err);
     }
 }
-
-module.exports = seedQuotesIfEmpty;

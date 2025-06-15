@@ -1,16 +1,13 @@
-const express = require('express');
+import express from 'express';
+import * as controller from '../controllers/contacts.controller.js';
+import middleware from '../middleware/middleware.js';
+
 const router = express.Router();
-const controller = require('../controllers/contacts.controller');
-const middleware = require('../middleware/middleware');
 
 router.post('/create', middleware, controller.createEmergencyContact);
-
 router.get('/obtain', middleware, controller.getEmergencyContacts);
-
 router.patch('/update', middleware, controller.updateEmergencyContact);
-
 router.delete('/delete', middleware, controller.deleteEmergencyContact);
-
 router.post('/button', middleware, controller.emergencyButton);
 
-module.exports = router;
+export default router;

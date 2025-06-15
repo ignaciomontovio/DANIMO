@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import * as controller from '../controllers/quotes.controller.js';
+
 const router = express.Router();
-const controller = require('../controllers/quotes.controller');
 
-router.get('/obtain', controller.getQuote)
+router.get('/obtain', controller.getQuote);
 
-module.exports = router;
+export default router;

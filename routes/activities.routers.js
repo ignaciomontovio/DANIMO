@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import * as controller from '../controllers/activities.controller.js';
+
 const router = express.Router();
-const controller = require('../controllers/activities.controller');
 
 router.get('/types', controller.getTypeActivities);
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const TypeActivity = require('../models/TypeActivities'); // o la ruta correspondiente
+import TypeActivity from '../models/TypeActivities.js';
 
 const initialActivities = [
     // Hogar
@@ -40,19 +40,17 @@ const initialActivities = [
     { name: 'Responder', category: 'Trabajo' }
 ];
 
-const seedTypeActivities = async () => {
-try {
-    const count = await TypeActivity.count(); 
+export default async function seedTypeActivities() {
+    try {
+        const count = await TypeActivity.count();
 
-    if (count === 0) {
-    await TypeActivity.bulkCreate(initialActivities);
-    console.log('Actividades insertadas correctamente');
-    } else {
-    console.log('La tabla TypeActivities ya contiene datos. No se insertó nada.');
+        if (count === 0) {
+            await TypeActivity.bulkCreate(initialActivities);
+            console.log('Actividades insertadas correctamente');
+        } else {
+            console.log('La tabla TypeActivities ya contiene datos. No se insertó nada.');
+        }
+    } catch (err) {
+        console.error('Error al insertar actividades:', err);
     }
-} catch (err) {
-    console.error('Error al insertar actividades:', err);
 }
-};
-
-module.exports = seedTypeActivities;

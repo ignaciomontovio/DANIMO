@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import * as controller from '../controllers/medications.controller.js';
+import middleware from '../middleware/middleware.js';
+
 const router = express.Router();
-const controller = require('../controllers/medications.controller');
-const middleware = require('../middleware/middleware');
 
 router.post('/entry', middleware, controller.createMedication);
 
-module.exports = router;
+export default router;

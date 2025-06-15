@@ -1,9 +1,10 @@
-const express = require('express');
+import express from 'express';
+import * as controller from '../controllers/professionals.controller.js';
+
 const router = express.Router();
-const controller = require('../controllers/professionals.controller');
 
 router.post('/registerProf', controller.registerProfessional);
 router.post('/loginProf', controller.loginProfessional);
 router.post('/googleProf', controller.googleLogin);
 
-module.exports = router;
+export default router;

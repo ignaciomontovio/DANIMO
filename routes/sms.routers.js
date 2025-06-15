@@ -1,7 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const smsController = require('../controllers/sms.controllers');
-const middleware = require('../middleware/middleware');
+import express from 'express';
+import * as smsController from '../controllers/sms.controllers.js';
+import middleware from '../middleware/middleware.js';
 
-router.post('/send-message', middleware, smsController.sendMessage)
-module.exports = router;
+const router = express.Router();
+
+router.post('/send-message', middleware, smsController.sendMessage);
+
+export default router;

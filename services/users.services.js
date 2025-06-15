@@ -1,17 +1,17 @@
-const Users = require('../models/Users');
-const RecoveryTokens = require('../models/RecoveryTokens');
-const {v4: uuidv4} = require('uuid');
-const {hashPassword, comparePassword} = require('../utils/password');
-const {signToken, signRefreshToken} = require('../utils/jwt'); // ⬅️ se importa también signRefreshToken
-const {verifyGoogleToken} = require('../utils/google');
-const sendEmail = require("../utils/sendEmail");
+import Users from '../models/Users.js';
+import RecoveryTokens from '../models/RecoveryTokens.js';
+import { v4 as uuidv4 } from 'uuid';
+import { hashPassword, comparePassword } from '../utils/password.js';
+import { signToken, signRefreshToken } from '../utils/jwt.js';
+import { verifyGoogleToken } from '../utils/google.js';
+import sendEmail from '../utils/sendEmail.js';
+import createError from 'http-errors';
+import crypto from 'crypto';
+
 const TWO_HOURS = 1000 * 60 * 60 * 2;
 const findUserByEmail = async (email) => {
     return await Users.findOne({where: {email}});
 };
-const createError = require('http-errors');
-
-const crypto = require('crypto');
 
 exports.validateToken = async ({tokenId, email}) => {
     const recoveryToken = await RecoveryTokens.findOne({

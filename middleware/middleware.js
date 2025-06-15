@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { signRefreshToken } from "../utils/jwt.js";
 
-const authMiddleware = (req, res, next) => {
+export const authMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     // Verifica si viene el token en el header
@@ -23,5 +23,3 @@ const authMiddleware = (req, res, next) => {
         return res.status(401).json({ message: 'Token inválido o expirado' });
     }
 };
-
-export default authMiddleware;

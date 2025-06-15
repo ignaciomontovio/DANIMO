@@ -4,7 +4,7 @@ import app from './app/index.js';
 import { testConnection, syncDatabase } from './config/sync.js';
 import seedQuotesIfEmpty from './utils/seedQuotes.js';
 import seedTypeActivities from './utils/seedTypeActivities.js';
-import seedTypeEmotions from './utils/seedTypeEmotions.js';
+import {seedTypeEmotions} from './utils/seedTypeEmotions.js';
 
 const PORT = process.env.PORT || 3000;
 

@@ -1,6 +1,6 @@
 import express from 'express';
 import * as usersController from '../controllers/users.controllers.js';
-import middleware from '../middleware/middleware.js';
+import {authMiddleware} from '../middleware/middleware.js';
 
 const router = express.Router();
 
@@ -11,6 +11,6 @@ router.post('/google', usersController.googleLogin);
 router.post('/forgot-password', usersController.forgotPassword);
 router.post('/validate-token', usersController.validateTokenController);
 router.post('/reset-password', usersController.resetPassword);
-router.patch('/update-profile', middleware, usersController.updateUserProfile);
+router.patch('/update-profile', authMiddleware, usersController.updateUserProfile);
 
 export default router;

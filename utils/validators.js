@@ -55,7 +55,7 @@ export const validateRegisterInput = (data) => Joi.object({
     email: Joi.string().lowercase().email().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
-        'string.empty': 'El email es obligatoria.'
+        'string.empty': 'El email es obligatorio.'
     }),
     birthDate: Joi.date().iso().optional(),
     gender: Joi.string().valid('Masculino', 'Femenino', 'No Binario', 'Prefiero no decir').required()
@@ -65,7 +65,7 @@ export const validateLoginInput = (data) => Joi.object({
     email: Joi.string().lowercase().email().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
-        'string.empty': 'El email es obligatoria.'
+        'string.empty': 'El email es obligatorio.'
     }), password: Joi.string().min(5).max(15).required(),
 }).validate(data);
 
@@ -89,7 +89,7 @@ export const validateToken = (data) => Joi.object({
     tokenId: Joi.string().required(), email: Joi.string().email().lowercase().required().messages({
         'any.required': 'El email es obligatorio.',
         'string.email': 'El email no es válido.',
-        'string.empty': 'El email es obligatoria.'
+        'string.empty': 'El email es obligatorio.'
     })
 }).validate(data);
 

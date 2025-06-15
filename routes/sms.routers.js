@@ -1,9 +1,9 @@
 import express from 'express';
 import * as smsController from '../controllers/sms.controllers.js';
-import middleware from '../middleware/middleware.js';
+import {authMiddleware} from '../middleware/middleware.js';
 
 const router = express.Router();
 
-router.post('/send-message', middleware, smsController.sendMessage);
+router.post('/send-message', authMiddleware, smsController.sendMessage);
 
 export default router;

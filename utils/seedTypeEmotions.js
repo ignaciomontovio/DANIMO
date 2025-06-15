@@ -8,7 +8,7 @@ const emotions = [
     { name: 'Tristeza', description: 'Estado de pena, pérdida o desánimo.', number: 5 }    
 ];
 
-const seedTypeEmotions = async () => {
+export const seedTypeEmotions = async () => {
     try {
         const count = await TypeEmotion.count();
         if (count === 0) {
@@ -21,5 +21,3 @@ const seedTypeEmotions = async () => {
         console.error('Error al insertar emociones:', err);
     }
 };
-
-export default seedTypeEmotions;

@@ -2,7 +2,7 @@ import { spawn } from 'child_process';
 import path from 'path';
 
 // Función asincrónica que ejecuta el script Python
-async function detectEmotion(imagePath) {
+export async function detectEmotion(imagePath) {
     return new Promise((resolve, reject) => {
         //ruta del script de python que usa deepface para determinar emocion
         const scriptPath = path.resolve(__dirname, '../emotionRecognition/recognition.py');
@@ -51,7 +51,3 @@ async function detectEmotion(imagePath) {
         console.error("Error al detectar emoción:", error.message);
     }
 })();
-
-// Exportar la función para poder usarla desde otro lado
-//const { detectarEmocion } = require('./reconocimiento/reconocimiento'); 
-export { detectEmotion };

@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { hashPassword, comparePassword } from '../utils/password.js';
 import { signToken, signRefreshToken } from '../utils/jwt.js';
 import { verifyGoogleToken } from '../utils/google.js';
-import sendEmail from '../utils/sendEmail.js';
+import {sendEmail} from '../utils/sendEmail.js';
 import createError from 'http-errors';
 import crypto from 'crypto';
 

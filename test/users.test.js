@@ -247,4 +247,4 @@ describe('Usuarios - Endpoints', () => {
         const updatedUser = await Users.findByPk(userId);
         expect(updatedUser.occupation).to.equal('QA Tester');
     });
-})}
+})})

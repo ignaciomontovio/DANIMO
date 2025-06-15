@@ -1,7 +1,7 @@
-const { validateSmsSending } = require('../utils/validators');
-const service = require('../services/sms.service');
+import { validateSmsSending } from '../utils/validators.js';
+import * as service from '../services/sms.service.js';
 
-exports.sendMessage = async (req, res) => {
+export const sendMessage = async (req, res) => {
     const { error } = validateSmsSending(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)

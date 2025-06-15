@@ -1,5 +1,6 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database').init()
+import { DataTypes } from 'sequelize';
+import { init } from '../config/database.js';
+const sequelize = init()
 
 const Quotes = sequelize.define('Quotes', {
     id: {
@@ -20,4 +21,4 @@ const Quotes = sequelize.define('Quotes', {
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt
 });
 
-module.exports = Quotes;
+export default Quotes;

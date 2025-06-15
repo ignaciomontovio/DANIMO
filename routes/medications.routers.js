@@ -6,4 +6,6 @@ const router = express.Router();
 
 router.post('/entry', authMiddleware, controller.createMedication);
 
+router.get('/obtain', authMiddleware, controller.getActiveMedications);
+
 export default router;

@@ -26,3 +26,16 @@ export const createMedication = async (req, res) => {
         res.status(500).json({ error: 'Error al registrar medicación' });
     }
 };
+
+export const getActiveMedications = async (req, res) => {
+    const userId = req.userId;
+
+    try {
+        const medications = await service.getActiveMedicationsByUser(userId);
+        console.log(`✅ Medicaciones activas obtenidas para userId=${userId}`);
+        res.json({ message: 'Medicaciones activas obtenidas con éxito', data: medications });
+    } catch (err) {
+        console.error('❌ Error al obtener medicaciones activas:', err);
+        res.status(500).json({ error: 'Error al obtener medicaciones activas' });
+    }
+};

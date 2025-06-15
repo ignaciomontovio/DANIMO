@@ -209,7 +209,7 @@ describe('Usuarios - Endpoints', () => {
 
     before(async () => {
         // Guardamos el console.log original
-        originalConsoleLog = console.log;
+        //originalConsoleLog = console.log;
         // Reemplazamos con una función vacía
         console.log = () => {};
         // Crear usuario manualmente
@@ -247,4 +247,4 @@ describe('Usuarios - Endpoints', () => {
         const updatedUser = await Users.findByPk(userId);
         expect(updatedUser.occupation).to.equal('QA Tester');
     });
-});
+})}

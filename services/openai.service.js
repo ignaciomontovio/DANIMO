@@ -2,11 +2,11 @@ import {validateDaniSuicideRiskResponse} from "../utils/validators";
 import {suicideRiskPrompt} from "../utils/prompts/suicideRiskPrompt";
 import {importantDatePrompt} from "../utils/prompts/importantDatePrompt";
 
-const axios = require("axios");
-const {validateDaniResponse} = require("../utils/validators");
+import axios from "axios";
+import { validateDaniResponse } from "../utils/validators";
+
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const CHATGPT_API_KEY = process.env.CHATGPT_API_KEY;
-const { openai } = require('./openai.service');
 
 export async function sendMessageToOpenIA(messages) {
     const headers = {

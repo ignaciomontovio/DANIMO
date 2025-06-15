@@ -1,4 +1,4 @@
-const { init } = require('../config/database');
+import { init } from '../config/database';
 
 // Declara una variable sequelize a nivel del archivo para que pueda ser usada en los hooks before y after, 
 // y exportada si hace falta.
@@ -28,6 +28,4 @@ after(async function () {
 });
 
 // Exporta una función getSequelize() que permite acceder a la instancia de Sequelize desde otros archivos si se necesita
-module.exports = {
-    getSequelize: () => sequelize,
-};
+export const getSequelize = () => sequelize;

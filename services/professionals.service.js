@@ -1,9 +1,8 @@
-const Professionals = require('../models/Professionals');
-const { hashPassword, comparePassword } = require('../utils/password');
-const { signToken } = require('../utils/jwt');
-const { verifyGoogleToken } = require('../utils/google');
-const { v4: uuidv4 } = require('uuid');
-const { isAdult } = require('../utils/date');
+import Professionals from '../models/Professionals';
+import { hashPassword, comparePassword } from '../utils/password';
+import { signToken } from '../utils/jwt';
+import { verifyGoogleToken } from '../utils/google';
+import { v4 as uuidv4 } from 'uuid';
 
 const findProfessionalByEmail = async (email) => {
     return await Professionals.findOne({ where: { email } });

@@ -1,11 +1,12 @@
-const Conversations = require('../models/Conversations');
-const {validateMessageIntention, containsLinksResponse} = require('./messageIntention/messageIntentionService');
-const {v4: generateUUID} = require('uuid');
-const {generalPrompt} = require('../utils/prompts/generalPrompt');
-const {suicideRiskDefaultResponse} = require('../utils/prompts/suicideRiskPrompt')
-const {userResponse, suicideRiskResponse} = require('./openai.service');
-const {format} = require('date-fns')
-require('dotenv').config();
+import Conversations from '../models/Conversations';
+import { validateMessageIntention, containsLinksResponse } from './messageIntention/messageIntentionService';
+import { v4 as generateUUID } from 'uuid';
+import { generalPrompt } from '../utils/prompts/generalPrompt';
+import { suicideRiskDefaultResponse } from '../utils/prompts/suicideRiskPrompt';
+import { userResponse, suicideRiskResponse } from './openai.service';
+import { format } from 'date-fns';
+import dotenv from 'dotenv';
+dotenv.config();
 
 async function evaluateSuicideRisk(message) {
     return await suicideRiskResponse(message)

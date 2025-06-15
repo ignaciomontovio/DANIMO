@@ -1,5 +1,5 @@
-const { spawn } = require('child_process');
-const path = require('path');
+import { spawn } from 'child_process';
+import path from 'path';
 
 // Función asincrónica que ejecuta el script Python
 async function detectEmotion(imagePath) {
@@ -54,4 +54,4 @@ async function detectEmotion(imagePath) {
 
 // Exportar la función para poder usarla desde otro lado
 //const { detectarEmocion } = require('./reconocimiento/reconocimiento'); 
-module.exports = { detectEmotion };
+export { detectEmotion };

@@ -1,5 +1,5 @@
-const { init } = require('./database');
-const models = require('../models');
+import { init } from './database';
+import * as models from '../models';
 
 async function syncDatabase(syncOpts = { alter: true }) {
     const sequelize = init();
@@ -22,4 +22,4 @@ async function testConnection() {
     }
 }
 
-module.exports = { syncDatabase, testConnection };
+export { syncDatabase, testConnection };

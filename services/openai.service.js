@@ -1,6 +1,7 @@
 import {validateDaniImportantDateResponse, validateDaniSuicideRiskResponse} from "../utils/validators.js";
 import {suicideRiskPrompt} from "../utils/prompts/suicideRiskPrompt.js";
 import {importantDatePrompt} from "../utils/prompts/importantDatePrompt.js";
+import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
 import ImportantEvents from "../models/ImportantEvents.js";
 import axios from "axios";
 import { validateDaniResponse } from "../utils/validators.js";
@@ -80,4 +81,17 @@ export async function dateEvaluationResponse(message) {
         })
     }
     return value.fechaImportante != null
+}
+
+export async function beingBriefResponse(message) {
+    const messages = [
+        {role: 'system', content: briefResponsePrompt},
+        {role: 'user', content: message}];
+    const reply = await sendMessageToOpenIA(messages);
+    //const { error, value } = validateDaniSuicideRiskResponse(reply);
+
+    //if (error) {
+    //    throw new Error(`Respuesta inválida: ${error.details[0].message}`);
+    //}
+    return reply
 }

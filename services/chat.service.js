@@ -3,7 +3,7 @@ import { validateMessageIntention, containsLinksResponse } from './messageIntent
 import { v4 as generateUUID } from 'uuid';
 import { generalPrompt } from '../utils/prompts/generalPrompt.js';
 import { suicideRiskDefaultResponse } from '../utils/prompts/suicideRiskPrompt.js';
-import {userResponse, suicideRiskResponse, dateEvaluationResponse} from './openai.service.js';
+import {userResponse, suicideRiskResponse, dateEvaluationResponse, beingBriefResponse} from './openai.service.js';
 import { format } from 'date-fns';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -12,8 +12,8 @@ async function evaluateSuicideRisk(message) {
     return await suicideRiskResponse(message)
 }
 
-function logBriefResponse() {
-
+function logBriefResponse(message) {
+    beingBriefResponse(message)
 }
 
 function evaluateDateReference(message) {
@@ -42,7 +42,7 @@ export async function chat({message, userId}) {
             case containsLinks === true:
                 return containsLinksResponse
             case isBriefResponse === true:
-                logBriefResponse()
+                logBriefResponse(message)
                 break
             case hasADateReference === true:
                 evaluateDateReference(message)

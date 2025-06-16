@@ -11,6 +11,7 @@ import TypeActivities from "./TypeActivities.js";
 import TypeEmotions from "./TypeEmotions.js";
 import Conversations from "./Conversations.js";
 import Photos from "./Photos.js";
+import ImportantEvents from "./ImportantEvents.js";
 import defineRelations from "./relations.js";
 
 const models = {
@@ -26,7 +27,8 @@ const models = {
     TypeActivities,
     TypeEmotions,
     Conversations,
-    Photos
+    Photos,
+    ImportantEvents
 };
 
 defineRelations(models); // define relaciones

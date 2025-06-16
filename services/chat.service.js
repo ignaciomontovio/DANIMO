@@ -3,7 +3,7 @@ import { validateMessageIntention, containsLinksResponse } from './messageIntent
 import { v4 as generateUUID } from 'uuid';
 import { generalPrompt } from '../utils/prompts/generalPrompt.js';
 import { suicideRiskDefaultResponse } from '../utils/prompts/suicideRiskPrompt.js';
-import { userResponse, suicideRiskResponse } from './openai.service.js';
+import {userResponse, suicideRiskResponse, dateEvaluationResponse} from './openai.service.js';
 import { format } from 'date-fns';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -17,7 +17,7 @@ function logBriefResponse() {
 }
 
 function evaluateDateReference(message) {
-
+    dateEvaluationResponse(message)
 }
 
 export async function chat({message, userId}) {

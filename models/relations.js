@@ -11,7 +11,8 @@ const defineRelations = (models) => {
         Conversations,
         TypeEmotions,
         TypeActivities,
-        Photos
+        Photos,
+        ImportantEvents
     } = models;
 
     // Usuario 1:N Medicaciones
@@ -84,8 +85,8 @@ const defineRelations = (models) => {
         as: 'photo'
     });
     Photos.hasOne(EmotionRegisters, {
-    foreignKey: 'photoId',
-    as: 'emotionRegister'
+        foreignKey: 'photoId',
+        as: 'emotionRegister'
     });
 
     // EmotionRegisters N:M → TypeActivities
@@ -115,18 +116,18 @@ const defineRelations = (models) => {
 
     // TypeEmotion 1:N Photos
     Photos.belongsTo(TypeEmotions, {
-    foreignKey: {
-        name: 'emotionName',
-        allowNull: false
-    },
-    targetKey: 'name', // 👈 si la PK de TypeEmotions es 'name'
-    as: 'emotion'
+        foreignKey: {
+            name: 'emotionName',
+            allowNull: false
+        },
+        targetKey: 'name', // 👈 si la PK de TypeEmotions es 'name'
+        as: 'emotion'
     });
     TypeEmotions.hasMany(Photos, {
-    foreignKey: 'emotionName',
-    sourceKey: 'name', // 👈 si 'name' es la PK o campo único
-    as: 'photos'
-    });    
+        foreignKey: 'emotionName',
+        sourceKey: 'name', // 👈 si 'name' es la PK o campo único
+        as: 'photos'
+    });
 
     //Usuario 1:N Registros de sueño
     Users.hasMany(SleepRegisters, {
@@ -152,6 +153,10 @@ const defineRelations = (models) => {
         as: "User",
     });
     Conversations.belongsTo(Users, {
+        foreignKey: "userId",
+        as: "User",
+    });
+    ImportantEvents.belongsTo(Users, {
         foreignKey: "userId",
         as: "User",
     });

@@ -6,5 +6,5 @@ export const importantDatePrompt = `Extraé del mensaje las fechas significativa
 {
 "fechaImportante": "[null o una fecha en formato ISO: AAAA-MM-DD si el mensaje incluye una fecha clave]", 
 "descripcionFechaImportante": "[Breve explicación de por qué esa fecha es significativa, o null si no aplica]", 
-"categoriaFechaImportante": ['fallecimiento', 'mudanza', 'salud', 'nacimiento/aborto', 'necesidades básicas', 'trabajo/educación', 'clima']
+"categoriaFechaImportante": ['fallecimiento', 'mudanza', 'salud', 'nacimiento', 'aborto', 'necesidades primarias', 'trabajo', 'educación', 'clima' o 'ninguna' en caso de que no haya fecha importante]
 }`

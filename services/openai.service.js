@@ -1,9 +1,11 @@
-import {validateDaniSuicideRiskResponse} from "../utils/validators.js";
+import {validateDaniImportantDateResponse, validateDaniSuicideRiskResponse} from "../utils/validators.js";
 import {suicideRiskPrompt} from "../utils/prompts/suicideRiskPrompt.js";
 import {importantDatePrompt} from "../utils/prompts/importantDatePrompt.js";
-
+import ImportantEvents from "../models/ImportantEvents.js";
 import axios from "axios";
 import { validateDaniResponse } from "../utils/validators.js";
+import {where} from "sequelize";
+import { v4 as uuidv4 } from 'uuid';
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const CHATGPT_API_KEY = process.env.CHATGPT_API_KEY;
@@ -64,10 +66,18 @@ export async function dateEvaluationResponse(message) {
         {role: 'system', content: importantDatePrompt},
         {role: 'user', content: message}];
     const reply = await sendMessageToOpenIA(messages);
-    const { error, value } = validateDaniSuicideRiskResponse(reply);
+    const { error, value } = validateDaniImportantDateResponse(reply);
 
     if (error) {
         throw new Error(`Respuesta inválida: ${error.details[0].message}`);
     }
-    return value.suicideRiskDetected === 'true'
+    if (value.fechaImportante != null) {
+        await ImportantEvents.create({
+            id: "FI-" + uuidv4(),
+            eventDescription: value.descripcionFechaImportante,
+            eventType: value.categoriaFechaImportante,
+            eventDate: value.fechaImportante,
+        })
+    }
+    return value.fechaImportante != null
 }

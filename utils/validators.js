@@ -103,6 +103,18 @@ export const validateUpdateInput = (data) => Joi.object({
     birthDate: Joi.date().iso().optional(),
     livesWith: Joi.string().optional()
 }).validate(data);
+
+export function validateEmailBody(data) {
+    const schema = Joi.object({
+        email: Joi.string().email().required().messages({
+            'any.required': 'El campo email es obligatorio',
+            'string.email': 'El email ingresado no es válido',
+            'string.empty': 'El email no puede estar vacío'
+        })
+    });
+
+    return schema.validate(data);
+}
 // ----------------------Emotions --------------------------
 
 export const validateEmotionRegisterInput = (data) => {

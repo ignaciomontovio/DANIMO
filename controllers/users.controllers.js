@@ -6,7 +6,8 @@ import {
     validateForgotPassword,
     validateResetPassword,
     validateUpdateInput,
-    validateToken
+    validateToken,
+    validateEmailBody
 } from '../utils/validators.js';
 import { signToken, verifyToken, signRefreshToken } from '../utils/jwt.js';
 
@@ -146,5 +147,36 @@ export const updateUserProfile = async (req, res) => {
     } catch (err) {
         console.error('❌ Error al actualizar perfil:', err);
         res.status(500).json({ error: 'No se pudo actualizar el perfil' });
+    }
+};
+
+export const validateUserEmail = async (req, res) => {
+    const { error, value } = validateEmailBody(req.body);
+    if (error) {
+        console.error("❌ Error de validación Joi:", error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const email = value.email;
+    const tokenUserId = req.userId;
+
+    try {
+        const user = await usersService.findUserByEmail(email);
+
+        if (!user) {
+            console.warn(`⚠️ Usuario con email ${email} no encontrado en la base de datos`);
+            return res.status(404).json({ error: "Usuario no encontrado en la base de datos" });
+        }
+
+        if (user.id !== tokenUserId) {
+            console.warn(`⛔ Mismatch: userId del token (${tokenUserId}) no coincide con el userId del email (${user.id})`);
+            return res.status(403).json({ error: "El usuario autenticado no coincide con el email proporcionado" });
+        }
+
+        console.log("✅ Validación exitosa: el email corresponde al usuario autenticado.");
+        return res.status(200).json({ message: "Validación exitosa. El email corresponde al usuario autenticado con el token." });
+    } catch (err) {
+        console.error("❌ Error interno validando email con token:", err);
+        return res.status(500).json({ error: "Error interno del servidor" });
     }
 };

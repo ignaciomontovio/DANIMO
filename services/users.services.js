@@ -124,3 +124,5 @@ export async function updateUserProfile(userId, updates) {
 function generateRandomKey() {
     return crypto.randomBytes(4).toString('hex').slice(0, 6); // 4 bytes son suficientes
 }
+
+export { findUserByEmail }; // 👈 necesario para usarlo desde el controller

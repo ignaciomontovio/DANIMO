@@ -43,8 +43,8 @@ export const getPredominantEmotion = async (req, res) => {
         const predominantEmotion = await service.findPredominantEmotion({ userId, date });
 
         if (!predominantEmotion) {
-            console.warn(`❌ No hay emoción predominante registrada para hoy para userId=${userId}`);
-            return res.status(404).json({ error: 'No hay una emoción predominante registrada para hoy.' });
+            console.log(`ℹ️ No hay emoción predominante registrada para hoy para userId=${userId}`);
+            return res.json({ message: 'No hay una emoción predominante registrada para hoy.', emotion: null });
         }
 
         console.log(`✅ Emoción predominante encontrada: ${predominantEmotion}`);

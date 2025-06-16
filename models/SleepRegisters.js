@@ -20,6 +20,10 @@ const SleepRegisters = sequelize.define('SleepRegisters', {
     userId: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    sleepName: { 
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

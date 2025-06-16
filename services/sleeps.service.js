@@ -1,17 +1,24 @@
 import SleepRegisters from '../models/SleepRegisters.js';
 import { v4 as uuidv4 } from 'uuid';
+import TypeSleeps from '../models/TypeSleeps.js';
 
-export async function createSleepRegister({ userId, bedtime, wake }) {
-    const dateObj = new Date(); // fecha actual
-    const date = dateObj.toISOString().split('T')[0]; // YYYY-MM-DD
-
+export async function createSleepRegister({ userId, bedtime, wake, sleep }) {
+    const dateObj = new Date();
+    const date = dateObj.toISOString().split('T')[0];
     const hoursOfSleep = (new Date(wake) - new Date(bedtime)) / (1000 * 60 * 60);
+
+    const typeSleep = await TypeSleeps.findOne({ where: { number: sleep } });
+
+    if (!typeSleep) {
+        throw new Error(`No se encontró un TypeSleep con number=${sleep}`);
+    }
 
     await SleepRegisters.create({
         id: `U-${uuidv4()}`,
         userId,
         hoursOfSleep,
-        date
+        date,
+        sleepName: typeSleep.name
     });
 }
 

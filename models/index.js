@@ -9,6 +9,7 @@ import Users from "./Users.js";
 import RecoveryTokens from "./RecoveryTokens.js";
 import TypeActivities from "./TypeActivities.js";
 import TypeEmotions from "./TypeEmotions.js";
+import TypeSleeps from '../models/TypeSleeps.js';
 import Conversations from "./Conversations.js";
 import Photos from "./Photos.js";
 import ImportantEvents from "./ImportantEvents.js";
@@ -26,6 +27,7 @@ const models = {
     RecoveryTokens,
     TypeActivities,
     TypeEmotions,
+    TypeSleeps,
     Conversations,
     Photos,
     ImportantEvents

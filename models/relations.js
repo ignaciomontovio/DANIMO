@@ -11,6 +11,7 @@ const defineRelations = (models) => {
         Conversations,
         TypeEmotions,
         TypeActivities,
+        TypeSleeps,
         Photos,
         ImportantEvents
     } = models;
@@ -137,6 +138,23 @@ const defineRelations = (models) => {
     SleepRegisters.belongsTo(Users, {
         foreignKey: 'userId',
         targetKey: 'id'
+    });
+
+    // Relación 1:N - SleepRegisters pertenece a TypeSleeps
+    SleepRegisters.belongsTo(TypeSleeps, {
+        foreignKey: {
+            name: 'sleepName',
+            allowNull: false
+        },
+        targetKey: 'name',
+        as: 'typeSleep'
+    });
+
+    // TypeSleeps tiene muchos SleepRegisters
+    TypeSleeps.hasMany(SleepRegisters, {
+        foreignKey: 'sleepName',
+        sourceKey: 'name',
+        as: 'sleepRegisters'
     });
 
     // Usuario 1:N Alteradores de ánimo

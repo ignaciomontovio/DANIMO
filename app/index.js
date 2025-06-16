@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import '../cron/medicationChecker.js';
 /*
 Comento cookie parser por ahora
 */

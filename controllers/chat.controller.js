@@ -14,7 +14,7 @@ export const chatController = async (req, res) => {
         console.log(`✅ Respuesta ${response} devuelta.`);
         res.json({message: response});
     } catch (err) {
-        console.error('❌ Error en /chat:', err);
+        console.error('❌ Error en /chat dani:', err);
         return res.status(500).json({error: 'Error al crear mensaje'});
     }
 }

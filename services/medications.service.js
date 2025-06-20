@@ -16,8 +16,7 @@ export async function createMedication({ userId, startDate, endDate, name, dosag
 export async function getActiveMedicationsByUser(userId) {
     return await Medications.findAll({
         where: {
-            userId,
-            active: true
+            userId
         },
         attributes: ['name'], // Solo queremos el nombre
         order: [['startDate', 'DESC']] // Opcional: ordenarlos por fecha de inicio
@@ -28,8 +27,7 @@ export async function getMedicationDetailByName(userId, name) {
     return await Medications.findOne({
         where: {
             userId,
-            name,
-            active: true
+            name
         }
     });
 }
@@ -80,5 +78,22 @@ export async function editMedication(userId, currentName, updates) {
     medication.active = true;
 
     await medication.save();
+    return medication;
+}
+
+export async function softDeleteMedication({ userId, name }) {
+    const today = new Date();
+
+    const medication = await Medications.findOne({ where: { userId, name } });
+    if (!medication) {
+        console.error(`❌ Medicacion ${name} no encontrada para el usuario.`);
+        throw new Error(`Medicación ${name} no encontrada para el usuario.`);
+    }
+
+    await medication.update({
+        active: false,
+        endDate: today
+    });
+
     return medication;
 }

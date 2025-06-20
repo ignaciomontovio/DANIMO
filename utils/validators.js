@@ -341,3 +341,14 @@ export const validateEditMedicationInput = (data) => {
 
     return schema.validate(data);
 };
+
+export const validateDeleteMedicationInput = (data) => {
+    const schema = Joi.object({
+        name: Joi.string().required().messages({
+            'string.base': '"name" debe ser un texto',
+            'any.required': '"name" es obligatorio'
+        })
+    });
+
+    return schema.validate(data);
+};

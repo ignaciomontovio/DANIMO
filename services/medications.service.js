@@ -55,3 +55,30 @@ export async function deactivateFinishedMedications() {
         console.error('❌ Error al desactivar medicaciones finalizadas:', error);
     }
 }
+
+export async function editMedication(userId, currentName, updates) {
+    // Buscamos el registro existente
+    const medication = await Medications.findOne({ where: { userId, name: currentName } });
+    if (!medication) return null;
+
+    const originalStart = medication.startDate;
+    const originalEnd = medication.endDate;
+
+    // Validar fechas si se cambian
+    const newStart = updates.startDate ? new Date(updates.startDate) : originalStart;
+    const newEnd = updates.endDate ? new Date(updates.endDate) : originalEnd;
+
+    if (newStart > newEnd) {
+        console.error('❌ La fecha de inicio no puede ser posterior a la fecha de fin.');
+        throw new Error('La fecha de inicio no puede ser posterior a la fecha de fin.');
+    }
+
+    // Preparamos campos a actualizar
+    Object.assign(medication, updates);
+
+    // Campo active a true automáticamente
+    medication.active = true;
+
+    await medication.save();
+    return medication;
+}

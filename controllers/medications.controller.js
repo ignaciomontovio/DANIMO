@@ -1,4 +1,4 @@
-import { validateMedicationInput, validateMedicationNameQuery } from '../utils/validators.js';
+import { validateMedicationInput, validateMedicationNameQuery, validateEditMedicationInput } from '../utils/validators.js';
 import * as service from '../services/medications.service.js';
 
 export const createMedication = async (req, res) => {
@@ -62,5 +62,29 @@ export const getMedicationDetail = async (req, res) => {
     } catch (err) {
         console.error('❌ Error al obtener el detalle de la medicación:', err);
         res.status(500).json({ error: 'Error al obtener el detalle de la medicación' });
+    }
+};
+
+export const editMedication = async (req, res) => {
+    const { error, value } = validateEditMedicationInput(req.body);
+    if (error) {
+        console.error('❌ Error en validación:', error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const userId = req.userId;
+    const { currentName, ...updates } = value;
+
+    try {
+        const result = await service.editMedication(userId, currentName, updates);
+        if (!result) {
+            console.warn(`⚠️ No se encontró medicación ${currentName} para el user ${userId}.`);
+            return res.status(404).json({ error: 'Medicación no encontrada' });
+        }
+        console.log(`✅ Medicación ${currentName} actualizada correctamente para user ${userId}.`);
+        res.status(200).json({ message: 'Medicación actualizada correctamente' });
+    } catch (err) {
+        console.error('❌ Error al editar medicación:', err.message);
+        res.status(500).json({ error: 'Error al editar medicación' });
     }
 };

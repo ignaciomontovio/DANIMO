@@ -321,3 +321,34 @@ export const validateMedicationNameQuery = (data) => {
 
     return schema.validate(data);
 };
+
+export const validateEditMedicationInput = (data) => {
+    const schema = Joi.object({
+        currentName: Joi.string().required().messages({
+            'any.required': '"currentName" es obligatorio',
+            'string.base': '"currentName" debe ser un texto válido'
+        }),
+        name: Joi.string().optional(),
+        startDate: Joi.date().iso().optional().messages({
+            'date.base': '"startDate" debe ser una fecha válida',
+        }),
+        endDate: Joi.date().iso().optional().messages({
+            'date.base': '"endDate" debe ser una fecha válida',
+        }),
+        dosage: Joi.string().optional()
+    }).or('name', 'startDate', 'endDate', 'dosage')
+    .messages({ 'object.missing': 'Debes proveer al menos un campo a editar' });
+
+    return schema.validate(data);
+};
+
+export const validateDeleteMedicationInput = (data) => {
+    const schema = Joi.object({
+        name: Joi.string().required().messages({
+            'string.base': '"name" debe ser un texto',
+            'any.required': '"name" es obligatorio'
+        })
+    });
+
+    return schema.validate(data);
+};

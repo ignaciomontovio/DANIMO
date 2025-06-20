@@ -10,4 +10,8 @@ router.get('/obtain', authMiddleware, controller.getActiveMedications);
 
 router.post('/detail', authMiddleware, controller.getMedicationDetail);
 
+router.patch('/update', authMiddleware, controller.editMedication);
+
+router.post('/delete', authMiddleware, controller.deleteMedication);
+
 export default router;

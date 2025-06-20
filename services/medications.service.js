@@ -16,8 +16,7 @@ export async function createMedication({ userId, startDate, endDate, name, dosag
 export async function getActiveMedicationsByUser(userId) {
     return await Medications.findAll({
         where: {
-            userId,
-            active: true
+            userId
         },
         attributes: ['name'], // Solo queremos el nombre
         order: [['startDate', 'DESC']] // Opcional: ordenarlos por fecha de inicio
@@ -28,8 +27,7 @@ export async function getMedicationDetailByName(userId, name) {
     return await Medications.findOne({
         where: {
             userId,
-            name,
-            active: true
+            name
         }
     });
 }
@@ -54,4 +52,48 @@ export async function deactivateFinishedMedications() {
     } catch (error) {
         console.error('❌ Error al desactivar medicaciones finalizadas:', error);
     }
+}
+
+export async function editMedication(userId, currentName, updates) {
+    // Buscamos el registro existente
+    const medication = await Medications.findOne({ where: { userId, name: currentName } });
+    if (!medication) return null;
+
+    const originalStart = medication.startDate;
+    const originalEnd = medication.endDate;
+
+    // Validar fechas si se cambian
+    const newStart = updates.startDate ? new Date(updates.startDate) : originalStart;
+    const newEnd = updates.endDate ? new Date(updates.endDate) : originalEnd;
+
+    if (newStart > newEnd) {
+        console.error('❌ La fecha de inicio no puede ser posterior a la fecha de fin.');
+        throw new Error('La fecha de inicio no puede ser posterior a la fecha de fin.');
+    }
+
+    // Preparamos campos a actualizar
+    Object.assign(medication, updates);
+
+    // Campo active a true automáticamente
+    medication.active = true;
+
+    await medication.save();
+    return medication;
+}
+
+export async function softDeleteMedication({ userId, name }) {
+    const today = new Date();
+
+    const medication = await Medications.findOne({ where: { userId, name } });
+    if (!medication) {
+        console.error(`❌ Medicacion ${name} no encontrada para el usuario.`);
+        throw new Error(`Medicación ${name} no encontrada para el usuario.`);
+    }
+
+    await medication.update({
+        active: false,
+        endDate: today
+    });
+
+    return medication;
 }

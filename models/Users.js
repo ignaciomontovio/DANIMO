@@ -48,6 +48,10 @@ const Users = sequelize.define('Users', {
     livesWith: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    profilePic: {
+        type: DataTypes.TEXT,
+        allowNull: true
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

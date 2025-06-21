@@ -102,12 +102,15 @@ export const validateUpdateInput = (data) => Joi.object({
         .optional(),
     birthDate: Joi.date().iso().optional(),
     livesWith: Joi.string().optional(),
+    //Descomentar si se vuelve para atras lo de la foto
+    /*
     profilePic: Joi.string()
         .dataUri()
         .optional()
         .messages({
             'string.pattern.base': `"profilePic" debe ser un Data URI válido (ej. data:image/png;base64,...)`
         })
+    */
 }).validate(data);
 
 export function validateEmailBody(data) {

@@ -141,6 +141,15 @@ export const updateUserProfile = async (req, res) => {
         const userId = req.userId; // viene del middleware
         const updates = req.body;
 
+        // Si hay imagen, convertir a base64 para guardar como data URI
+        //Borrar esto si en el FRONT no funciona
+        if (req.file) {
+            const mimeType = req.file.mimetype; // ej: 'image/png'
+            const base64 = req.file.buffer.toString('base64');
+            updates.profilePic = `data:${mimeType};base64,${base64}`;
+        }
+        //Borrar hasta acá
+
         await usersService.updateUserProfile(userId, updates);
         console.log("✅ Perfil actualizado correctamente")
         res.json({ message: 'Perfil actualizado correctamente' });

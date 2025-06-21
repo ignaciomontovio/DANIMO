@@ -1,11 +1,11 @@
 import Conversations from '../models/Conversations.js';
-import { validateMessageIntention, containsLinksResponse } from './messageIntention/messageIntentionService.js';
-import { v4 as generateUUID } from 'uuid';
-import { generalPrompt } from '../utils/prompts/generalPrompt.js';
-import { suicideRiskDefaultResponse } from '../utils/prompts/suicideRiskPrompt.js';
+import {validateMessageIntention, containsLinksResponse} from './messageIntention/messageIntentionService.js';
+import {v4 as generateUUID} from 'uuid';
+import {generalPrompt} from '../utils/prompts/generalPrompt.js';
+import {suicideRiskDefaultResponse} from '../utils/prompts/suicideRiskPrompt.js';
 import {userResponse, suicideRiskResponse, dateEvaluationResponse, beingBriefResponse} from './openai.service.js';
-import { format } from 'date-fns';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 async function evaluateSuicideRisk(message) {
@@ -75,7 +75,8 @@ async function compileConversationHistory(userId, currentMessage) {
     }
     messages.push({
         role: 'user',
-        content: `${currentMessage}. Debes responder con el template de salida. La fecha de hoy es ` + format(new Date(), 'yyyy-MM-dd'),
+        //content: `${currentMessage}. Debes responder con el template de salida. La fecha de hoy es ` + format(new Date(), 'yyyy-MM-dd'),
+        content: currentMessage
     });
     return messages;
 }

@@ -1,8 +1,8 @@
 export const suicideRiskPrompt = 'Eres un modelo especializado en la detección de riesgo de suicidio en textos escritos por personas. ' +
     'Tu tarea es analizar el siguiente texto y determinar si muestra señales claras de ideación suicida, desesperanza extrema, intenciones autolesivas ' +
     'o cualquier otro factor de riesgo que indique una posible conducta suicida.Analiza cuidadosamente el contenido, tono y contexto emocional. ' +
-    'Solo deberás indicar **"suicideRiskDetected": true** si el riesgo es evidente, significativo y preocupante. Si no hay señales claras de riesgo, ' +
-    'deberás indicar **"suicideRiskDetected": false**.Responde exclusivamente con un JSON con esta estructura:```json { "suicideRiskDetected": false } ';
+    'Solo deberás indicar {"suicideRiskDetected": true} si el riesgo es evidente, significativo y preocupante. Si no hay señales claras de riesgo, ' +
+    'deberás indicar {"suicideRiskDetected": false}.Responde exclusivamente con un JSON con esta estructura.';
 
 export const suicideRiskDefaultResponse = 'Quiero contarte que, si bien estoy acá para acompañarte, no estoy capacitado/a para intervenir en situaciones de riesgo de suicidio o autolesiones.\n' +
     'Si estás pasando por un momento difícil, te recomiendo que te contactes con profesionales que puedan ayudarte de forma inmediata y especializada. En Argentina, podés comunicarte gratis y de forma confidencial con:\n' +

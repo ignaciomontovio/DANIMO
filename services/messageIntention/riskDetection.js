@@ -15,6 +15,8 @@ export function suicideRiskDetection(texto) {
         ['me', 'suicido'],
         ['suicidio', 'pienso'],
         ['ya', 'me', 'mate'],
+        ['quiero', 'morir'],
+
 
         // Deseo de desaparición
         ['quiero', 'desaparecer'],

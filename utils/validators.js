@@ -259,7 +259,8 @@ export const validateDaniResponse = (data) => {
 
 export const validateDaniSuicideRiskResponse = (data) => {
     const schema = Joi.object({
-        suicideRiskDetected: Joi.string().lowercase().valid('true', 'false').required(),
+        suicideRiskDetected: Joi.boolean().required()
+        //suicideRiskDetected: Joi.string().lowercase().valid('true', 'false').required(),
     });
 
     return schema.validate(data);

@@ -13,7 +13,7 @@ const ImportantEvents = sequelize.define('ImportantEvents', {
         allowNull: false,
     },
     eventType: {
-        type: DataTypes.ENUM('fallecimiento', 'mudanza', 'salud', 'nacimiento', 'aborto', 'necesidades primarias', 'trabajo', 'educación', 'clima'),
+        type: DataTypes.STRING,
         allowNull: false,
     },
     eventDate:{

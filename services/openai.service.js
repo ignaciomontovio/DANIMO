@@ -6,10 +6,12 @@ import ImportantEvents from "../models/ImportantEvents.js";
 import axios from "axios";
 import {validateDaniResponse} from "../utils/validators.js";
 import {v4 as uuidv4} from 'uuid';
+import {format} from "date-fns";
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const CHATGPT_API_KEY = process.env.CHATGPT_API_KEY;
 const AZURE_OPENAI_API_GPT3_URL = process.env.AZURE_OPENAI_API_GPT3_URL
+const AZURE_OPENAI_API_GPT4_URL = process.env.AZURE_OPENAI_API_GPT4_URL
 const AZURE_OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY
 
 export async function sendMessageToOpenIA(messages) {
@@ -101,14 +103,15 @@ export async function suicideRiskResponse(message) {
 export async function dateEvaluationResponse(message) {
     const messages = [
         {role: 'system', content: importantDatePrompt},
-        {role: 'user', content: message}];
+        {role: 'user', content: message + ". La fecha de hoy es " + format(new Date(), 'yyyy-MM-dd')}];
     const reply = await sendMessageToAzureOpenIAWithParseJson(messages);
     const {error, value} = validateDaniImportantDateResponse(reply);
 
     if (error) {
         throw new Error(`Respuesta inválida: ${error.details[0].message}`);
     }
-    if (value.fechaImportante != null) {
+    if (value.esSignificativo === true && value.categoriaFechaImportante !== 'ninguna') {
+        console.log("Fecha importante detectada: " + value.fechaImportante);
         await ImportantEvents.create({
             id: "FI-" + uuidv4(),
             eventDescription: value.descripcionFechaImportante,
@@ -116,7 +119,7 @@ export async function dateEvaluationResponse(message) {
             eventDate: value.fechaImportante,
         })
     }
-    return value.fechaImportante != null
+    return value.esSignificativo
 }
 
 export async function beingBriefResponse(message) {

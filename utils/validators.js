@@ -268,9 +268,12 @@ export const validateDaniSuicideRiskResponse = (data) => {
 
 export const validateDaniImportantDateResponse = (data) => {
     const schema = Joi.object({
+        esSignificativo: Joi.boolean().required(),
         fechaImportante: Joi.string().isoDate().allow(null).allow('null'),
         descripcionFechaImportante: Joi.string().allow(null).allow('null'),
-        categoriaFechaImportante: Joi.array().items(Joi.string().valid('fallecimiento', 'mudanza', 'salud', 'nacimiento', 'aborto', 'necesidades primarias', 'trabajo', 'educación', 'clima')).required()
+        categoriaFechaImportante: Joi.string()
+            .valid('fallecimiento', 'mudanza', 'salud', 'nacimiento', 'aborto', 'necesidades primarias', 'trabajo', 'educación', 'clima', 'ninguna')
+            .required()
     });
 
     return schema.validate(data);

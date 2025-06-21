@@ -19,7 +19,7 @@ const initialActivities = [
     { name: 'Dibujar', category: 'Hobby' },
     { name: 'Entrenar', category: 'Hobby' },
     { name: 'Bailar', category: 'Hobby' },
-    { name: 'Salida', category: 'Hobby' },
+    { name: 'Amistades', category: 'Hobby' },
 
     // Estudio
     { name: 'Estudiar', category: 'Estudio' },
@@ -30,14 +30,9 @@ const initialActivities = [
 
     // Trabajo
     { name: 'Reunirse', category: 'Trabajo' },
-    { name: 'Viajar', category: 'Trabajo' },
     { name: 'Entregas', category: 'Trabajo' },
     { name: 'Informes', category: 'Trabajo' },
-    { name: 'Presentaciones', category: 'Trabajo' },
-    { name: 'Planear', category: 'Trabajo' },
-    { name: 'Supervisar', category: 'Trabajo' },
-    { name: 'Redactar', category: 'Trabajo' },
-    { name: 'Responder', category: 'Trabajo' }
+    { name: 'Presentaciones', category: 'Trabajo' }
 ];
 
 export default async function seedTypeActivities() {

@@ -101,7 +101,13 @@ export const validateUpdateInput = (data) => Joi.object({
         .valid('Masculino', 'Femenino', 'No Binario', 'Prefiero no decir')
         .optional(),
     birthDate: Joi.date().iso().optional(),
-    livesWith: Joi.string().optional()
+    livesWith: Joi.string().optional(),
+    profilePic: Joi.string()
+        .dataUri()
+        .optional()
+        .messages({
+            'string.pattern.base': `"profilePic" debe ser un Data URI válido (ej. data:image/png;base64,...)`
+        })
 }).validate(data);
 
 export function validateEmailBody(data) {

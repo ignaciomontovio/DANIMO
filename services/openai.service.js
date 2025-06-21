@@ -42,6 +42,7 @@ export async function sendMessageToAzureOpenIA(messages, model = AZURE_OPENAI_AP
         messages,
     }, {headers});
 
+    console.log("Enviando mensaje a Azure OpenAI con el modelo: " + model);
     const replyContent = response.data.choices[0]?.message?.content;
     if (!replyContent) {
         throw new Error('La API de OpenAI no retornó una respuesta válida.');
@@ -78,13 +79,15 @@ export async function suicideRiskResponse(message) {
     const messages = [
         {role: 'system', content: suicideRiskPrompt},
         {role: 'user', content: message}];
+
     const reply = await sendMessageToAzureOpenIAWithParseJson(messages);
+    console.log("Respuesta de la API de OpenAI: " + reply);
     const { error, value } = validateDaniSuicideRiskResponse(reply);
 
     if (error) {
         throw new Error(`Respuesta inválida: ${error.details[0].message}`);
     }
-    return value.suicideRiskDetected === 'true'
+    return value.suicideRiskDetected === true
 }
 
 export async function dateEvaluationResponse(message) {

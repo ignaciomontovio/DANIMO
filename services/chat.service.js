@@ -9,7 +9,15 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 async function evaluateSuicideRisk(message) {
-    return await suicideRiskResponse(message)
+    try{
+        return await suicideRiskResponse(message)
+    } catch (error) {
+        if (error.response && error.response.status === 400) {
+            // Aquí puedes marcar el mensaje como de riesgo suicida
+            return true;
+        }
+        throw error;
+    }
 }
 
 function logBriefResponse(message) {

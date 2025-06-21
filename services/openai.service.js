@@ -4,8 +4,8 @@ import {importantDatePrompt} from "../utils/prompts/importantDatePrompt.js";
 import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
 import ImportantEvents from "../models/ImportantEvents.js";
 import axios from "axios";
-import { validateDaniResponse } from "../utils/validators.js";
-import { v4 as uuidv4 } from 'uuid';
+import {validateDaniResponse} from "../utils/validators.js";
+import {v4 as uuidv4} from 'uuid';
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const CHATGPT_API_KEY = process.env.CHATGPT_API_KEY;
@@ -76,18 +76,26 @@ export async function userResponse(messages) {
 }
 
 export async function suicideRiskResponse(message) {
-    const messages = [
-        {role: 'system', content: suicideRiskPrompt},
-        {role: 'user', content: message}];
+    try {
+        const messages = [
+            {role: 'system', content: suicideRiskPrompt},
+            {role: 'user', content: message}];
 
-    const reply = await sendMessageToAzureOpenIAWithParseJson(messages);
-    console.log("Respuesta de la API de OpenAI: " + reply);
-    const { error, value } = validateDaniSuicideRiskResponse(reply);
+        const reply = await sendMessageToAzureOpenIAWithParseJson(messages);
+        console.log("Respuesta de la API de OpenAI: " + reply);
+        const {error, value} = validateDaniSuicideRiskResponse(reply);
 
-    if (error) {
-        throw new Error(`Respuesta inválida: ${error.details[0].message}`);
+        if (error) {
+            throw new Error(`Respuesta inválida: ${error.details[0].message}`);
+        }
+        return value.suicideRiskDetected === true
+    } catch (error) {
+        if (error.response && error.response.status === 400) {
+            // Aquí puedes marcar el mensaje como de riesgo suicida
+            return true;
+        }
+        throw error;
     }
-    return value.suicideRiskDetected === true
 }
 
 export async function dateEvaluationResponse(message) {
@@ -95,7 +103,7 @@ export async function dateEvaluationResponse(message) {
         {role: 'system', content: importantDatePrompt},
         {role: 'user', content: message}];
     const reply = await sendMessageToAzureOpenIAWithParseJson(messages);
-    const { error, value } = validateDaniImportantDateResponse(reply);
+    const {error, value} = validateDaniImportantDateResponse(reply);
 
     if (error) {
         throw new Error(`Respuesta inválida: ${error.details[0].message}`);

@@ -180,3 +180,16 @@ export const validateUserEmail = async (req, res) => {
         return res.status(500).json({ error: "Error interno del servidor" });
     }
 };
+
+export const getUserProfile = async (req, res) => {
+    const userId = req.userId; // obtenido del middleware
+
+    try {
+        const profile = await usersService.getUserProfile(userId);
+        console.log("✅ Perfil de usuario obtenido correctamente.");
+        res.status(200).json(profile);
+    } catch (err) {
+        console.error("❌ Error al obtener el perfil de usuario:", err.message);
+        res.status(500).json({ error: "No se pudo obtener el perfil del usuario" });
+    }
+};

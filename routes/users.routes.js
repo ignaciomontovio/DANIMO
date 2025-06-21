@@ -13,5 +13,6 @@ router.post('/validate-token', usersController.validateTokenController);
 router.post('/reset-password', usersController.resetPassword);
 router.patch('/update-profile', authMiddleware, usersController.updateUserProfile);
 router.post('/token-email', authMiddleware, usersController.validateUserEmail);
+router.get('/profile', authMiddleware, usersController.getUserProfile);
 
 export default router;

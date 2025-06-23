@@ -7,6 +7,8 @@ import {userResponse, suicideRiskResponse, dateEvaluationResponse, isABriefRespo
 import dotenv from 'dotenv';
 import ImportantEvents from "../models/ImportantEvents.js";
 
+// Mandar mensaje + cortar conversacion (true-false) + decir que rutina recomendar (id) o que emocion para rutinas
+//Pregunta cosas fuera de danimo
 dotenv.config();
 
 async function evaluateSuicideRisk(message) {

@@ -1,5 +1,5 @@
 export const stressLevelEvaluationPrompt = `Eres un asistente que analiza mensajes escritos para detectar emociones
- intensas. Devuelve un JSON con un puntaje del 1 al 5 para cada emoción listada. Usa 1 si no hay señales de esa emoción,
+ intensas. Devuelve un JSON con un puntaje del 0 al 5 para cada emoción listada. Usa 0 si no hay señales de esa emoción,
   y 5 si es muy intensa. Las emociones son: ira, angustia, tristeza, miedo, frustración, culpa, confusión y euforia. 
   No expliques tu razonamiento. Solo responde con un JSON como este 
 {

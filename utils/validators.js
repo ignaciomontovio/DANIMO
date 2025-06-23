@@ -281,6 +281,21 @@ export const validateDaniImportantDateResponse = (data) => {
 
     return schema.validate(data);
 };
+
+export const validateStressLevelResponse = (data) => {
+    const schema = Joi.object({
+        ira: Joi.number().required(),
+        angustia: Joi.number().required(),
+        tristeza: Joi.number().required(),
+        miedo: Joi.number().required(),
+        frustracion: Joi.number().required(),
+        culpa: Joi.number().required(),
+        confusion: Joi.number().required(),
+        euforia: Joi.number().required()
+    });
+
+    return schema.validate(data);
+};
 // ----------------------Quotes--------------------------
 
 export const validateQuoteInput = (data) => {

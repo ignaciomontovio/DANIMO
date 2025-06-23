@@ -1,3 +1,5 @@
+import UsersEmotionalState from "./UsersEmotionalState.js";
+
 const defineRelations = (models) => {
     const {
         Users,
@@ -177,6 +179,14 @@ const defineRelations = (models) => {
     ImportantEvents.belongsTo(Users, {
         foreignKey: "userId",
         as: "User",
+    });
+    Users.hasMany(ImportantEvents, {
+        foreignKey: "userId",
+        as: "ImportantEvents",
+    });
+    UsersEmotionalState.belongsTo(Users, {
+        foreignKey: "userId",
+        as: "UsersEmotionalState",
     });
 };
 export default defineRelations;

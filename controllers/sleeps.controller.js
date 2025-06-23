@@ -42,3 +42,14 @@ export const getAllSleepRegisters = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener los registros de sueño' });
     }
 };
+
+export const getTypeSleeps = async (req, res) => {
+    try {
+        const sleeps = await service.getAllTypeSleeps();
+        console.log(`✅ ${sleeps.length} emociones obtenidas`);
+        res.json(sleeps);
+    } catch (err) {
+        console.error('❌ Error al obtener emociones:', err);
+        res.status(500).json({ error: 'Error al obtener emociones' });
+    }
+};

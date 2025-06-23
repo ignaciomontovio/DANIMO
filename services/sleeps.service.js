@@ -32,3 +32,7 @@ export async function getSleepRegistersByUser(userId) {
         order: [['date', 'DESC']]
     });
 }
+
+export async function getAllTypeSleeps() {
+    return await TypeSleeps.findAll();
+}

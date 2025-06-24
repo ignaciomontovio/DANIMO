@@ -156,16 +156,9 @@ export const validateEmotionRegisterInput = (data) => {
 
 export const validateSleepRegisterInput = (data) => {
     const schema = Joi.object({
-        bedtime: Joi.date().iso().required()
-            .messages({
-                'date.base': `"bedtime" debe ser una fecha ISO válida (ej. 2025-06-13T22:50:00.000Z)`, 
-                'any.required': `"bedtime" es obligatorio`
-            }),
-        wake: Joi.date().iso().greater(Joi.ref('bedtime')).required()
-            .messages({
-                'date.base': `"wake" debe ser una fecha ISO válida (ej. 2025-06-14T07:00:00.000Z)`,
-                'date.greater': `"wake" debe ser posterior a "bedtime"`,
-                'any.required': `"wake" es obligatorio`
+        hoursOfSleep: Joi.number().min(0).required().messages({
+                'number.min': `"hoursOfSleep" debe ser al menos 0`,
+                'any.required': `"hoursOfSleep" es obligatorio`
             }),
         sleep: Joi.number().integer().min(1).max(5).required()
             .messages({

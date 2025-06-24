@@ -10,7 +10,7 @@ export const createSleepRegister = async (req, res) => {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { bedtime, wake, sleep } = req.body;
+    const { hoursOfSleep, sleep } = req.body;
     const userId = req.userId;
     const today = new Date().toISOString().split('T')[0];
 
@@ -21,7 +21,7 @@ export const createSleepRegister = async (req, res) => {
             return res.status(409).json({ error: 'Ya existe un registro de sueño para hoy.' });
         }
 
-        await service.createSleepRegister({ userId, bedtime, wake, sleep });
+        await service.createSleepRegister({ userId, hoursOfSleep, sleep });
 
         console.log(`✅ Sueño registrado correctamente para userId=${userId}`);
         res.json({ message: '¡Sueño registrado correctamente!' });

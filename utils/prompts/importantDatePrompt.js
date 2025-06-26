@@ -3,7 +3,8 @@ export const importantDatePrompt = `Extraé del mensaje las fechas significativa
 estén asociadas a un evento **real, concreto y personal vivido por el hablante**. No deben incluirse eventos simbólicos, 
 metafóricos, históricos, impersonales ni relacionados con personas públicas o ajenas al hablante
 2. Si el mensaje incluye una fecha explícita, debe registrarse tal como aparece (en formato ISO AAAA-MM-DD).
-3. Si el mensaje usa referencias temporales relativas como “hoy”, “ayer”, “hace tres días” o “la semana pasada”, convertilas a fechas absolutas (en formato ISO AAAA-MM-DD).
+3. Si el mensaje usa referencias temporales relativas como “hoy”, “ayer”, “hace tres días” o “la semana pasada”, convertilas 
+a fechas absolutas (en formato ISO AAAA-MM-DD).
 4. **Ignorá expresiones poéticas, simbólicas, irónicas, históricas o impersonales**, como por ejemplo:
    - “hoy murió el arte”
    - “ayer se acabó la esperanza”

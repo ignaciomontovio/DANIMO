@@ -2,7 +2,6 @@ const SMS_ACCOUNT_ID = process.env.SMS_ACCOUNT_ID;
 const SMS_AUTH_TOKEN = process.env.SMS_AUTH_TOKEN;
 const SMS_FROM = process.env.SMS_FROM;
 
-//const client = require('twilio')(SMS_ACCOUNT_ID, SMS_AUTH_TOKEN);
 import twilio from 'twilio';
 
 const client = twilio(SMS_ACCOUNT_ID, SMS_AUTH_TOKEN);

@@ -35,6 +35,7 @@ const sendPushNotification = (token, title, body) => {
     const message = {
         notification: { title, body },
         token,
+        data: { screen: "/tabs/home" }
     };
 
     admin.messaging().send(message)

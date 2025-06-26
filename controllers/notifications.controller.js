@@ -12,19 +12,19 @@ export const sendNotificationToUser = async (req, res) => {
     }
 };
 
-export const registerToken = (req, res) => {
-    const { token } = req.body;
+export const registerToken = async (req, res) => {
+    const {token} = req.body;
     if (!token) {
         console.error("❌ Error: Firebase token is required");
-        return res.status(400).json({ error: 'Firebase token is required' });
+        return res.status(400).json({error: 'Firebase token is required'});
     }
     try {
-        const userId = req.userId; // Assuming userId is set in the request
-        service.registerFirebaseToken(userId, token)
+        const userId = req.userId;
+        await service.registerFirebaseToken(userId, token)
         console.log("✅ Token registrado correctamente");
-        res.json({ message: 'Token registered successfully' });
+        res.json({message: 'Token registered successfully'});
     } catch (err) {
         console.error('❌ Error al registrar el token:', err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({error: err.message});
     }
 }

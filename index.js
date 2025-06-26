@@ -1,11 +1,13 @@
 import dotenv from 'dotenv';
+
 dotenv.config();
 import app from './app/index.js';
-import { testConnection, syncDatabase } from './config/sync.js';
+import {testConnection, syncDatabase} from './config/sync.js';
 import seedQuotesIfEmpty from './utils/seedQuotes.js';
 import seedTypeActivities from './utils/seedTypeActivities.js';
 import {seedTypeEmotions} from './utils/seedTypeEmotions.js';
 import {seedTypeSleep} from './utils/seedTypeSleeps.js';
+import {notificationServiceInitialize} from './services/notifications.services.js';
 
 const PORT = process.env.PORT || 3000;
 
@@ -17,5 +19,6 @@ app.listen(PORT, async () => {
     await seedTypeActivities();
     await seedTypeEmotions();
     await seedTypeSleep();
+    await notificationServiceInitialize()
     console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });

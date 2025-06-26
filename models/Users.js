@@ -52,7 +52,12 @@ const Users = sequelize.define('Users', {
     profilePic: {
         type: DataTypes.TEXT,
         allowNull: true
-    }
+    },
+    firebaseToken: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: true
+    },
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt

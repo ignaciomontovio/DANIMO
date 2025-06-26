@@ -21,8 +21,11 @@ export function sendPushNotificationToUser(userId) {
     const body = "Cuerpo de prueba";
     return Users.findOne({where: {id: userId}, attributes: ['firebaseToken']})
         .then(user => {
-            if (!user || !user.firebaseToken) {
-                throw new Error('User not found or no firebase token available');
+            if (!user) {
+                throw new Error('User not found in database');
+            }
+            if (!user.firebaseToken) {
+                throw new Error('No firebase token available for this user');
             }
             return sendPushNotification(user.firebaseToken, title, body);
         });

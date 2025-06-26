@@ -366,7 +366,8 @@ const initialQuotes = [
     { id: 362, quote: 'Cada paso hacia adelante, por pequeño que sea, te aleja del ayer.', author: 'Mateo Vargas' },
     { id: 363, quote: 'Los sueños grandes comienzan con decisiones pequeñas.', author: 'Renata Zamora' },
     { id: 364, quote: 'El progreso no se mide en velocidad, sino en dirección.', author: 'Renata Zamora' },
-    { id: 365, quote: 'El valor verdadero se revela cuando decides continuar.', author: 'Nicolás Cabrera' }
+    { id: 365, quote: 'El valor verdadero se revela cuando decides continuar.', author: 'Nicolás Cabrera' },
+    { id: 366, quote: 'Cada día extra es una nueva oportunidad para crecer.', author: 'Lorena Cáceres' }
 ];
 
 export default async function seedQuotesIfEmpty() {

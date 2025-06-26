@@ -15,11 +15,14 @@ export const createSleepRegister = async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
 
     try {
+        //Puede tener varios registros de sueño en un mismo dia. Despues borrar esto
+        /*
         const existing = await service.findSleepRegisterByUserAndDate(userId, today);
         if (existing) {
             console.warn(`⚠️ Registro ya existe para userId=${userId} en fecha=${today}`);
             return res.status(409).json({ error: 'Ya existe un registro de sueño para hoy.' });
         }
+        */
 
         await service.createSleepRegister({ userId, hoursOfSleep, sleep });
 

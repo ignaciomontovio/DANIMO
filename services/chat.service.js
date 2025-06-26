@@ -6,6 +6,7 @@ import {suicideRiskDefaultResponse} from '../utils/prompts/suicideRiskPrompt.js'
 import {userResponse, suicideRiskResponse, dateEvaluationResponse, isABriefResponse, stressLevelEvaluationResponse} from './openai.service.js';
 import dotenv from 'dotenv';
 import ImportantEvents from "../models/ImportantEvents.js";
+import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
 
 // Mandar mensaje + cortar conversacion (true-false) + decir que rutina recomendar (id) o que emocion para rutinas
 //Pregunta cosas fuera de danimo

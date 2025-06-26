@@ -3,13 +3,12 @@ import serviceAccount from '#json' with { type: 'json' };
 import cron from 'node-cron'
 import Users from '../models/Users.js'
 
-export function registerFirebaseToken(userId, token) {
-    Users.update(
-        { firebaseToken: token },
-        { where: { id: userId } }
+export async function registerFirebaseToken(userId, token) {
+    return await Users.update(
+        {firebaseToken: token},
+        {where: {id: userId}}
     );
 }
-
 
 export function notificationServiceInitialize() {
     admin.initializeApp({

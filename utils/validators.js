@@ -293,7 +293,7 @@ export const validateStressLevelResponse = (data) => {
 
 export const validateQuoteInput = (data) => {
     const schema = Joi.object({
-        id: Joi.number().integer().min(1).max(100).required()
+        id: Joi.number().integer().min(1).max(360).required()
     });
     return schema.validate(data);
 };

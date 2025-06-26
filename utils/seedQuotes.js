@@ -372,13 +372,9 @@ const initialQuotes = [
 
 export default async function seedQuotesIfEmpty() {
     try {
-        const count = await Quote.count();
-        if (count === 0) {
-            await Quote.bulkCreate(initialQuotes);
-            console.log('Frases insertadas correctamente');
-        } else {
-            console.log('La tabla Quotes ya contiene datos. No se insertó nada.');
-        }
+        await Quote.destroy({ where: {} });
+        await Quote.bulkCreate(initialQuotes);
+        console.log('Frases insertadas correctamente');
     } catch (err) {
         console.error('Error al insertar frases:', err);
     }

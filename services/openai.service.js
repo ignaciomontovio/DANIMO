@@ -1,7 +1,7 @@
 import {
     validateDaniImportantDateResponse,
     validateDaniSuicideRiskResponse,
-    validateStressLevelResponse
+    validateStressLevelResponse, validateUserIntentResponse
 } from "../utils/validators.js";
 import {suicideRiskPrompt} from "../utils/prompts/suicideRiskPrompt.js";
 import {importantDatePrompt} from "../utils/prompts/importantDatePrompt.js";
@@ -9,9 +9,9 @@ import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
 import {stressLevelEvaluationPrompt} from "../utils/prompts/stressLevelEvaluationPrompt.js";
 import ImportantEvents from "../models/ImportantEvents.js";
 import axios from "axios";
-import {validateDaniResponse} from "../utils/validators.js";
 import {v4 as uuidv4} from 'uuid';
 import {format} from "date-fns";
+import {userIntentPrompt} from "../utils/prompts/userIntentPrompt.js";
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const CHATGPT_API_KEY = process.env.CHATGPT_API_KEY;
@@ -93,7 +93,7 @@ export async function suicideRiskResponse(message) {
         const {error, value} = validateDaniSuicideRiskResponse(reply);
 
         if (error) {
-            throw new Error(`Respuesta inválida: ${error.details[0].message}`);
+            throw new Error(`Respuesta inválida en suicideRiskResponse: ${error.details[0].message}`);
         }
         return value.suicideRiskDetected === true
     } catch (error) {
@@ -113,7 +113,7 @@ export async function dateEvaluationResponse(message) {
     const {error, value} = validateDaniImportantDateResponse(reply);
 
     if (error) {
-        throw new Error(`Respuesta inválida: ${error.details[0].message}`);
+        throw new Error(`Respuesta inválida en dateEvaluationResponse: ${error.details[0].message}`);
     }
     if (value.esSignificativo === true && value.categoriaFechaImportante !== 'ninguna') {
         console.log("Fecha importante detectada: " + value.fechaImportante);
@@ -148,7 +148,21 @@ export async function stressLevelEvaluationResponse(message) {
     const { error, value } = validateStressLevelResponse(reply);
 
     if (error) {
-        throw new Error(`Respuesta inválida: ${error.details[0].message}`);
+        throw new Error(`Respuesta inválida en stressLevelEvaluation: ${error.details[0].message}`);
     }
     return reply
+}
+
+export async function userIntentMessage(message) {
+    const messages = [
+        {role: 'system', content: userIntentPrompt},
+        {role: 'user', content: message}];
+
+    const reply = await sendMessageToAzureOpenIAWithParseJson(messages);
+    const { error, value } = validateUserIntentResponse(reply);
+
+    if (error) {
+        throw new Error(`Respuesta inválida en userIntentMessge: ${error.details[0].message}`);
+    }
+    return {conversacionNoDanimo: reply.conversacionNoDanimo, intentaBorrarHistorial: reply.intentaBorrarHistorial}
 }

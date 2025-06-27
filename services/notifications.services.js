@@ -3,6 +3,7 @@ import admin from 'firebase-admin'
 import cron from 'node-cron'
 import Users from '../models/Users.js'
 const FIREBASE_NOTIFICATION_KEY = process.env.FIREBASE_NOTIFICATION_KEY
+
 export async function registerFirebaseToken(userId, token) {
     return await Users.update(
         {firebaseToken: token},

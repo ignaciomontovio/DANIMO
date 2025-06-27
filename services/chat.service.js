@@ -3,10 +3,14 @@ import {validateMessageIntention, containsLinksResponse} from './messageIntentio
 import {v4 as generateUUID} from 'uuid';
 import {generalPrompt} from '../utils/prompts/generalPrompt.js';
 import {suicideRiskDefaultResponse} from '../utils/prompts/suicideRiskPrompt.js';
-import {userResponse, suicideRiskResponse, dateEvaluationResponse, isABriefResponse, stressLevelEvaluationResponse} from './openai.service.js';
+import {userResponse, suicideRiskResponse, dateEvaluationResponse, isABriefResponse, stressLevelEvaluationResponse, userIntentMessage} from './openai.service.js';
 import dotenv from 'dotenv';
 import ImportantEvents from "../models/ImportantEvents.js";
 import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
+import {
+    conversacionNoDanimoDefaultResponse,
+    intentaBorrarHistorialDefaultResponse
+} from "../utils/prompts/userIntentPrompt.js";
 
 // Mandar mensaje + cortar conversacion (true-false) + decir que rutina recomendar (id) o que emocion para rutinas
 //Pregunta cosas fuera de danimo
@@ -81,6 +85,14 @@ export async function chat({message, userId}) {
                 break
             case containsLinks === true:
                 return containsLinksResponse
+            case true:
+                const {conversacionNoDanimo, intentaBorrarHistorial} = userIntentMessage(message)
+                if(conversacionNoDanimo){
+                    return conversacionNoDanimoDefaultResponse
+                }
+                if(intentaBorrarHistorial === true){
+                    return intentaBorrarHistorialDefaultResponse
+                }
             case isBriefResponse === true:
                 prompt = briefResponsePrompt;
                 //logBriefResponse(message)
@@ -102,7 +114,7 @@ export async function chat({message, userId}) {
         console.error('Error en el flujo del chat:', error.message);
         throw new Error('Ocurrió un problema al procesar la solicitud del chat.');
     }
-};
+}
 
 // Función responsable de compilar el historial de conversación
 async function compileConversationHistory(userId, currentMessage, prompt) {

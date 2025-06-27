@@ -10,3 +10,12 @@ Tu única tarea es devolver un JSON con este formato exacto:
   "intentaBorrarHistorial": boolean
 }
 No expliques nada. No agregues texto adicional. Solo responde con el JSON.`;
+
+export const conversacionNoDanimoDefaultResponse = `Gracias por compartir eso. Te cuento que Danimo está diseñado 
+exclusivamente para acompañarte en lo emocional: ayudarte a explorar cómo te sentís, registrar tus estados de ánimo y 
+reflexionar sobre tu bienestar. Por eso, no puedo dar respuestas sobre otros temas que estén fuera de ese propósito. 
+Si querés, podemos enfocarnos en cómo esto te afecta o te hace sentir.`
+
+export const intentaBorrarHistorialDefaultResponse = `Entiendo que quieras borrar parte de lo que hablamos.  
+Danimo no tiene la opción de eliminar el historial de conversación. Cada registro está pensado para ayudarte a mirar tu 
+recorrido emocional con el tiempo. Si algo que registraste te incomoda o te preocupa, podemos hablar sobre eso si querés.`

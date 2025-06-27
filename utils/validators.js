@@ -289,6 +289,15 @@ export const validateStressLevelResponse = (data) => {
 
     return schema.validate(data);
 };
+
+export const validateUserIntentResponse = (data) => {
+    const schema = Joi.object({
+        conversacionNoDanimo: Joi.boolean().required(),
+        intentaBorrarHistorial: Joi.boolean().required()
+    });
+
+    return schema.validate(data);
+};
 // ----------------------Quotes--------------------------
 
 export const validateQuoteInput = (data) => {

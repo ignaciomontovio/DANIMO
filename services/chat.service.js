@@ -87,10 +87,11 @@ export async function chat({message, userId}) {
                 return containsLinksResponse
             case true:
                 const {conversacionNoDanimo, intentaBorrarHistorial} = userIntentMessage(message)
-                if(conversacionNoDanimo){
+                if(conversacionNoDanimo === true){
                     return conversacionNoDanimoDefaultResponse
                 }
                 if(intentaBorrarHistorial === true){
+                    console.log("El usuario intenta borrar el historial de conversaciones")
                     return intentaBorrarHistorialDefaultResponse
                 }
             case isBriefResponse === true:

@@ -6,8 +6,8 @@ Quiero que actúes como un clasificador que analiza lo que dice una persona usua
 2. Si intenta borrar o reiniciar su historial dentro de la app Danimo.
 Tu única tarea es devolver un JSON con este formato exacto:
 {
-  "conversacionNoDanimo": boolean,
-  "intentaBorrarHistorial": boolean
+  "conversacionNoDanimo": true o false,
+  "intentaBorrarHistorial": true o false
 }
 No expliques nada. No agregues texto adicional. Solo responde con el JSON.`;
 

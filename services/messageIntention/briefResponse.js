@@ -23,6 +23,6 @@ export function briefResponse(text) {
     const phraseMatch = briefPhrases.some(phrase =>
         phrase.every(p => words.includes(p))
     );
-
+    console.log("phase size " + cleaned.length)
     return (wordMatch || phraseMatch) && cleaned.length < 20;
 }

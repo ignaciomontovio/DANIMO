@@ -164,5 +164,6 @@ export async function userIntentMessage(message) {
     if (error) {
         throw new Error(`Respuesta inválida en userIntentMessge: ${error.details[0].message}`);
     }
+    console.log("Respuesta de userIntentMessage: conversacionNoDanimo " + reply.conversacionNoDanimo + " intentaBorrarHistorial " + reply.intentaBorrarHistorial);
     return {conversacionNoDanimo: reply.conversacionNoDanimo, intentaBorrarHistorial: reply.intentaBorrarHistorial}
 }

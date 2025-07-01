@@ -39,6 +39,10 @@ export async function loginProfessional({ email, password }) {
     const isValid = await comparePassword(password, professional.password);
     if (!isValid) throw new Error('Contraseña incorrecta.');
 
+    if (!professional.authorized) {
+        throw new Error('Aun no ha sido autorizado para ingresar a la aplicación.');
+    }
+
     return signToken({ user: professional.user });
 }
 

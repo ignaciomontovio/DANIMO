@@ -21,9 +21,16 @@ export const validateRegisterInputProf = (data) => Joi.object({
         'string.email': 'El email no es válido.',
         'string.empty': 'El email es obligatoria.'
     }),
-    profession: Joi.string().valid('Psicologo', 'Psiquiatra').required(),
     birthDate: Joi.date().iso().optional(),
-    gender: Joi.string().valid('Masculino', 'Femenino', 'No Binario', 'Prefiero no decir').required()
+    gender: Joi.string().valid('Masculino', 'Femenino', 'No Binario', 'Prefiero no decir').required(),
+    license: Joi.string().required().messages({
+        'any.required': 'La matricula es obligatoria.',
+        'string.empty': 'La matricula no puede ser vacia.'
+    }),
+    dni: Joi.number().integer().required().messages({
+        'number.base': 'El campo dni debe ser un número.',
+        'any.required': 'El dni es obligatorio.'
+    })
 }).validate(data);
 
 export const validateLoginInputProf = (data) => Joi.object({

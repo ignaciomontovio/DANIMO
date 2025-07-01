@@ -70,7 +70,7 @@ export async function chat({message, userId}) {
     }
     try {
         const importantDatesNearby = await importantDateNearby(userId);
-        const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference} = validateMessageIntention(message);
+        const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference} = await validateMessageIntention(message);
         console.log(`--- Análisis de Intención del Mensaje ---
         ¿Riesgo de suicidio?         : ${hasSuicideRisk}
         ¿Contiene enlaces?           : ${containsLinks}
@@ -120,9 +120,6 @@ export async function chat({message, userId}) {
             case importantDatesNearby.length > 0:
                 console.log("Hay fechas importantes cercanas");
                 break;
-
-            default:
-                console.log("Ningún caso del switch fue coincidente");
         }
         const {risk, evaluation} = await stressLevelEvaluation(message)
         // Obtén la conversación existente y genera el historial de mensajes

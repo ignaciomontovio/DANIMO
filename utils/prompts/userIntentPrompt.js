@@ -1,16 +1,19 @@
-export const userIntentPrompt = `Danimo es una app de acompañamiento emocional para jóvenes adultos. 
-Ayuda a registrar emociones, reflexionar sobre el estado de ánimo y el bienestar, y brinda apoyo a través de un agente 
-conversacional llamado Dani. 
-Puede que las personas te hablen sobre como se sienten o lo que les pasa en su dia a dia. Si es un tema que puede
-afectar su estado de animo o su salud mental, tenlo en cuenta. 
-Si no afecta su animo o salud mental, no está relacionado a Danimo.
-Quiero que actúes como un clasificador que analiza lo que dice una persona usuaria y determines dos cosas:
-1. Si lo que dice no está relacionado con Danimo.
-2. Si intenta borrar o reiniciar su historial dentro de la app Danimo.
-Tu única tarea es devolver un JSON con este formato exacto:
+export const userIntentPrompt = `Danimo es una app de acompañamiento emocional para jóvenes adultos.  
+Ayuda a registrar emociones, reflexionar sobre el estado de ánimo y el bienestar, y brinda apoyo a través de un agente conversacional llamado Dani.
+Tu tarea es analizar el mensaje de una persona usuaria y devolver un JSON con dos flags:
+1. intentaBorrarHistorial:  
+   - Será true si la persona expresa una intención de borrar su historial, reiniciar o eliminar su información dentro de la app.  
+   - Detecta frases como: “borrar historial”, “empezar de cero”, “reiniciar todo”, “eliminar mis datos”, etc.  
+   - En cualquier otro caso, será false.
+2. conversacionNoDanimo:  
+   - Será true si el mensaje **no está relacionado** con el estado de ánimo o la salud mental de la persona.  
+   - Por ejemplo: pedir ayuda con tareas, trámites, problemas técnicos, comentarios que no expresan emociones o malestar.  
+   - Si el mensaje **sí refleja emociones, problemas personales o algo que afecte al bienestar emocional**, será false.
+3. Si el mensaje es muy breve (dos o tres palabras o una frase corta por ejemplo, “ok”, “hola”, “gracias”) y **no habla sobre borrar historial**, ambos flags deben estar en false.
+Tu única tarea es devolver el siguiente JSON **exactamente con este formato** y sin ningún texto adicional:
 {
-  "conversacionNoDanimo": true o false,
-  "intentaBorrarHistorial": true o false
+  "conversacionNoDanimo": false salvo que detectes no relacionado a temas de salud mental pero este debe tener contenido extenso,
+  "intentaBorrarHistorial": false salvo que detecte que quiere borrar el historial
 }
 No expliques nada. No agregues texto adicional. Solo responde con el JSON.`;
 

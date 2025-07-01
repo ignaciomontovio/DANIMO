@@ -44,6 +44,10 @@ export const validateLoginInputProf = (data) => Joi.object({
 export const validateGoogleTokenProf = (data) => Joi.object({
     googleJWT: Joi.required()
 }).validate(data);
+
+export const validateAuthorizeProf = (data) => Joi.object({
+    email: Joi.string().email().required()
+}).validate(data);
 // ------------------------ Users --------------------------------
 export const validateRegisterInput = (data) => Joi.object({
     password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\={};:"|,.<>?]).{8,}$'))

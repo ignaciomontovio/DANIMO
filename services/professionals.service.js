@@ -40,7 +40,7 @@ export async function loginProfessional({ email, password }) {
     if (!isValid) throw new Error('Contraseña incorrecta.');
 
     if (!professional.authorized) {
-        throw new Error('Aun no ha sido autorizado para ingresar a la aplicación.');
+        throw new Error('Su acceso no fue autorizado o se ha revocado.');
     }
 
     return signToken({ user: professional.user });
@@ -66,3 +66,11 @@ export async function googleLogin(googleJWT) {
 
     return { message: 'Login con Google exitoso', token: signToken({ user: professional.user }) };
 };
+
+export async function setProfessionalAuthorization(email, status) {
+    const professional = await findProfessionalByEmail(email);
+    if (!professional) throw new Error('Profesional no encontrado.');
+    
+    professional.authorized = status;
+    await professional.save();
+}

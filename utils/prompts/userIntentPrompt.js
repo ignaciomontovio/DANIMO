@@ -1,6 +1,9 @@
 export const userIntentPrompt = `Danimo es una app de acompañamiento emocional para jóvenes adultos. 
 Ayuda a registrar emociones, reflexionar sobre el estado de ánimo y el bienestar, y brinda apoyo a través de un agente 
-conversacional llamado Dani.
+conversacional llamado Dani. 
+Puede que las personas te hablen sobre como se sienten o lo que les pasa en su dia a dia. Si es un tema que puede
+afectar su estado de animo o su salud mental, tenlo en cuenta. 
+Si no afecta su animo o salud mental, no está relacionado a Danimo.
 Quiero que actúes como un clasificador que analiza lo que dice una persona usuaria y determines dos cosas:
 1. Si lo que dice no está relacionado con Danimo.
 2. Si intenta borrar o reiniciar su historial dentro de la app Danimo.

@@ -78,30 +78,51 @@ export async function chat({message, userId}) {
         ¿Hace referencia a una fecha?: ${hasADateReference}
         -----------------------------------------
         `);
+        
         switch (true) {
             case hasSuicideRisk === true:
-                if (await evaluateSuicideRisk(message) === true)
-                    return suicideRiskDefaultResponse
+                console.log("Detectado riesgo de suicidio");
+                if (await evaluateSuicideRisk(message) === true) {
+                    console.log("Confirmado riesgo de suicidio tras evaluación");
+                    return suicideRiskDefaultResponse;
+                }
+                break;
+
             case containsLinks === true:
-                return containsLinksResponse
+                console.log("El mensaje contiene enlaces");
+                return containsLinksResponse;
+
             case true:
-                const {conversacionNoDanimo, intentaBorrarHistorial} = userIntentMessage(message)
-                if(conversacionNoDanimo === true){
-                    return conversacionNoDanimoDefaultResponse
+                console.log("Evaluando intención del usuario");
+                const { conversacionNoDanimo, intentaBorrarHistorial } = await userIntentMessage(message);
+
+                if (intentaBorrarHistorial === true) {
+                    console.log("El usuario intenta borrar el historial de conversaciones");
+                    return intentaBorrarHistorialDefaultResponse;
                 }
-                if(intentaBorrarHistorial === true){
-                    console.log("El usuario intenta borrar el historial de conversaciones")
-                    return intentaBorrarHistorialDefaultResponse
+                if (conversacionNoDanimo === true) {
+                    console.log("El usuario expresa no tener ánimo para conversar");
+                    return conversacionNoDanimoDefaultResponse;
                 }
+                break;
 
             case isBriefResponse === true:
+                console.log("El mensaje es una respuesta breve");
                 prompt = briefResponsePrompt;
-                //logBriefResponse(message)
-                break
+                //logBriefResponse(message);
+                break;
+
             case hasADateReference === true:
-                evaluateDateReference(message)
+                console.log("El mensaje contiene una referencia a una fecha");
+                evaluateDateReference(message);
+                break;
+
             case importantDatesNearby.length > 0:
-                break
+                console.log("Hay fechas importantes cercanas");
+                break;
+
+            default:
+                console.log("Ningún caso del switch fue coincidente");
         }
         const {risk, evaluation} = await stressLevelEvaluation(message)
         // Obtén la conversación existente y genera el historial de mensajes

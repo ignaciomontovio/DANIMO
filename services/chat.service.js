@@ -82,7 +82,6 @@ export async function chat({message, userId}) {
             case hasSuicideRisk === true:
                 if (await evaluateSuicideRisk(message) === true)
                     return suicideRiskDefaultResponse
-                break
             case containsLinks === true:
                 return containsLinksResponse
             case true:
@@ -94,6 +93,7 @@ export async function chat({message, userId}) {
                     console.log("El usuario intenta borrar el historial de conversaciones")
                     return intentaBorrarHistorialDefaultResponse
                 }
+
             case isBriefResponse === true:
                 prompt = briefResponsePrompt;
                 //logBriefResponse(message)
@@ -139,19 +139,19 @@ async function compileConversationHistory(userId, currentMessage, prompt) {
 
 // Función para guardar mensajes en la base de datos
 async function saveMessagesToDB(userId, userMessage, assistantReply) {
-    const createMessage = async (type, text) => {
-        await Conversations.create({
-            id: `C-${generateUUID()}`,
-            type,
-            summaryAvailable: false,
-            text,
-            messageDate: Date.now(),
-            userId,
-        });
-    };
-
     await Promise.all([
         createMessage('user', userMessage),
         createMessage('assistant', assistantReply),
     ]);
 }
+
+const createMessage = async (type, text) => {
+    await Conversations.create({
+        id: `C-${generateUUID()}`,
+        type,
+        summaryAvailable: false,
+        text,
+        messageDate: Date.now(),
+        userId,
+    });
+};

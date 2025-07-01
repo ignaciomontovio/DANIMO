@@ -45,8 +45,9 @@ export const validateGoogleTokenProf = (data) => Joi.object({
     googleJWT: Joi.required()
 }).validate(data);
 
-export const validateAuthorizeProf = (data) => Joi.object({
-    email: Joi.string().email().required()
+export const  validateAuthorizeProf = (data) => Joi.object({
+    email: Joi.string().email().required(),
+    key: Joi.string().required()
 }).validate(data);
 // ------------------------ Users --------------------------------
 export const validateRegisterInput = (data) => Joi.object({

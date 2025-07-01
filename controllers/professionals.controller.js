@@ -51,11 +51,11 @@ export const googleLogin = async (req, res) => {
 };
 
 export const approveProfessional = async (req, res) => {
-    const { error, value } = validateAuthorizeProf(req.body);
+    const { error, value } = validateAuthorizeProf(req.query);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     try {
-        await service.setProfessionalAuthorization(value.email, true);
+        await service.setProfessionalAuthorization(value.email, true, value.key);
         console.log(`✅ Profesional ${value.email} aprobado`);
         res.status(200).json({ message: 'Profesional aprobado correctamente.' });
     } catch (err) {
@@ -65,11 +65,11 @@ export const approveProfessional = async (req, res) => {
 };
 
 export const revokeProfessional = async (req, res) => {
-    const { error, value } = validateAuthorizeProf(req.body);
+    const { error, value } = validateAuthorizeProf(req.query);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     try {
-        await service.setProfessionalAuthorization(value.email, false);
+        await service.setProfessionalAuthorization(value.email, false, value.key);
         console.log(`⛔ Profesional ${value.email} revocado`);
         res.status(200).json({ message: 'Acceso del profesional revocado.' });
     } catch (err) {

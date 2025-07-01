@@ -140,12 +140,12 @@ async function compileConversationHistory(userId, currentMessage, prompt) {
 // Función para guardar mensajes en la base de datos
 async function saveMessagesToDB(userId, userMessage, assistantReply) {
     await Promise.all([
-        createMessage('user', userMessage),
-        createMessage('assistant', assistantReply),
+        createMessage('user', userMessage, userId),
+        createMessage('assistant', assistantReply, userId),
     ]);
 }
 
-const createMessage = async (type, text) => {
+const createMessage = async (type, text, userId) => {
     await Conversations.create({
         id: `C-${generateUUID()}`,
         type,

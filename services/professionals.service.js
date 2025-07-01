@@ -82,8 +82,7 @@ export async function setProfessionalAuthorization(email, status, key) {
     const professional = await findProfessionalByEmail(email);
     if (!professional) throw new Error('Profesional no encontrado.');
     if(!validateShortKey(email, key)) throw new Error(`Key ${key} is invalid for email ${email}.`);
-    professional.authorized = status;
-    await professional.save();
+    await professional.update({ authorized: status });
 }
 
 

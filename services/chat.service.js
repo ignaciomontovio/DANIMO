@@ -11,6 +11,7 @@ import {
     conversacionNoDanimoDefaultResponse,
     intentaBorrarHistorialDefaultResponse
 } from "../utils/prompts/userIntentPrompt.js";
+import { runStrategies } from '../utils/strategy.js';
 
 // Mandar mensaje + cortar conversacion (true-false) + decir que rutina recomendar (id) o que emocion para rutinas
 //Pregunta cosas fuera de danimo
@@ -79,51 +80,65 @@ export async function chat({message, userId}) {
         ¿Intenta borrar historial?   : ${clearHistory}
         -----------------------------------------
         `);
-        
-        switch (true) {
-            case hasSuicideRisk === true:
-                console.log("Detectado riesgo de suicidio");
-                if (await evaluateSuicideRisk(message) === true) {
+
+        const strategies = [
+            {
+                condition: () => hasSuicideRisk === true,
+                lazyCondition: async () => await evaluateSuicideRisk(message) === true,
+                action: async () => {
                     console.log("Confirmado riesgo de suicidio tras evaluación");
                     return suicideRiskDefaultResponse;
                 }
-                break;
-
-            case containsLinks === true:
-                console.log("El mensaje contiene enlaces");
-                return containsLinksResponse;
-
-            case clearHistory  === true:
-                return intentaBorrarHistorialDefaultResponse
-            case true:
-                console.log("Evaluando intención del usuario");
-                const { conversacionNoDanimo, intentaBorrarHistorial } = await userIntentMessage(message);
-                /*
-                if (intentaBorrarHistorial === true) {
-                    console.log("El usuario intenta borrar el historial de conversaciones");
+            },
+            {
+                condition: () => containsLinks === true,
+                action: async () => {
+                    console.log("El mensaje contiene enlaces");
+                    return containsLinksResponse;
+                }
+            },
+            {
+                condition: () => clearHistory === true,
+                action: async () => {
                     return intentaBorrarHistorialDefaultResponse;
-                }*/
-                if (conversacionNoDanimo === true) {
+                }
+            },
+            {
+                condition: () => true,
+                lazyCondition: async () => {
+                    const { conversacionNoDanimo } = await userIntentMessage(message);
+                    return conversacionNoDanimo === true;
+                },
+                action: async () => {
                     console.log("El usuario expresa no tener ánimo para conversar");
                     return conversacionNoDanimoDefaultResponse;
                 }
-                break;
+            },
+            {
+                condition: () => isBriefResponse === true,
+                action: async () => {
+                    console.log("El mensaje es una respuesta breve");
+                    prompt = briefResponsePrompt;
+                }
+            },
+            {
+                condition: () => hasADateReference === true,
+                action: async () => {
+                    console.log("El mensaje contiene una referencia a una fecha");
+                    evaluateDateReference(message);
+                }
+            },
+            {
+                condition: () => importantDatesNearby.length > 0,
+                action: async () => {
+                    console.log("Hay fechas importantes cercanas");
+                }
+            }
+        ];
 
-            case isBriefResponse === true:
-                console.log("El mensaje es una respuesta breve");
-                prompt = briefResponsePrompt;
-                //logBriefResponse(message);
-                break;
+        const strategyResult = await runStrategies(strategies);
+        if (strategyResult !== undefined) return strategyResult;
 
-            case hasADateReference === true:
-                console.log("El mensaje contiene una referencia a una fecha");
-                evaluateDateReference(message);
-                break;
-
-            case importantDatesNearby.length > 0:
-                console.log("Hay fechas importantes cercanas");
-                break;
-        }
         const {risk, evaluation} = await stressLevelEvaluation(message)
         // Obtén la conversación existente y genera el historial de mensajes
         const messages = await compileConversationHistory(userId, message, prompt);

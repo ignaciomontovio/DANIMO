@@ -11,10 +11,45 @@ import {
     conversacionNoDanimoDefaultResponse,
     intentaBorrarHistorialDefaultResponse
 } from "../utils/prompts/userIntentPrompt.js";
+import SuicideRiskHandler from './messageEvaluation/SuicideRiskHandler.js';
+import ContainsLinksHandler from './messageEvaluation/ContainsLinksHandler.js';
+import ClearHistoryHandler from './messageEvaluation/ClearHistoryHandler.js';
+import ConversacionNoDanimoHandler from './messageEvaluation/ConversacionNoDanimoHandler.js';
+import BriefResponseHandler from './messageEvaluation/BriefResponseHandler.js';
+import DateReferenceHandler from './messageEvaluation/DateReferenceHandler.js';
+import ImportantDatesNearbyHandler from './messageEvaluation/ImportantDatesNearbyHandler.js';
 
 // Mandar mensaje + cortar conversacion (true-false) + decir que rutina recomendar (id) o que emocion para rutinas
 //Pregunta cosas fuera de danimo
 dotenv.config();
+
+const context = {
+    hasSuicideRisk,
+    containsLinks,
+    isBriefResponse,
+    hasADateReference,
+    clearHistory,
+    importantDatesNearby,
+    message,
+    evaluateSuicideRisk,
+    suicideRiskDefaultResponse,
+    containsLinksResponse,
+    intentaBorrarHistorialDefaultResponse,
+    userIntentMessage,
+    conversacionNoDanimoDefaultResponse,
+    briefResponsePrompt,
+    setPrompt: (p) => { prompt = p; },
+    evaluateDateReference
+};
+const handlers = [
+    new SuicideRiskHandler(context),
+    new ContainsLinksHandler(context),
+    new ClearHistoryHandler(context),
+    new ConversacionNoDanimoHandler(context),
+    new BriefResponseHandler(context),
+    new DateReferenceHandler(context),
+    new ImportantDatesNearbyHandler(context)
+];
 
 async function evaluateSuicideRisk(message) {
     return await suicideRiskResponse(message)
@@ -80,49 +115,15 @@ export async function chat({message, userId}) {
         -----------------------------------------
         `);
         
-        switch (true) {
-            case hasSuicideRisk === true:
-                console.log("Detectado riesgo de suicidio");
-                if (await evaluateSuicideRisk(message) === true) {
-                    console.log("Confirmado riesgo de suicidio tras evaluación");
-                    return suicideRiskDefaultResponse;
-                }
-                break;
+        // Handler base y handlers individuales ahora están en archivos separados
+        // Reemplazo del switch/cases por handlers con clases
 
-            case containsLinks === true:
-                console.log("El mensaje contiene enlaces");
-                return containsLinksResponse;
-
-            case clearHistory  === true:
-                return intentaBorrarHistorialDefaultResponse
-            case true:
-                console.log("Evaluando intención del usuario");
-                const { conversacionNoDanimo, intentaBorrarHistorial } = await userIntentMessage(message);
-                /*
-                if (intentaBorrarHistorial === true) {
-                    console.log("El usuario intenta borrar el historial de conversaciones");
-                    return intentaBorrarHistorialDefaultResponse;
-                }*/
-                if (conversacionNoDanimo === true) {
-                    console.log("El usuario expresa no tener ánimo para conversar");
-                    return conversacionNoDanimoDefaultResponse;
-                }
+        for (const handler of handlers) {
+            if (handler.matches()) {
+                const result = handler.handle.constructor.name === 'AsyncFunction' ? await handler.handle() : handler.handle();
+                if (result !== undefined) return result;
                 break;
-
-            case isBriefResponse === true:
-                console.log("El mensaje es una respuesta breve");
-                prompt = briefResponsePrompt;
-                //logBriefResponse(message);
-                break;
-
-            case hasADateReference === true:
-                console.log("El mensaje contiene una referencia a una fecha");
-                evaluateDateReference(message);
-                break;
-
-            case importantDatesNearby.length > 0:
-                console.log("Hay fechas importantes cercanas");
-                break;
+            }
         }
         const {risk, evaluation} = await stressLevelEvaluation(message)
         // Obtén la conversación existente y genera el historial de mensajes

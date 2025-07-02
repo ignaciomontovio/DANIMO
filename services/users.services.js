@@ -6,7 +6,7 @@ import { signToken, signRefreshToken } from '../utils/jwt.js';
 import { verifyGoogleToken } from '../utils/google.js';
 import {sendEmail} from '../utils/sendEmail.js';
 import createError from 'http-errors';
-import crypto from 'crypto';
+import { generateRandomKey } from '../utils/jwt.js';
 
 const TWO_HOURS = 1000 * 60 * 60 * 2;
 const findUserByEmail = async (email) => {
@@ -119,10 +119,6 @@ export async function updateUserProfile(userId, updates) {
     if (!user) throw new Error('Usuario no encontrado');
 
     await user.update(updates);
-}
-
-function generateRandomKey() {
-    return crypto.randomBytes(4).toString('hex').slice(0, 6); // 4 bytes son suficientes
 }
 
 export { findUserByEmail }; // 👈 necesario para usarlo desde el controller

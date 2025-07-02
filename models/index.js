@@ -6,6 +6,7 @@ import Professionals from "./Professionals.js";
 import Quotes from "./Quotes.js";
 import SleepRegisters from "./SleepRegisters.js";
 import Users from "./Users.js";
+import RecoveryTokensProfessionals from "./RecoveryTokensProfessionals.js";
 import RecoveryTokens from "./RecoveryTokens.js";
 import TypeActivities from "./TypeActivities.js";
 import TypeEmotions from "./TypeEmotions.js";
@@ -25,6 +26,7 @@ const models = {
     SleepRegisters,
     Users,
     RecoveryTokens,
+    RecoveryTokensProfessionals,
     TypeActivities,
     TypeEmotions,
     TypeSleeps,

@@ -5,10 +5,15 @@ import { verifyGoogleToken } from '../utils/google.js';
 import { v4 as uuidv4 } from 'uuid';
 import { sendEmail } from "../utils/sendEmail.js";
 import crypto from 'crypto';
+import createError from "http-errors";
+import { generateRandomKey } from '../utils/jwt.js';
+import RecoveryTokensProfessionals from "../models/RecoveryTokensProfessionals.js";
 
 const KEY_SIZE = 16
 const SECRET_KEY = process.env.JWT_SECRET
 const HOST = process.env.HOST
+const TWO_HOURS = 1000 * 60 * 60 * 2;
+
 const findProfessionalByEmail = async (email) => {
     return await Professionals.findOne({ where: { email } });
 };
@@ -110,4 +115,45 @@ function generateShortKey(email, secret = SECRET_KEY, length = KEY_SIZE) {
 function validateShortKey(email, keyRecibida, secreto = SECRET_KEY, length = KEY_SIZE) {
     const keyEsperada = generateShortKey(email, secreto, length);
     return keyRecibida === keyEsperada;
+}
+
+export async function forgotPassword(email) {
+    const professional = await findProfessionalByEmail(email);
+    if (!professional) throw createError(404, "Profesional no encontrado");
+    const token = generateRandomKey().toUpperCase()
+    await RecoveryTokensProfessionals.destroy({where: {professionalId: professional.id}})
+    await RecoveryTokensProfessionals.create({
+        tokenId: token, expirationDate: Date.now() + TWO_HOURS, professionalId: professional.id
+    })
+    await sendEmail(email, "Recupera tu contraseña", `Su código de recuperación es ${token}`)
+    return "Email enviado con éxito";
+}
+
+export async function resetPassword(tokenId, password) {
+    const recoveryToken = await RecoveryTokensProfessionals.findOne({
+        where: {tokenId: tokenId.toUpperCase()}, include: [{
+            model: Professionals, // Hace referencia al modelo de usuarios
+            as: 'Professionals'   // Alias definido en la relación, si lo hay
+        }]
+    })
+    if (recoveryToken === null) throw new Error("Token no encontrado");
+    const {_, expirationDate} = recoveryToken
+    if (expirationDate < Date.now()) throw new Error("Token expirado");
+    Professionals.update({password: await hashPassword(password)}, {where: {id: recoveryToken.professionalId}})
+
+    return "Contraseña cambiada con exito";
+}
+
+export async function validateToken({tokenId, email}) {
+    const recoveryToken = await RecoveryTokensProfessionals.findOne({
+        where: {tokenId: tokenId.toUpperCase()},
+        include: [{
+            model: Professionals, // Modelo de usuarios
+            as: 'Professionals'   // Alias definido en la relación
+        }]
+    })
+    if (recoveryToken === null) throw new createError(404, "Token no encontrado");
+    if (recoveryToken.Professionals.email !== email) throw new Error("Token no pertenece al profesional o incorrecto.");
+    if (recoveryToken.expirationDate < Date.now()) throw new Error("Token expirado");
+    return "Token valido"
 }

@@ -1,5 +1,11 @@
 import * as service from '../services/professionals.service.js';
-import { validateRegisterInputProf, validateLoginInputProf, validateGoogleTokenProf, validateAuthorizeProf } from '../utils/validators.js';
+import {
+    validateRegisterInputProf,
+    validateLoginInputProf,
+    validateGoogleTokenProf,
+    validateAuthorizeProf,
+    validateForgotPassword, validateResetPassword, validateToken
+} from '../utils/validators.js';
 
 export const registerProfessional = async (req, res) => {
     const { error, value } = validateRegisterInputProf(req.body);
@@ -77,3 +83,53 @@ export const revokeProfessional = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+export const forgotPassword = async (req, res) => {
+    const { error, value } = validateForgotPassword(req.body);
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: 'Email invalido' });
+    }
+
+    try {
+        const result = await service.forgotPassword(value.email);
+        console.log("✅ Email de recuperación de contraseña enviado con éxito. ")
+        res.status(200).json(result);
+    } catch (err) {
+        console.error('❌ Error recuperando contraseña:', err);
+        res.status(401).json({ error: err.message });
+    }
+};
+
+export const resetPassword = async (req, res) => {
+    const { error, value } = validateResetPassword(req.body);
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: 'token o contrasena invalida' });
+    }
+    try {
+        const {tokenId, password} = value
+        const result = await service.resetPassword(tokenId, password);
+        console.log("✅ Contraseña cambiada con éxito")
+        res.status(200).json(result);
+    } catch (err) {
+        console.error('❌ Error reseteando contraseña:', err);
+        res.status(401).json({ error: err.message });
+    }
+};
+
+export const validateTokenController = async (req, res) => {
+    const { error, value } = validateToken(req.body);
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: error.details[0].message });
+    }
+    try {
+        const response = await service.validateToken(value);
+        console.log("✅ El token " + value.tokenId + " es un token válido.")
+        res.json({ response });
+    } catch (err) {
+        console.error('❌ Token inválido:', err);
+        res.status(500).json({ error: err.message });
+    }
+}

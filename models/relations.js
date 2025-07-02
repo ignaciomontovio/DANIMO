@@ -10,6 +10,7 @@ const defineRelations = (models) => {
         SleepRegisters,
         MoodAlternators,
         RecoveryTokens,
+        RecoveryTokensProfessionals,
         Conversations,
         TypeEmotions,
         TypeActivities,
@@ -171,6 +172,10 @@ const defineRelations = (models) => {
     RecoveryTokens.belongsTo(Users, {
         foreignKey: "userId",
         as: "User",
+    });
+    RecoveryTokensProfessionals.belongsTo(Professionals, {
+        foreignKey: "professionalId",
+        as: "Professionals",
     });
     Conversations.belongsTo(Users, {
         foreignKey: "userId",

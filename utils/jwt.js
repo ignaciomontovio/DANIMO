@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import crypto from "crypto";
 
 export const signToken = (payload) => {
     return jwt.sign(payload, process.env.JWT_SECRET, {
@@ -17,3 +18,7 @@ export const signRefreshToken = (payload) => {
 export const verifyToken = (token) => {
     return jwt.verify(token, process.env.JWT_SECRET);
 };
+
+export function generateRandomKey() {
+    return crypto.randomBytes(4).toString('hex').slice(0, 6); // 4 bytes son suficientes
+}

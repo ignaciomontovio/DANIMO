@@ -149,7 +149,6 @@ async function compileConversationHistory(userId, currentMessage, prompt) {
     }
     messages.push({
         role: 'user',
-        //content: `${currentMessage}. Debes responder con el template de salida. La fecha de hoy es ` + format(new Date(), 'yyyy-MM-dd'),
         content: currentMessage
     });
     return messages;

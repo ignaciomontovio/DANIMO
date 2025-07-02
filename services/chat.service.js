@@ -3,10 +3,14 @@ import {validateMessageIntention, containsLinksResponse} from './messageIntentio
 import {v4 as generateUUID} from 'uuid';
 import {generalPrompt} from '../utils/prompts/generalPrompt.js';
 import {suicideRiskDefaultResponse} from '../utils/prompts/suicideRiskPrompt.js';
-import {userResponse, suicideRiskResponse, dateEvaluationResponse, isABriefResponse, stressLevelEvaluationResponse} from './openai.service.js';
+import {userResponse, suicideRiskResponse, dateEvaluationResponse, isABriefResponse, stressLevelEvaluationResponse, userIntentMessage} from './openai.service.js';
 import dotenv from 'dotenv';
 import ImportantEvents from "../models/ImportantEvents.js";
 import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
+import {
+    conversacionNoDanimoDefaultResponse,
+    intentaBorrarHistorialDefaultResponse
+} from "../utils/prompts/userIntentPrompt.js";
 
 // Mandar mensaje + cortar conversacion (true-false) + decir que rutina recomendar (id) o que emocion para rutinas
 //Pregunta cosas fuera de danimo
@@ -66,7 +70,7 @@ export async function chat({message, userId}) {
     }
     try {
         const importantDatesNearby = await importantDateNearby(userId);
-        const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference} = validateMessageIntention(message);
+        const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference} = await validateMessageIntention(message);
         console.log(`--- Análisis de Intención del Mensaje ---
         ¿Riesgo de suicidio?         : ${hasSuicideRisk}
         ¿Contiene enlaces?           : ${containsLinks}
@@ -74,21 +78,48 @@ export async function chat({message, userId}) {
         ¿Hace referencia a una fecha?: ${hasADateReference}
         -----------------------------------------
         `);
+        
         switch (true) {
             case hasSuicideRisk === true:
-                if (await evaluateSuicideRisk(message) === true)
-                    return suicideRiskDefaultResponse
-                break
+                console.log("Detectado riesgo de suicidio");
+                if (await evaluateSuicideRisk(message) === true) {
+                    console.log("Confirmado riesgo de suicidio tras evaluación");
+                    return suicideRiskDefaultResponse;
+                }
+                break;
+
             case containsLinks === true:
-                return containsLinksResponse
+                console.log("El mensaje contiene enlaces");
+                return containsLinksResponse;
+
+            case true:
+                console.log("Evaluando intención del usuario");
+                const { conversacionNoDanimo, intentaBorrarHistorial } = await userIntentMessage(message);
+
+                if (intentaBorrarHistorial === true) {
+                    console.log("El usuario intenta borrar el historial de conversaciones");
+                    return intentaBorrarHistorialDefaultResponse;
+                }
+                if (conversacionNoDanimo === true) {
+                    console.log("El usuario expresa no tener ánimo para conversar");
+                    return conversacionNoDanimoDefaultResponse;
+                }
+                break;
+
             case isBriefResponse === true:
+                console.log("El mensaje es una respuesta breve");
                 prompt = briefResponsePrompt;
-                //logBriefResponse(message)
-                break
+                //logBriefResponse(message);
+                break;
+
             case hasADateReference === true:
-                evaluateDateReference(message)
+                console.log("El mensaje contiene una referencia a una fecha");
+                evaluateDateReference(message);
+                break;
+
             case importantDatesNearby.length > 0:
-                break
+                console.log("Hay fechas importantes cercanas");
+                break;
         }
         const {risk, evaluation} = await stressLevelEvaluation(message)
         // Obtén la conversación existente y genera el historial de mensajes
@@ -102,7 +133,7 @@ export async function chat({message, userId}) {
         console.error('Error en el flujo del chat:', error.message);
         throw new Error('Ocurrió un problema al procesar la solicitud del chat.');
     }
-};
+}
 
 // Función responsable de compilar el historial de conversación
 async function compileConversationHistory(userId, currentMessage, prompt) {
@@ -126,19 +157,19 @@ async function compileConversationHistory(userId, currentMessage, prompt) {
 
 // Función para guardar mensajes en la base de datos
 async function saveMessagesToDB(userId, userMessage, assistantReply) {
-    const createMessage = async (type, text) => {
-        await Conversations.create({
-            id: `C-${generateUUID()}`,
-            type,
-            summaryAvailable: false,
-            text,
-            messageDate: Date.now(),
-            userId,
-        });
-    };
-
     await Promise.all([
-        createMessage('user', userMessage),
-        createMessage('assistant', assistantReply),
+        createMessage('user', userMessage, userId),
+        createMessage('assistant', assistantReply, userId),
     ]);
 }
+
+const createMessage = async (type, text, userId) => {
+    await Conversations.create({
+        id: `C-${generateUUID()}`,
+        type,
+        summaryAvailable: false,
+        text,
+        messageDate: Date.now(),
+        userId,
+    });
+};

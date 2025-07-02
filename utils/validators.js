@@ -21,9 +21,16 @@ export const validateRegisterInputProf = (data) => Joi.object({
         'string.email': 'El email no es válido.',
         'string.empty': 'El email es obligatoria.'
     }),
-    profession: Joi.string().valid('Psicologo', 'Psiquiatra').required(),
     birthDate: Joi.date().iso().optional(),
-    gender: Joi.string().valid('Masculino', 'Femenino', 'No Binario', 'Prefiero no decir').required()
+    gender: Joi.string().valid('Masculino', 'Femenino', 'No Binario', 'Prefiero no decir').required(),
+    license: Joi.string().required().messages({
+        'any.required': 'La matricula es obligatoria.',
+        'string.empty': 'La matricula no puede ser vacia.'
+    }),
+    dni: Joi.number().integer().required().messages({
+        'number.base': 'El campo dni debe ser un número.',
+        'any.required': 'El dni es obligatorio.'
+    })
 }).validate(data);
 
 export const validateLoginInputProf = (data) => Joi.object({
@@ -36,6 +43,11 @@ export const validateLoginInputProf = (data) => Joi.object({
 
 export const validateGoogleTokenProf = (data) => Joi.object({
     googleJWT: Joi.required()
+}).validate(data);
+
+export const  validateAuthorizeProf = (data) => Joi.object({
+    email: Joi.string().email().required(),
+    key: Joi.string().required()
 }).validate(data);
 // ------------------------ Users --------------------------------
 export const validateRegisterInput = (data) => Joi.object({
@@ -285,6 +297,15 @@ export const validateStressLevelResponse = (data) => {
         culpa: Joi.number().required(),
         confusion: Joi.number().required(),
         euforia: Joi.number().required()
+    });
+
+    return schema.validate(data);
+};
+
+export const validateUserIntentResponse = (data) => {
+    const schema = Joi.object({
+        conversacionNoDanimo: Joi.boolean().required(),
+        intentaBorrarHistorial: Joi.boolean().required()
     });
 
     return schema.validate(data);

@@ -27,7 +27,7 @@ import medication from '../routes/medications.routers.js';
 import notification from '../routes/notifications.routers.js';
 
 app.use('/auth', usersRoutes);
-app.use('/professionalsAuth', professionalsRoutes);
+app.use('/auth/professional', professionalsRoutes);
 app.use('/activity', activity)
 app.use('/emotion', emotion)
 app.use('/sleep', sleep)

@@ -32,12 +32,24 @@ export async function registerProfessional({ firstName, lastName, email, passwor
         dni,
         authorized: false
     });
-    const msj = `Se ha registrado un nuevo profesional: ${firstName} ${lastName} con email: 
-    ${email}. DNI: ${dni} Matricula: ${license} Por favor, valide su acceso.
-    Aprobar: ${HOST}/auth/professional/approve?email=${email}&key=${generateShortKey(email)}
-    Rechazar: ${HOST}/auth/professional/revoke?email=${email}&key=${generateShortKey(email)}`
+    const MSJ = `Nuevo profesional registrado:
 
-    await sendEmail("danimoapp@gmail.com", "Nuevo profesional registrado", msj);
+    Nombre: ${firstName} ${lastName}
+    Email: ${email}
+    DNI: ${dni}
+    Matrícula: ${license}
+    
+    Por favor, valide su acceso utilizando los siguientes enlaces:
+    
+    ✅ Aprobar acceso:
+    ${HOST}/auth/professional/approve?email=${email}&key=${generateShortKey(email)}
+    
+    ❌ Rechazar acceso:
+    ${HOST}/auth/professional/revoke?email=${email}&key=${generateShortKey(email)}
+    
+    Gracias por su colaboración.`
+
+    await sendEmail("danimoapp@gmail.com", "Nuevo profesional registrado", MSJ);
 
     return '¡Profesional registrado correctamente!';
 }

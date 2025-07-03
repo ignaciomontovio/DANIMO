@@ -181,6 +181,10 @@ const defineRelations = (models) => {
         foreignKey: "userId",
         as: "User",
     });
+    Users.hasMany(Conversations, {
+        foreignKey: "userId",
+        as: "Conversations",
+    });
     ImportantEvents.belongsTo(Users, {
         foreignKey: "userId",
         as: "User",

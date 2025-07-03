@@ -70,12 +70,13 @@ export async function chat({message, userId}) {
     }
     try {
         const importantDatesNearby = await importantDateNearby(userId);
-        const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference} = await validateMessageIntention(message);
+        const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory} = await validateMessageIntention(message);
         console.log(`--- Análisis de Intención del Mensaje ---
         ¿Riesgo de suicidio?         : ${hasSuicideRisk}
         ¿Contiene enlaces?           : ${containsLinks}
         ¿Es una respuesta breve?     : ${isBriefResponse}
         ¿Hace referencia a una fecha?: ${hasADateReference}
+        ¿Intenta borrar historial?   : ${clearHistory}
         -----------------------------------------
         `);
         
@@ -92,14 +93,16 @@ export async function chat({message, userId}) {
                 console.log("El mensaje contiene enlaces");
                 return containsLinksResponse;
 
+            case clearHistory  === true:
+                return intentaBorrarHistorialDefaultResponse
             case true:
                 console.log("Evaluando intención del usuario");
                 const { conversacionNoDanimo, intentaBorrarHistorial } = await userIntentMessage(message);
-
+                /*
                 if (intentaBorrarHistorial === true) {
                     console.log("El usuario intenta borrar el historial de conversaciones");
                     return intentaBorrarHistorialDefaultResponse;
-                }
+                }*/
                 if (conversacionNoDanimo === true) {
                     console.log("El usuario expresa no tener ánimo para conversar");
                     return conversacionNoDanimoDefaultResponse;

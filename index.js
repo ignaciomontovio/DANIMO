@@ -13,8 +13,8 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
     await testConnection();
-    //await syncDatabase({ force: true }); //Para que la base se cree desde 0
-    await syncDatabase(); // usa alter por defecto
+    await syncDatabase({ force: true }); //Para que la base se cree desde 0
+    //await syncDatabase(); // usa alter por defecto
     await seedQuotesIfEmpty();
     await seedTypeActivities();
     await seedTypeEmotions();

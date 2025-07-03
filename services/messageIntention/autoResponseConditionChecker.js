@@ -3,6 +3,8 @@ import {suicideRiskDefaultResponse} from "../../utils/prompts/suicideRiskPrompt.
 import {containsLinksResponse} from "./messageIntentionService.js";
 import {conversacionNoDanimoDefaultResponse} from "../../utils/prompts/userIntentPrompt.js";
 import {intentaBorrarHistorialDefaultResponse} from "../../utils/prompts/userIntentPrompt.js";
+import UsersEmotionalState from "../../models/UsersEmotionalState.js";
+import {v4 as uuidv4} from "uuid";
 
 function logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory) {
     console.log(`--- Análisis de Intención del Mensaje ---
@@ -15,12 +17,23 @@ function logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateRefere
         `);
 }
 
-export async function conditionChecker(message, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory) {
+export async function autoResponseConditionChecker(message, userId, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory) {
     logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory);
     if (hasSuicideRisk) {
-        if (await suicideRiskResponse(message) === true)
+        if (await suicideRiskResponse(message) === true){
             console.log("Confirmado riesgo de suicidio tras evaluación")
-        return {autoResponse: true, defaultResponse: suicideRiskDefaultResponse};
+            UsersEmotionalState.create(
+                {
+                    id: `RISK-${uuidv4()}`,
+                    suicideRiskDetected: true,
+                    routineRecomended: false,
+                    message: message,
+                    date: new Date(),
+                    userId: userId
+                }
+            )
+            return {autoResponse: true, defaultResponse: suicideRiskDefaultResponse};
+        }
     }
 
     if (containsLinks === true) {
@@ -39,4 +52,16 @@ export async function conditionChecker(message, hasSuicideRisk, containsLinks, i
         return {autoResponse: true, defaultResponse: conversacionNoDanimoDefaultResponse};
     }
     return {autoResponse: false, defaultResponse: null};
+}
+
+export async function evaluateRecentSuicideRisk(userId) {
+    const today = new Date()
+    const [day, month, year] = [today.getDay(), today.getMonth(), today.getFullYear()];
+    const userStates = await UsersEmotionalState.findAll({ where: { userId } });
+    console.log(userStates)
+    if(userStates.some(state => state.suicideRiskDetected === true
+        && state.date.getDay() === day && state.date.getMonth() === month && state.date.getFullYear() === year)) {
+        console.log("El usuario ha tenido riesgo de suicidio hoy. Se bloqueará el envío de mensajes.");
+        return true;
+    }
 }

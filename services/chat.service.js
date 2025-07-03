@@ -6,7 +6,10 @@ import {userResponse, dateEvaluationResponse} from './openai.service.js';
 import dotenv from 'dotenv';
 import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
 import {riskScoreEvaluation} from "./messageIntention/riskScoreEvaluation.js";
-import {conditionChecker} from "./messageIntention/autoResponseConditionChecker.js";
+import {
+    autoResponseConditionChecker,
+    evaluateRecentSuicideRisk
+} from "./messageIntention/autoResponseConditionChecker.js";
 
 dotenv.config();
 
@@ -15,19 +18,24 @@ function evaluateDateReference(message) {
 }
 
 export async function chat({message, userId}) {
+    if (await evaluateRecentSuicideRisk(userId) === true) {
+        console.log("El usuario tiene riesgo de suicidio reciente, no se procesará el mensaje.")
+        return "No podemos procesar tu mensaje en este momento. Por favor, contacta a un profesional de salud mental.";
+    }
     let prompt = generalPrompt;
     // Validamos que los parámetros de entrada sean correctos
     if (!message || !userId) {
         throw new Error('El mensaje y el userId son obligatorios');
     }
     try {
-        const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory} = await validateMessageIntention(message);
+        const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory} =
+            validateMessageIntention(message);
         const {autoResponse, defaultResponse} =
-            await conditionChecker(message, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory)
-        if(autoResponse === true) {
+            await autoResponseConditionChecker(message, userId, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory)
+        if (autoResponse === true) {
             return defaultResponse
         }
-        if(isBriefResponse === true) {
+        if (isBriefResponse === true) {
             console.log("El mensaje es una respuesta breve");
             prompt = briefResponsePrompt;
         }

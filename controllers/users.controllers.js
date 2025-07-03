@@ -28,7 +28,7 @@ export const validateTokenController = async (req, res) => {
 }
 
 export const registerUser = async (req, res) => {
-    const { error, value } = validateRegisterInput(req.query);
+    const { error, value } = validateRegisterInput(req.body);
     if (error) {
         console.error("❌ Error in joi validation Error:" + error.details[0].message)
         return res.status(400).json({ error: error.details[0].message });

@@ -37,7 +37,7 @@ async function stressLevelEvaluation(message) {
     return {risk: emotionWithRiskLevel(evaluation), evaluation: evaluation};
 }
 
-export async function riskScoreEvaluation(userId) {
+export async function riskScoreEvaluation(userId, message) {
     let totalScore = 0
     const importantDates = await importantDateNearby(userId)
     if (importantDates.length > 0){

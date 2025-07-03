@@ -33,7 +33,7 @@ export async function chat({message, userId}) {
         -----------------------------------------
         `);
         const {autoResponse, defaultResponse} =
-            await conditionChecker(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory)
+            await conditionChecker(message, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory)
         if(autoResponse === true) {
             return defaultResponse
         }
@@ -45,7 +45,7 @@ export async function chat({message, userId}) {
             console.log("El mensaje contiene una referencia a una fecha");
             evaluateDateReference(message);
         }
-        await riskScoreEvaluation(userId)
+        await riskScoreEvaluation(userId, message)
         // Obtén la conversación existente y genera el historial de mensajes
         const messages = await compileConversationHistory(userId, message, prompt);
         // Envía el mensaje a la API de OpenAI y obtiene la respuesta
@@ -80,6 +80,7 @@ async function compileConversationHistory(userId, currentMessage, prompt) {
 
 // Función para guardar mensajes en la base de datos
 async function saveMessagesToDB(userId, userMessage, assistantReply) {
+    console.log(`Se guardara ${userId} `)
     await Promise.all([
         createMessage('user', userMessage, userId),
         createMessage('assistant', assistantReply, userId),

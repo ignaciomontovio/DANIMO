@@ -11,6 +11,7 @@ import {
     conversacionNoDanimoDefaultResponse,
     intentaBorrarHistorialDefaultResponse
 } from "../utils/prompts/userIntentPrompt.js";
+import {conditionChecker} from "./messageIntention/autoResponseConditionChecker.js";
 
 // Mandar mensaje + cortar conversacion (true-false) + decir que rutina recomendar (id) o que emocion para rutinas
 //Pregunta cosas fuera de danimo
@@ -79,36 +80,12 @@ export async function chat({message, userId}) {
         ¿Intenta borrar historial?   : ${clearHistory}
         -----------------------------------------
         `);
-        
+        const {autoResponse, defaultResponse} = await conditionChecker(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory)
+        if(autoResponse === true) {
+            return defaultResponse
+        }
+
         switch (true) {
-            case hasSuicideRisk === true:
-                console.log("Detectado riesgo de suicidio");
-                if (await evaluateSuicideRisk(message) === true) {
-                    console.log("Confirmado riesgo de suicidio tras evaluación");
-                    return suicideRiskDefaultResponse;
-                }
-                break;
-
-            case containsLinks === true:
-                console.log("El mensaje contiene enlaces");
-                return containsLinksResponse;
-
-            case clearHistory  === true:
-                return intentaBorrarHistorialDefaultResponse
-            case true:
-                console.log("Evaluando intención del usuario");
-                const { conversacionNoDanimo, intentaBorrarHistorial } = await userIntentMessage(message);
-                /*
-                if (intentaBorrarHistorial === true) {
-                    console.log("El usuario intenta borrar el historial de conversaciones");
-                    return intentaBorrarHistorialDefaultResponse;
-                }*/
-                if (conversacionNoDanimo === true) {
-                    console.log("El usuario expresa no tener ánimo para conversar");
-                    return conversacionNoDanimoDefaultResponse;
-                }
-                break;
-
             case isBriefResponse === true:
                 console.log("El mensaje es una respuesta breve");
                 prompt = briefResponsePrompt;

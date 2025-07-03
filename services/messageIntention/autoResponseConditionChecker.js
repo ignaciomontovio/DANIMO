@@ -1,4 +1,5 @@
-import {userResponse, suicideRiskResponse, dateEvaluationResponse, isABriefResponse, stressLevelEvaluationResponse, userIntentMessage} from './openai.service.js';
+
+import {suicideRiskResponse, userIntentMessage} from '../openai.service.js';
 import {suicideRiskDefaultResponse} from "../../utils/prompts/suicideRiskPrompt.js";
 import {containsLinksResponse} from "./messageIntentionService.js";
 import {conversacionNoDanimoDefaultResponse} from "../../utils/prompts/userIntentPrompt.js";

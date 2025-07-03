@@ -4,7 +4,19 @@ import {containsLinksResponse} from "./messageIntentionService.js";
 import {conversacionNoDanimoDefaultResponse} from "../../utils/prompts/userIntentPrompt.js";
 import {intentaBorrarHistorialDefaultResponse} from "../../utils/prompts/userIntentPrompt.js";
 
+function logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory) {
+    console.log(`--- Análisis de Intención del Mensaje ---
+        ¿Riesgo de suicidio?         : ${hasSuicideRisk}
+        ¿Contiene enlaces?           : ${containsLinks}
+        ¿Es una respuesta breve?     : ${isBriefResponse}
+        ¿Hace referencia a una fecha?: ${hasADateReference}
+        ¿Intenta borrar historial?   : ${clearHistory}
+        -----------------------------------------
+        `);
+}
+
 export async function conditionChecker(message, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory) {
+    logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory);
     if (hasSuicideRisk) {
         if (await suicideRiskResponse(message) === true)
             console.log("Confirmado riesgo de suicidio tras evaluación")

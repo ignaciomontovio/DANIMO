@@ -2,14 +2,12 @@ import Conversations from '../models/Conversations.js';
 import {validateMessageIntention} from './messageIntention/messageIntentionService.js';
 import {v4 as generateUUID} from 'uuid';
 import {generalPrompt} from '../utils/prompts/generalPrompt.js';
-import {userResponse, dateEvaluationResponse, isABriefResponse, stressLevelEvaluationResponse, userIntentMessage} from './openai.service.js';
+import {userResponse, dateEvaluationResponse} from './openai.service.js';
 import dotenv from 'dotenv';
 import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
 import {riskScoreEvaluation} from "./messageIntention/riskScoreEvaluation.js";
 import {conditionChecker} from "./messageIntention/autoResponseConditionChecker.js";
 
-// Mandar mensaje + cortar conversacion (true-false) + decir que rutina recomendar (id) o que emocion para rutinas
-//Pregunta cosas fuera de danimo
 dotenv.config();
 
 function evaluateDateReference(message) {
@@ -24,14 +22,6 @@ export async function chat({message, userId}) {
     }
     try {
         const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory} = await validateMessageIntention(message);
-        console.log(`--- Análisis de Intención del Mensaje ---
-        ¿Riesgo de suicidio?         : ${hasSuicideRisk}
-        ¿Contiene enlaces?           : ${containsLinks}
-        ¿Es una respuesta breve?     : ${isBriefResponse}
-        ¿Hace referencia a una fecha?: ${hasADateReference}
-        ¿Intenta borrar historial?   : ${clearHistory}
-        -----------------------------------------
-        `);
         const {autoResponse, defaultResponse} =
             await conditionChecker(message, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory)
         if(autoResponse === true) {

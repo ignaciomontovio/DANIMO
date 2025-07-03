@@ -1,130 +1,49 @@
 import Conversations from '../models/Conversations.js';
-import {validateMessageIntention, containsLinksResponse} from './messageIntention/messageIntentionService.js';
+import {validateMessageIntention} from './messageIntention/messageIntentionService.js';
 import {v4 as generateUUID} from 'uuid';
 import {generalPrompt} from '../utils/prompts/generalPrompt.js';
-import {suicideRiskDefaultResponse} from '../utils/prompts/suicideRiskPrompt.js';
-import {userResponse, suicideRiskResponse, dateEvaluationResponse, isABriefResponse, stressLevelEvaluationResponse, userIntentMessage} from './openai.service.js';
+import {userResponse, dateEvaluationResponse} from './openai.service.js';
 import dotenv from 'dotenv';
-import ImportantEvents from "../models/ImportantEvents.js";
 import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
+import {riskScoreEvaluation} from "./messageIntention/riskScoreEvaluation.js";
 import {
-    conversacionNoDanimoDefaultResponse,
-    intentaBorrarHistorialDefaultResponse
-} from "../utils/prompts/userIntentPrompt.js";
+    autoResponseConditionChecker,
+    evaluateRecentSuicideRisk
+} from "./messageIntention/autoResponseConditionChecker.js";
 
-// Mandar mensaje + cortar conversacion (true-false) + decir que rutina recomendar (id) o que emocion para rutinas
-//Pregunta cosas fuera de danimo
 dotenv.config();
-
-async function evaluateSuicideRisk(message) {
-    return await suicideRiskResponse(message)
-}
-
-async function logBriefResponse(message) {
-    await isABriefResponse(message)
-}
 
 function evaluateDateReference(message) {
     dateEvaluationResponse(message)
 }
 
-async function importantDateNearby(userId) {
-    const actualMonth = new Date().getMonth() + 1; // Los meses en JavaScript van de 0 a 11
-    const actualDay = new Date().getDate();
-    const importantDates = await ImportantEvents.findAll({
-        where: {
-            userId
-        }
-    });
-    return importantDates.map(impD => {
-        // date1 y date2 son objetos Date
-        const date1 = impD.eventDate
-        const d1 = new Date(2000, date1.getMonth(), date1.getDate());
-        const d2 = new Date(2000, actualMonth, actualDay);
-        const diff = Math.abs(d1 - d2) / (1000 * 60 * 60 * 24); // Diferencia en días
-        if (diff <= 7) {
-            console.log(`¡Atención! La fecha importante "${impD.eventDescription}" está a ${diff} días de distancia.`);
-            return true
-        } else {
-            console.log(`La fecha importante "${impD.eventDescription}" está a más de 7 días de distancia.`);
-            return false
-        }
-    })
-}
-function emotionWithRiskLevel(emotion) {
-    return emotion.ira >= 4 || emotion.tristeza >= 4 || emotion.miedo >= 4
-    || emotion.frustracion >= 4 || emotion.culpa >= 4
-    || emotion.confusion >= 4 || emotion.euforia >= 4
-}
-async function stressLevelEvaluation(message) {
-    const evaluation = await stressLevelEvaluationResponse(message)
-    console.log(`Evaluación de nivel de estrés: ${JSON.stringify(evaluation)}`);
-    return {risk: emotionWithRiskLevel(evaluation), evaluation: evaluation};
-}
-
 export async function chat({message, userId}) {
+    if (await evaluateRecentSuicideRisk(userId) === true) {
+        console.log("El usuario tiene riesgo de suicidio reciente, no se procesará el mensaje.")
+        return "No podemos procesar tu mensaje en este momento. Por favor, contacta a un profesional de salud mental.";
+    }
     let prompt = generalPrompt;
     // Validamos que los parámetros de entrada sean correctos
     if (!message || !userId) {
         throw new Error('El mensaje y el userId son obligatorios');
     }
     try {
-        const importantDatesNearby = await importantDateNearby(userId);
-        const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory} = await validateMessageIntention(message);
-        console.log(`--- Análisis de Intención del Mensaje ---
-        ¿Riesgo de suicidio?         : ${hasSuicideRisk}
-        ¿Contiene enlaces?           : ${containsLinks}
-        ¿Es una respuesta breve?     : ${isBriefResponse}
-        ¿Hace referencia a una fecha?: ${hasADateReference}
-        ¿Intenta borrar historial?   : ${clearHistory}
-        -----------------------------------------
-        `);
-        
-        switch (true) {
-            case hasSuicideRisk === true:
-                console.log("Detectado riesgo de suicidio");
-                if (await evaluateSuicideRisk(message) === true) {
-                    console.log("Confirmado riesgo de suicidio tras evaluación");
-                    return suicideRiskDefaultResponse;
-                }
-                break;
-
-            case containsLinks === true:
-                console.log("El mensaje contiene enlaces");
-                return containsLinksResponse;
-
-            case clearHistory  === true:
-                return intentaBorrarHistorialDefaultResponse
-            case true:
-                console.log("Evaluando intención del usuario");
-                const { conversacionNoDanimo, intentaBorrarHistorial } = await userIntentMessage(message);
-                /*
-                if (intentaBorrarHistorial === true) {
-                    console.log("El usuario intenta borrar el historial de conversaciones");
-                    return intentaBorrarHistorialDefaultResponse;
-                }*/
-                if (conversacionNoDanimo === true) {
-                    console.log("El usuario expresa no tener ánimo para conversar");
-                    return conversacionNoDanimoDefaultResponse;
-                }
-                break;
-
-            case isBriefResponse === true:
-                console.log("El mensaje es una respuesta breve");
-                prompt = briefResponsePrompt;
-                //logBriefResponse(message);
-                break;
-
-            case hasADateReference === true:
-                console.log("El mensaje contiene una referencia a una fecha");
-                evaluateDateReference(message);
-                break;
-
-            case importantDatesNearby.length > 0:
-                console.log("Hay fechas importantes cercanas");
-                break;
+        const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory} =
+            validateMessageIntention(message);
+        const {autoResponse, defaultResponse} =
+            await autoResponseConditionChecker(message, userId, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory)
+        if (autoResponse === true) {
+            return defaultResponse
         }
-        const {risk, evaluation} = await stressLevelEvaluation(message)
+        if (isBriefResponse === true) {
+            console.log("El mensaje es una respuesta breve");
+            prompt = briefResponsePrompt;
+        }
+        if (hasADateReference === true) {
+            console.log("El mensaje contiene una referencia a una fecha");
+            evaluateDateReference(message);
+        }
+        await riskScoreEvaluation(userId, message)
         // Obtén la conversación existente y genera el historial de mensajes
         const messages = await compileConversationHistory(userId, message, prompt);
         // Envía el mensaje a la API de OpenAI y obtiene la respuesta
@@ -159,6 +78,7 @@ async function compileConversationHistory(userId, currentMessage, prompt) {
 
 // Función para guardar mensajes en la base de datos
 async function saveMessagesToDB(userId, userMessage, assistantReply) {
+    console.log(`Se guardara ${userId} `)
     await Promise.all([
         createMessage('user', userMessage, userId),
         createMessage('assistant', assistantReply, userId),

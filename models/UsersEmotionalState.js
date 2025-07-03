@@ -4,7 +4,7 @@ const sequelize = init();
 
 const UsersEmotionalState = sequelize.define('UsersEmotionalState', {
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         primaryKey: true
     },
     suicideRiskDetected: {

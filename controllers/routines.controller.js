@@ -1,4 +1,8 @@
 import * as service from '../services/routines.service.js';
+import { validateRoutineCreationInput } from '../utils/validators.js';
+import Users from '../models/Users.js';
+import Professionals from '../models/Professionals.js';
+import TypeEmotions from '../models/TypeEmotions.js';
 
 export const obtainRoutines = async (req, res) => {
   const userId = req.userId; //viene del middleware
@@ -7,8 +11,41 @@ export const obtainRoutines = async (req, res) => {
         console.log(`✅ Rutinas obtenidas exitosamente para ${userId}`);
         res.json(routines);
     } catch (err) {
-        console.error('❌ Error al obtener rutinas:', err.message);
         console.error(`❌ Error en /routines/obtain para ${userId}:`, err.message);
         res.status(400).json({ error: err.message });
+    }
+};
+
+export const createRoutine = async (req, res) => {
+    const { error } = validateRoutineCreationInput(req.body);
+    if (error) {
+        console.warn('⚠️ Validación fallida en createRoutine:', error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const { name, body, emotion: emotionNumber } = req.body;
+    const userId = req.userId;
+
+    try {
+        const isProfessional = await Professionals.findOne({ where: { id: userId } });
+
+        if (!isProfessional) {
+            console.warn(`⛔ El userId ${userId} no pertenece a un profesional`);
+            return res.status(403).json({ error: 'Solo los profesionales pueden crear rutinas' });
+        }
+
+        const emotion = await TypeEmotions.findOne({ where: { number: emotionNumber } });
+
+        if (!emotion) {
+            console.warn(`❌ No se encontró emoción con número=${emotionNumber}`);
+            return res.status(404).json({ error: `No se encontró una emoción con el número ${emotionNumber}` });
+        }
+
+        const result = await service.createRoutine({ name, body, emotion: emotion.name, createdBy: userId });
+        console.log(`✅ Rutina creada correctamente por ${userId}: ${name}`);
+        res.status(200).json({ message: result });
+    } catch (err) {
+        console.error('❌ Error al crear rutina:', err.message);
+        res.status(500).json({ error: 'Error al crear rutina' });
     }
 };

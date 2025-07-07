@@ -25,6 +25,7 @@ import quote from '../routes/quotes.routers.js';
 import sms from '../routes/sms.routers.js';
 import medication from '../routes/medications.routers.js';
 import notification from '../routes/notifications.routers.js';
+import routine from '../routes/routines.routers.js';
 
 app.use('/auth', usersRoutes);
 app.use('/auth/professional', professionalsRoutes);
@@ -37,5 +38,6 @@ app.use('/dani', chat)
 app.use('/sms', sms)
 app.use('/medication',medication)
 app.use('/notification',notification)
+app.use('/routine',routine)
 
 export default app;

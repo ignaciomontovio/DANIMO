@@ -16,7 +16,8 @@ const defineRelations = (models) => {
         TypeActivities,
         TypeSleeps,
         Photos,
-        ImportantEvents
+        ImportantEvents,
+        Routines
     } = models;
 
     // Usuario 1:N Medicaciones
@@ -158,6 +159,18 @@ const defineRelations = (models) => {
         foreignKey: 'sleepName',
         sourceKey: 'name',
         as: 'sleepRegisters'
+    });
+
+    // Usuario N:N Rutinas
+    Users.belongsToMany(Routines, {
+        through: "UserRoutines",
+        as: "Routines",
+        foreignKey: "userId",
+    });
+    Routines.belongsToMany(Users, {
+        through: "UserRoutines",
+        as: "Users",
+        foreignKey: "routineId",
     });
 
     // Usuario 1:N Alteradores de ánimo

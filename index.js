@@ -7,6 +7,7 @@ import seedQuotesIfEmpty from './utils/seedQuotes.js';
 import seedTypeActivities from './utils/seedTypeActivities.js';
 import {seedTypeEmotions} from './utils/seedTypeEmotions.js';
 import {seedTypeSleep} from './utils/seedTypeSleeps.js';
+import {seedRoutines} from './utils/seedRoutines.js';
 import {notificationServiceInitialize} from './services/notifications.services.js';
 
 const PORT = process.env.PORT || 3000;
@@ -19,6 +20,7 @@ app.listen(PORT, async () => {
     await seedTypeActivities();
     await seedTypeEmotions();
     await seedTypeSleep();
+    await seedRoutines();
     await notificationServiceInitialize()
     console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });

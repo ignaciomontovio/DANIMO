@@ -45,6 +45,18 @@ const Professionals = sequelize.define('Professionals', {
         allowNull: false,
         unique: false
     },
+    occupation: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    livesWith: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    profilePic: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
     license: {
         type: DataTypes.STRING,
         allowNull: false,

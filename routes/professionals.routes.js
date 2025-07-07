@@ -1,5 +1,7 @@
 import express from 'express';
 import * as controller from '../controllers/professionals.controller.js';
+import {authMiddleware} from '../middleware/middleware.js';
+import { upload } from '../utils/uploads.js';
 import * as usersController from "../controllers/users.controllers.js";
 
 const router = express.Router();
@@ -12,5 +14,7 @@ router.get('/revoke', controller.revokeProfessional);
 router.post('/forgot-password', controller.forgotPassword);
 router.post('/validate-token', controller.validateTokenController);
 router.post('/reset-password', controller.resetPassword);
+//Si lo de la foto no anda, sacar el upload en la ruta de abajo y quitar el import
+router.patch('/update-profile', authMiddleware, upload.single('profilePic'), controller.updateProfessionalProfile);
 
 export default router;

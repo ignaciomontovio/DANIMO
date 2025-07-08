@@ -1,5 +1,5 @@
 import * as service from '../services/routines.service.js';
-import { validateRoutineCreationInput, validateRoutineEditInput } from '../utils/validators.js';
+import { validateRoutineCreationInput, validateRoutineEditInput, validateRoutineDeleteInput } from '../utils/validators.js';
 import Users from '../models/Users.js';
 import Professionals from '../models/Professionals.js';
 import TypeEmotions from '../models/TypeEmotions.js';
@@ -89,6 +89,33 @@ export const updateRoutine = async (req, res) => {
 
     } catch (err) {
         console.error('❌ Error al actualizar rutina:', err.message);
+        res.status(400).json({ error: err.message });
+    }
+};
+
+export const deleteRoutine = async (req, res) => {
+    const { error } = validateRoutineDeleteInput(req.body);
+    if (error) {
+        console.warn('⚠️ Validación fallida en deleteRoutine:', error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const { name } = req.body;
+    const userId = req.userId;
+
+    try {
+        const isProfessional = await Professionals.findOne({ where: { id: userId } });
+        if (!isProfessional) {
+            console.warn(`⛔ El userId ${userId} no pertenece a un profesional`);
+            return res.status(403).json({ error: 'Solo los profesionales pueden borrar rutinas' });
+        }
+
+        const result = await service.deleteRoutine(name, userId);
+        console.log(`🗑️ Rutina eliminada: ${name} por profesional ${userId}`);
+        res.status(200).json({ message: result });
+
+    } catch (err) {
+        console.error('❌ Error al eliminar rutina:', err.message);
         res.status(400).json({ error: err.message });
     }
 };

@@ -443,3 +443,14 @@ export const validateRoutineEditInput = (data) => {
 
     return schema.validate(data);
 };
+
+export const validateRoutineDeleteInput = (data) => {
+    const schema = Joi.object({
+        name: Joi.string().required().messages({
+            'any.required': '"name" es obligatorio',
+            'string.base': '"name" debe ser un texto válido',
+        })
+    });
+
+    return schema.validate(data);
+};

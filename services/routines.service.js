@@ -72,3 +72,14 @@ export async function updateRoutine({ currentName, name, body, emotionName, user
 
     return 'Rutina actualizada correctamente';
 }
+
+export async function deleteRoutine(name, userId) {
+    const routine = await Routines.findOne({ where: { name, createdBy: userId } });
+
+    if (!routine) {
+        throw new Error('No se encontró una rutina con ese nombre que pertenezca al profesional.');
+    }
+
+    await routine.destroy();
+    return 'Rutina eliminada correctamente';
+}

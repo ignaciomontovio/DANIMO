@@ -1,4 +1,5 @@
 import { cleanMessage } from '../../utils/textNormalize.js';
+import UsersEmotionalState from "../../models/UsersEmotionalState.js";
 
 export function briefResponse(text) {
     const cleaned = cleanMessage(text);
@@ -26,4 +27,16 @@ export function briefResponse(text) {
     );
     console.log("phase size " + cleaned.length)
     return (wordMatch || phraseMatch) && cleaned.length < 20;
+}
+
+export async function briefResponseCooldown(userId) {
+    const briefResponses = await UsersEmotionalState.findAll({where: {briefResponse: true, userId: userId}})
+    console.log(briefResponses)
+    return briefResponses.some( br => {
+        const now = new Date();
+        const diff = now - br.date;
+        const diffInMinutes = Math.floor(diff / (1000 * 60));
+        console.log(`Diferencia en minutos desde la última respuesta breve: ${diffInMinutes}`);
+        return diffInMinutes < 30; // 30 minutos de cooldown
+    })
 }

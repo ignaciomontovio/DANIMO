@@ -15,6 +15,10 @@ const UsersEmotionalState = sequelize.define('UsersEmotionalState', {
         type: DataTypes.BOOLEAN,
         allowNull: true,
     },
+    briefResponseDetected: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+    },
     message: {
         type: DataTypes.TEXT,
         allowNull: false,

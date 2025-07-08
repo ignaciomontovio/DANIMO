@@ -419,3 +419,27 @@ export const validateRoutineCreationInput = (data) => {
 
     return schema.validate(data);
 };
+
+export const validateRoutineEditInput = (data) => {
+    const schema = Joi.object({
+        currentName: Joi.string().required().messages({
+            'any.required': '"currentName" es obligatorio',
+            'string.base': '"currentName" debe ser un texto válido',
+        }),
+        name: Joi.string().optional().messages({
+            'string.base': '"name" debe ser un texto válido',
+        }),
+        body: Joi.string().optional().messages({
+            'string.base': '"body" debe ser un texto válido',
+        }),
+        emotion: Joi.number().integer().min(1).max(5).optional().messages({
+            'number.base': '"emotion" debe ser un número',
+            'number.min': '"emotion" debe estar entre 1 y 5',
+            'number.max': '"emotion" debe estar entre 1 y 5',
+        })
+    }).or('name', 'body', 'emotion').messages({
+        'object.missing': 'Debes proveer al menos un campo a modificar (name, body o emotion)',
+    });
+
+    return schema.validate(data);
+};

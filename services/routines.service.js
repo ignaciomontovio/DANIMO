@@ -48,3 +48,27 @@ export async function createRoutine({ name, body, emotion, createdBy }) {
 
     return '¡Rutina creada correctamente!';
 }
+
+export async function updateRoutine({ currentName, name, body, emotionName, userId }) {
+    const routine = await Routines.findOne({ where: { name: currentName, createdBy: userId } });
+
+    if (!routine) {
+        throw new Error('No se encontró una rutina con ese nombre que pertenezca al profesional.');
+    }
+
+    if (name && name !== currentName) {
+        const duplicate = await Routines.findOne({ where: { name, createdBy: userId } });
+        if (duplicate) {
+            throw new Error(`Ya existe una rutina con el nombre "${name}" para este profesional.`);
+        }
+    }
+
+    const updateFields = {};
+    if (name) updateFields.name = name;
+    if (body) updateFields.body = body;
+    if (emotionName) updateFields.emotion = emotionName;
+
+    await routine.update(updateFields);
+
+    return 'Rutina actualizada correctamente';
+}

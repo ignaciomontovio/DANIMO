@@ -1,5 +1,5 @@
 import * as service from '../services/routines.service.js';
-import { validateRoutineCreationInput } from '../utils/validators.js';
+import { validateRoutineCreationInput, validateRoutineEditInput } from '../utils/validators.js';
 import Users from '../models/Users.js';
 import Professionals from '../models/Professionals.js';
 import TypeEmotions from '../models/TypeEmotions.js';
@@ -47,5 +47,48 @@ export const createRoutine = async (req, res) => {
     } catch (err) {
         console.error('❌ Error al crear rutina:', err.message);
         res.status(500).json({ error: 'Error al crear rutina' });
+    }
+};
+
+export const updateRoutine = async (req, res) => {
+    const { error } = validateRoutineEditInput(req.body);
+    if (error) {
+        console.warn('⚠️ Validación fallida en updateRoutine:', error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const { currentName, name, body, emotion: emotionNumber } = req.body;
+    const userId = req.userId;
+
+    try {
+        const professional = await Professionals.findOne({ where: { id: userId } });
+        if (!professional) {
+            console.warn(`⛔ El userId ${userId} no pertenece a un profesional`);
+            return res.status(403).json({ error: 'Solo los profesionales pueden editar rutinas' });
+        }
+
+        let emotionName = null;
+        if (emotionNumber !== undefined) {
+            const emotion = await TypeEmotions.findOne({ where: { number: emotionNumber } });
+            if (!emotion) {
+                return res.status(404).json({ error: `No se encontró una emoción con el número ${emotionNumber}` });
+            }
+            emotionName = emotion.name;
+        }
+
+        const result = await service.updateRoutine({
+            currentName,
+            name,
+            body,
+            emotionName,
+            userId
+        });
+
+        console.log(`✅ Rutina "${currentName}" actualizada correctamente por ${userId}`);
+        res.status(200).json({ message: result });
+
+    } catch (err) {
+        console.error('❌ Error al actualizar rutina:', err.message);
+        res.status(400).json({ error: err.message });
     }
 };

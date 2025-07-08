@@ -454,3 +454,20 @@ export const validateRoutineDeleteInput = (data) => {
 
     return schema.validate(data);
 };
+
+export const validateRoutineAssignInput = (data) => {
+    const schema = Joi.object({
+        name: Joi.string().required().messages({
+            'any.required': '"name" es obligatorio',
+            'string.base': '"name" debe ser un texto válido',
+        }),
+        emails: Joi.array().items(Joi.string().email()).min(1).required().messages({
+            'array.base': '"emails" debe ser una lista de correos',
+            'array.min': 'Debe proporcionar al menos un email',
+            'any.required': '"emails" es obligatorio',
+            'string.email': 'Todos los elementos de "emails" deben ser correos válidos',
+        })
+    });
+
+    return schema.validate(data);
+};

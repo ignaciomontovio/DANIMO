@@ -1,5 +1,6 @@
 import * as service from '../services/routines.service.js';
-import { validateRoutineCreationInput, validateRoutineEditInput, validateRoutineDeleteInput } from '../utils/validators.js';
+import { validateRoutineCreationInput, validateRoutineEditInput, 
+    validateRoutineDeleteInput, validateRoutineAssignInput } from '../utils/validators.js';
 import Users from '../models/Users.js';
 import Professionals from '../models/Professionals.js';
 import TypeEmotions from '../models/TypeEmotions.js';
@@ -7,7 +8,7 @@ import TypeEmotions from '../models/TypeEmotions.js';
 export const obtainRoutines = async (req, res) => {
   const userId = req.userId; //viene del middleware
     try {
-        const routines = await service.getRoutinesByUserId(userId);
+        const routines = await service.getRoutinesByUser(userId);
         console.log(`✅ Rutinas obtenidas exitosamente para ${userId}`);
         res.json(routines);
     } catch (err) {
@@ -116,6 +117,26 @@ export const deleteRoutine = async (req, res) => {
 
     } catch (err) {
         console.error('❌ Error al eliminar rutina:', err.message);
+        res.status(400).json({ error: err.message });
+    }
+};
+
+export const assignRoutine = async (req, res) => {
+    const { error } = validateRoutineAssignInput(req.body);
+    if (error) {
+        console.warn('⚠️ Validación fallida en assignRoutine:', error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const { name, emails } = req.body;
+    const userId = req.userId;
+
+    try {
+        const result = await service.assignRoutine(name, emails, userId);
+        console.log(`✅ Rutina "${name}" asignada a ${emails.length} usuario(s) por profesional ${userId}`);
+        res.status(200).json({ message: result });
+    } catch (err) {
+        console.error('❌ Error en assignRoutine:', err.message);
         res.status(400).json({ error: err.message });
     }
 };

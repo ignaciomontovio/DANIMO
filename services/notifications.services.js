@@ -1,5 +1,5 @@
 import admin from 'firebase-admin'
-//import serviceAccount from '#json' with { type: 'json' };
+import serviceAccount from '#json' with { type: 'json' };
 import cron from 'node-cron'
 import Users from '../models/Users.js'
 const FIREBASE_NOTIFICATION_KEY = process.env.FIREBASE_NOTIFICATION_KEY
@@ -12,12 +12,16 @@ export async function registerFirebaseToken(userId, token) {
 }
 
 export function notificationServiceInitialize() {
-    const serviceAccount = JSON.parse(
-        Buffer.from(FIREBASE_NOTIFICATION_KEY, 'base64').toString('utf-8')
-    );
+    //const serviceAccount = JSON.parse(
+    //    Buffer.from(FIREBASE_NOTIFICATION_KEY, 'base64').toString('utf-8')
+    //);
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
     });
+
+    admin.auth().listUsers(1)
+        .then(() => console.log('✅ Admin SDK inicializado correctamente'))
+        .catch((err) => console.error('❌ Error al inicializar Admin SDK:', err));
 }
 
 export function sendPushNotificationToUser(userId) {

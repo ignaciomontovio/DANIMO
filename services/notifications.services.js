@@ -18,6 +18,9 @@ export function notificationServiceInitialize() {
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
     });
+    admin.auth().listUsers(1)
+        .then(() => console.log('✅ Admin SDK inicializado correctamente'))
+        .catch((err) => console.error('❌ Error al inicializar Admin SDK:', err));
 }
 
 export function sendPushNotificationToUser(userId) {

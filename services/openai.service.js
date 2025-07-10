@@ -5,7 +5,6 @@ import {
 } from "../utils/validators.js";
 import {suicideRiskPrompt} from "../utils/prompts/suicideRiskPrompt.js";
 import {importantDatePrompt} from "../utils/prompts/importantDatePrompt.js";
-import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
 import {stressLevelEvaluationPrompt} from "../utils/prompts/stressLevelEvaluationPrompt.js";
 import ImportantEvents from "../models/ImportantEvents.js";
 import axios from "axios";
@@ -13,31 +12,11 @@ import {v4 as uuidv4} from 'uuid';
 import {format} from "date-fns";
 import {userIntentPrompt} from "../utils/prompts/userIntentPrompt.js";
 
-const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
-const CHATGPT_API_KEY = process.env.CHATGPT_API_KEY;
+//const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
+//const CHATGPT_API_KEY = process.env.CHATGPT_API_KEY;
 const AZURE_OPENAI_API_GPT3_URL = process.env.AZURE_OPENAI_API_GPT3_URL
 const AZURE_OPENAI_API_GPT4_URL = process.env.AZURE_OPENAI_API_GPT4_URL
 const AZURE_OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY
-
-export async function sendMessageToOpenIA(messages) {
-    const headers = {
-        Authorization: `Bearer ${CHATGPT_API_KEY}`,
-        'Content-Type': 'application/json',
-    };
-
-    const response = await axios.post(OPENAI_API_URL, {
-        model: 'gpt-3.5-turbo', //gpt-3.5-turbo | gpt-3.5-turbo-16k | gpt-4 | gpt-4-32k | gpt-4-32k | gpt-4-0125-preview
-        messages,
-    }, {headers});
-
-    const replyContent = response.data.choices[0]?.message?.content;
-    if (!replyContent) {
-        throw new Error('La API de OpenAI no retornó una respuesta válida.');
-    }
-    const parsedReply = JSON.parse(replyContent);
-    console.log(parsedReply);
-    return parsedReply;
-}
 
 export async function sendMessageToAzureOpenIA(messages, model = AZURE_OPENAI_API_GPT3_URL) {
     const headers = {
@@ -60,7 +39,7 @@ export async function sendMessageToAzureOpenIA(messages, model = AZURE_OPENAI_AP
 export async function sendMessageToAzureOpenIAWithParseJson(messages, model = AZURE_OPENAI_API_GPT3_URL) {
     const replyContent = await sendMessageToAzureOpenIA(messages, model)
     const parsedReply = JSON.parse(replyContent);
-    console.log(parsedReply);
+    //console.log(parsedReply);
     return parsedReply;
 }
 
@@ -68,12 +47,6 @@ export async function sendMessageToAzureOpenIAWithParseJson(messages, model = AZ
 export async function userResponse(messages) {
     try {
         const reply = await sendMessageToAzureOpenIA(messages, AZURE_OPENAI_API_GPT4_URL);
-
-        /*const { error } = validateDaniResponse(reply);
-
-        if (error) {
-            throw new Error(`Respuesta inválida: ${error.details[0].message}`);
-        }*/
 
         return reply;
     } catch (error) {
@@ -127,19 +100,6 @@ export async function dateEvaluationResponse(message) {
     return value.esSignificativo
 }
 
-export async function isABriefResponse(message) {
-    const messages = [
-        {role: 'system', content: briefResponsePrompt},
-        {role: 'user', content: message}];
-    const reply = await sendMessageToAzureOpenIAWithParseJson(messages);
-    //const { error, value } = validateDaniSuicideRiskResponse(reply);
-
-    //if (error) {
-    //    throw new Error(`Respuesta inválida: ${error.details[0].message}`);
-    //}
-    return reply
-}
-
 export async function stressLevelEvaluationResponse(message) {
     const messages = [
         {role: 'system', content: stressLevelEvaluationPrompt},
@@ -167,3 +127,26 @@ export async function userIntentMessage(message) {
     console.log("Respuesta de userIntentMessage: conversacionNoDanimo " + reply.conversacionNoDanimo + " intentaBorrarHistorial " + reply.intentaBorrarHistorial);
     return {conversacionNoDanimo: reply.conversacionNoDanimo, intentaBorrarHistorial: reply.intentaBorrarHistorial}
 }
+
+// Función para enviar mensajes a la API de OpenAI por fuera de azure (comentada porque no se usa actualmente)
+/*
+export async function sendMessageToOpenIA(messages) {
+    const headers = {
+        Authorization: `Bearer ${CHATGPT_API_KEY}`,
+        'Content-Type': 'application/json',
+    };
+
+    const response = await axios.post(OPENAI_API_URL, {
+        model: 'gpt-3.5-turbo', //gpt-3.5-turbo | gpt-3.5-turbo-16k | gpt-4 | gpt-4-32k | gpt-4-32k | gpt-4-0125-preview
+        messages,
+    }, {headers});
+
+    const replyContent = response.data.choices[0]?.message?.content;
+    if (!replyContent) {
+        throw new Error('La API de OpenAI no retornó una respuesta válida.');
+    }
+    const parsedReply = JSON.parse(replyContent);
+    console.log(parsedReply);
+    return parsedReply;
+}
+*/

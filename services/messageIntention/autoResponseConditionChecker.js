@@ -25,8 +25,9 @@ export async function autoResponseConditionChecker(message, userId, hasSuicideRi
             UsersEmotionalState.create(
                 {
                     id: `RISK-${uuidv4()}`,
-                    suicideRiskDetected: true,
+                    briefResponseDetected: false,
                     routineRecomended: false,
+                    suicideRiskDetected: true,
                     message: message,
                     date: new Date(),
                     userId: userId

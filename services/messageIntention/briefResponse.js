@@ -1,5 +1,6 @@
 import { cleanMessage } from '../../utils/textNormalize.js';
 import UsersEmotionalState from "../../models/UsersEmotionalState.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export function briefResponse(text) {
     const cleaned = cleanMessage(text);
@@ -30,7 +31,7 @@ export function briefResponse(text) {
 }
 
 export async function briefResponseCooldown(userId) {
-    const briefResponses = await UsersEmotionalState.findAll({where: {briefResponse: true, userId: userId}})
+    const briefResponses = await UsersEmotionalState.findAll({where: {briefResponseDetected: true, userId: userId}})
     console.log(briefResponses)
     return briefResponses.some( br => {
         const now = new Date();
@@ -39,4 +40,16 @@ export async function briefResponseCooldown(userId) {
         console.log(`Diferencia en minutos desde la última respuesta breve: ${diffInMinutes}`);
         return diffInMinutes < 30; // 30 minutos de cooldown
     })
+}
+
+export function saveBriefResponseRegister(userId, message) {
+    UsersEmotionalState.create({
+        id: `BR-${uuidv4()}`,
+        userId: userId,
+        message: message,
+        briefResponseDetected: true,
+        routineRecomended: false,
+        suicideRiskDetected: false,
+        date: new Date()
+    });
 }

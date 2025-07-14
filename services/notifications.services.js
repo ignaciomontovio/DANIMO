@@ -23,6 +23,12 @@ export function notificationServiceInitialize() {
         .catch((err) => console.error('❌ Error al inicializar Admin SDK:', err));
 }
 
+export function tryPushNotificationService() {
+    return admin.auth().listUsers(1)
+        .then(() => '✅ Admin SDK inicializado correctamente')
+        .catch((err) => `❌ Error al inicializar Admin SDK: ${err}`);
+}
+
 export function sendPushNotificationToUser(userId) {
     const title = "Titulo de prueba"
     const body = "Cuerpo de prueba";

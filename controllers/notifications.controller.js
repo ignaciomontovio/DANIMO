@@ -28,3 +28,15 @@ export const registerToken = async (req, res) => {
         res.status(500).json({error: err.message});
     }
 }
+
+export const tryPushNotificationService = async (req, res) => {
+    try {
+        console.log("test")
+        const result = await service.tryPushNotificationService();
+        console.log(result);
+        res.json({message: result});
+    } catch (err) {
+        console.error('❌ Error al probar el servicio de notificaciones:', err);
+        res.status(500).json({error: err.message});
+    }
+}

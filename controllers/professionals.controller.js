@@ -4,7 +4,8 @@ import {
     validateLoginInputProf,
     validateGoogleTokenProf,
     validateAuthorizeProf,
-    validateForgotPassword, validateResetPassword, validateToken
+    validateForgotPassword, validateResetPassword, validateToken,
+    validateUpdateInput
 } from '../utils/validators.js';
 
 export const registerProfessional = async (req, res) => {
@@ -133,3 +134,31 @@ export const validateTokenController = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+export const updateProfessionalProfile = async (req, res) => {
+    const { error } = validateUpdateInput(req.body);
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: error.details[0].message });
+    }
+    try {
+        const userId = req.userId; // viene del middleware
+        const updates = req.body;
+
+        // Si hay imagen, convertir a base64 para guardar como data URI
+        //Borrar esto si en el FRONT no funciona
+        if (req.file) {
+            const mimeType = req.file.mimetype; // ej: 'image/png'
+            const base64 = req.file.buffer.toString('base64');
+            updates.profilePic = `data:${mimeType};base64,${base64}`;
+        }
+        //Borrar hasta acá
+
+        await service.updateProfessionalProfile(userId, updates);
+        console.log("✅ Perfil actualizado correctamente")
+        res.json({ message: 'Perfil actualizado correctamente' });
+    } catch (err) {
+        console.error('❌ Error al actualizar perfil:', err);
+        res.status(500).json({ error: 'No se pudo actualizar el perfil' });
+    }
+};

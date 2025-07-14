@@ -71,7 +71,7 @@ export async function loginProfessional({ email, password }) {
         throw new Error('Su acceso no fue autorizado aún o se ha revocado.');
     }
 
-    return signToken({ user: professional.user });
+    return signToken({ userId: professional.id });
 }
 
 export async function googleLogin(googleJWT) {
@@ -156,4 +156,11 @@ export async function validateToken({tokenId, email}) {
     if (recoveryToken.Professionals.email !== email) throw new Error("Token no pertenece al profesional o incorrecto.");
     if (recoveryToken.expirationDate < Date.now()) throw new Error("Token expirado");
     return "Token valido"
+}
+
+export async function updateProfessionalProfile(userId, updates) {
+    const profesional = await Professionals.findByPk(userId);
+    if (!profesional) throw new Error('Usuario no encontrado');
+
+    await profesional.update(updates);
 }

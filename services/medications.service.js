@@ -18,7 +18,10 @@ export async function getActiveMedicationsByUser(userId) {
         where: {
             userId
         },
-        order: [['startDate', 'DESC']] // Opcional: ordenarlos por fecha de inicio
+        order: [
+            ['active', 'DESC'],       // Primero los que tienen active = true
+            ['startDate', 'DESC']     // Luego por fecha de inicio descendente
+        ]
     });
 }
 

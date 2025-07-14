@@ -43,5 +43,8 @@
     "sqlite3": "^5.1.7",
     "supertest": "^7.1.1"
   },
-  "type": "module"
+  "type": "module",
+  "imports": {
+    "#json": "./danimo-11ebc-firebase-adminsdk-fbsvc-6c213c7bfa.json"
+  }
 }

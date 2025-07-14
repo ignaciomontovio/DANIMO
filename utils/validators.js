@@ -394,3 +394,80 @@ export const validateDeleteMedicationInput = (data) => {
 
     return schema.validate(data);
 };
+
+// ----------------------Routines--------------------------
+
+export const validateRoutineCreationInput = (data) => {
+    const schema = Joi.object({
+        name: Joi.string().required().messages({
+            'any.required': '"name" es obligatorio',
+            'string.base': '"name" debe ser un texto válido',
+            'string.empty': '"name" no puede estar vacío'
+        }),
+        body: Joi.string().required().messages({
+            'any.required': '"body" es obligatorio',
+            'string.base': '"body" debe ser un texto válido',
+            'string.empty': '"body" no puede estar vacío'
+        }),
+        emotion: Joi.number().integer().min(1).max(5).required().messages({
+            'any.required': '"emotion" es obligatorio',
+            'number.base': '"emotion" debe ser un número',
+            'number.min': '"emotion" debe ser un número entre 1 y 5',
+            'number.max': '"emotion" debe ser un número entre 1 y 5'
+        })
+    });
+
+    return schema.validate(data);
+};
+
+export const validateRoutineEditInput = (data) => {
+    const schema = Joi.object({
+        currentName: Joi.string().required().messages({
+            'any.required': '"currentName" es obligatorio',
+            'string.base': '"currentName" debe ser un texto válido',
+        }),
+        name: Joi.string().optional().messages({
+            'string.base': '"name" debe ser un texto válido',
+        }),
+        body: Joi.string().optional().messages({
+            'string.base': '"body" debe ser un texto válido',
+        }),
+        emotion: Joi.number().integer().min(1).max(5).optional().messages({
+            'number.base': '"emotion" debe ser un número',
+            'number.min': '"emotion" debe estar entre 1 y 5',
+            'number.max': '"emotion" debe estar entre 1 y 5',
+        })
+    }).or('name', 'body', 'emotion').messages({
+        'object.missing': 'Debes proveer al menos un campo a modificar (name, body o emotion)',
+    });
+
+    return schema.validate(data);
+};
+
+export const validateRoutineDeleteInput = (data) => {
+    const schema = Joi.object({
+        name: Joi.string().required().messages({
+            'any.required': '"name" es obligatorio',
+            'string.base': '"name" debe ser un texto válido',
+        })
+    });
+
+    return schema.validate(data);
+};
+
+export const validateRoutineAssignInput = (data) => {
+    const schema = Joi.object({
+        name: Joi.string().required().messages({
+            'any.required': '"name" es obligatorio',
+            'string.base': '"name" debe ser un texto válido',
+        }),
+        emails: Joi.array().items(Joi.string().email()).min(1).required().messages({
+            'array.base': '"emails" debe ser una lista de correos',
+            'array.min': 'Debe proporcionar al menos un email',
+            'any.required': '"emails" es obligatorio',
+            'string.email': 'Todos los elementos de "emails" deben ser correos válidos',
+        })
+    });
+
+    return schema.validate(data);
+};

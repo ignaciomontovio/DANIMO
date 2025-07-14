@@ -14,6 +14,7 @@ import TypeSleeps from '../models/TypeSleeps.js';
 import Conversations from "./Conversations.js";
 import Photos from "./Photos.js";
 import ImportantEvents from "./ImportantEvents.js";
+import Routines from "./Routines.js";
 import defineRelations from "./relations.js";
 
 const models = {
@@ -32,7 +33,8 @@ const models = {
     TypeSleeps,
     Conversations,
     Photos,
-    ImportantEvents
+    ImportantEvents,
+    Routines
 };
 
 defineRelations(models); // define relaciones

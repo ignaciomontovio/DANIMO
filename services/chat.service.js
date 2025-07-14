@@ -10,7 +10,7 @@ import {
     autoResponseConditionChecker,
     evaluateRecentSuicideRisk
 } from "./messageIntention/autoResponseConditionChecker.js";
-
+import {briefResponseCooldown, saveBriefResponseRegister} from "./messageIntention/briefResponse.js";
 dotenv.config();
 
 function evaluateDateReference(message) {
@@ -35,8 +35,9 @@ export async function chat({message, userId}) {
         if (autoResponse === true) {
             return defaultResponse
         }
-        if (isBriefResponse === true) {
+        if (isBriefResponse === true && await briefResponseCooldown(userId) === false) {
             console.log("El mensaje es una respuesta breve");
+            saveBriefResponseRegister(userId, message)
             prompt = briefResponsePrompt;
         }
         if (hasADateReference === true) {

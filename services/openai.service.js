@@ -4,7 +4,7 @@ import {
     validateStressLevelResponse, validateUserIntentResponse
 } from "../utils/validators.js";
 import {suicideRiskPrompt} from "../utils/prompts/suicideRiskPrompt.js";
-import {importantDatePrompt} from "../utils/prompts/importantDatePrompt.js";
+import {importantDatePrompt, importantDatePromptFiltrado} from "../utils/prompts/importantDatePrompt.js";
 import {stressLevelEvaluationPrompt} from "../utils/prompts/stressLevelEvaluationPrompt.js";
 import ImportantEvents from "../models/ImportantEvents.js";
 import axios from "axios";
@@ -80,7 +80,7 @@ export async function suicideRiskResponse(message) {
 
 export async function dateEvaluationResponse(message,userId) {
     const messages = [
-        {role: 'system', content: importantDatePrompt},
+        {role: 'system', content: importantDatePromptFiltrado},
         {role: 'user', content: message + ". La fecha de hoy es " + format(new Date(), 'yyyy-MM-dd')}];
     const reply = await sendMessageToAzureOpenIAWithParseJson(messages);
     const {error, value} = validateDaniImportantDateResponse(reply);

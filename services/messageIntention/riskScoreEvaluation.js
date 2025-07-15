@@ -26,7 +26,7 @@ async function importantDateNearby(userId) {
 }
 
 function emotionWithRiskLevel(emotion) {
-    return emotion.ira >= 4 || emotion.tristeza >= 4 || emotion.miedo >= 4
+    return emotion.ira >= 4 || emotion.angustia >= 4 ||emotion.tristeza >= 4 || emotion.miedo >= 4
         || emotion.frustracion >= 4 || emotion.culpa >= 4
         || emotion.confusion >= 4 || emotion.euforia >= 4
 }

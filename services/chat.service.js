@@ -44,7 +44,9 @@ export async function chat({message, userId}) {
             console.log("El mensaje contiene una referencia a una fecha");
             evaluateDateReference(message,userId);
         }
-        await riskScoreEvaluation(userId, message)
+        //Puntaje de riesgo
+        const riskScore = await riskScoreEvaluation(userId, message)
+        console.log('Puntaje de riesgo calculado: ' + riskScore)
         // Obtén la conversación existente y genera el historial de mensajes
         const messages = await compileConversationHistory(userId, message, prompt);
         // Envía el mensaje a la API de OpenAI y obtiene la respuesta

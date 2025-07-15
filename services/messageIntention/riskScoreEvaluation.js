@@ -50,4 +50,5 @@ export async function riskScoreEvaluation(userId, message) {
         totalScore += 4
     }
     console.log(`Puntuación total de riesgo: ${totalScore}`);
+    return totalScore;
 }

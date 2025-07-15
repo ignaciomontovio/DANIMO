@@ -13,8 +13,8 @@ import {
 import {briefResponseCooldown, saveBriefResponseRegister} from "./messageIntention/briefResponse.js";
 dotenv.config();
 
-function evaluateDateReference(message) {
-    dateEvaluationResponse(message)
+function evaluateDateReference(message,userId) {
+    dateEvaluationResponse(message,userId)
 }
 
 export async function chat({message, userId}) {
@@ -42,7 +42,7 @@ export async function chat({message, userId}) {
         }
         if (hasADateReference === true) {
             console.log("El mensaje contiene una referencia a una fecha");
-            evaluateDateReference(message);
+            evaluateDateReference(message,userId);
         }
         await riskScoreEvaluation(userId, message)
         // Obtén la conversación existente y genera el historial de mensajes

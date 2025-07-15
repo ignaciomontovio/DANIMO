@@ -78,7 +78,7 @@ export async function suicideRiskResponse(message) {
     }
 }
 
-export async function dateEvaluationResponse(message) {
+export async function dateEvaluationResponse(message,userId) {
     const messages = [
         {role: 'system', content: importantDatePrompt},
         {role: 'user', content: message + ". La fecha de hoy es " + format(new Date(), 'yyyy-MM-dd')}];
@@ -95,6 +95,7 @@ export async function dateEvaluationResponse(message) {
             eventDescription: value.descripcionFechaImportante,
             eventType: value.categoriaFechaImportante,
             eventDate: value.fechaImportante,
+            userId: userId
         })
     }
     return value.esSignificativo

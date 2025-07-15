@@ -58,11 +58,13 @@ const sendPushNotification = (token, title, body) => {
 
 
 // Todos los días a las 10:00 AM
-cron.schedule('0 10 * * *', async () => {
-    // Reemplazá con los tokens registrados de tus usuarios
-    const tokens = await Users.findAll({attributes: ['firebaseToken']})
+cron.schedule('0 11 * * *', async () => {
+    const users = await Users.findAll({ attributes: ['firebaseToken'] });
 
-    tokens.forEach(token => {
-        sendPushNotification(token, 'Hola!', 'Tu mensaje diario está aquí');
+    users
+    .map(user => user.firebaseToken) // extraer solo el token
+    .filter(token => typeof token === 'string' && token !== '') // filtrar vacíos/nulos
+    .forEach(token => {
+        sendPushNotification(token, 'Hola!', 'Recuerda registrar tu estado de ánimo diario');
     });
 });

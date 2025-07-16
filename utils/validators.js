@@ -51,7 +51,7 @@ export const  validateAuthorizeProf = (data) => Joi.object({
 }).validate(data);
 
 export const validateLinkUser = (data) => Joi.object({
-    token: Joi.string().required()
+    token: Joi.string().uppercase().required()
 }).validate(data);
 
 // ------------------------ Users --------------------------------

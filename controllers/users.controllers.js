@@ -202,3 +202,15 @@ export const getUserProfile = async (req, res) => {
         res.status(500).json({ error: "No se pudo obtener el perfil del usuario" });
     }
 };
+export const generateProfessionalToken = async (req, res) => {
+    const userId = req.userId; // obtenido del middleware
+
+    try {
+        const token = await usersService.generateProfessionalToken(userId);
+        console.log("✅ Token de vinculacion de profesional generado correctamente.");
+        res.status(200).json(token);
+    } catch (err) {
+        console.error("❌ Error al generar token de vinculacion de profesional:", err.message);
+        res.status(500).json({ error: "Error al generar token de vinculacion de profesional" });
+    }
+};

@@ -26,7 +26,7 @@ async function importantDateNearby(userId) {
 }
 
 function emotionWithRiskLevel(emotion) {
-    return emotion.ira >= 4 || emotion.tristeza >= 4 || emotion.miedo >= 4
+    return emotion.ira >= 4 || emotion.angustia >= 4 ||emotion.tristeza >= 4 || emotion.miedo >= 4
         || emotion.frustracion >= 4 || emotion.culpa >= 4
         || emotion.confusion >= 4 || emotion.euforia >= 4
 }
@@ -50,4 +50,6 @@ export async function riskScoreEvaluation(userId, message) {
         totalScore += 4
     }
     console.log(`Puntuación total de riesgo: ${totalScore}`);
+    //return totalScore;
+    return {riskScore: totalScore, evaluation: JSON.stringify(evaluation)};
 }

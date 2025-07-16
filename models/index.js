@@ -16,6 +16,7 @@ import Photos from "./Photos.js";
 import ImportantEvents from "./ImportantEvents.js";
 import Routines from "./Routines.js";
 import defineRelations from "./relations.js";
+import ProfessionalPatientTokens from "./ProfessionalPatientTokens.js";
 
 const models = {
     EmergencyContacts,
@@ -34,7 +35,8 @@ const models = {
     Conversations,
     Photos,
     ImportantEvents,
-    Routines
+    Routines,
+    ProfessionalPatientTokens
 };
 
 defineRelations(models); // define relaciones

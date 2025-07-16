@@ -1,5 +1,6 @@
 import Users from '../models/Users.js';
 import RecoveryTokens from '../models/RecoveryTokens.js';
+import ProfesionalPatientTokens from "../models/ProfessionalPatientTokens.js";
 import { v4 as uuidv4 } from 'uuid';
 import { hashPassword, comparePassword } from '../utils/password.js';
 import { signToken, signRefreshToken } from '../utils/jwt.js';
@@ -130,4 +131,14 @@ export async function getUserProfile(userId) {
 
     if (!user) throw new Error('Usuario no encontrado');
     return user;
+}
+
+export async function generateProfessionalToken(userId) {
+    const key = generateRandomKey().toUpperCase()
+    await ProfesionalPatientTokens.destroy({where: {userId}});
+
+    await ProfesionalPatientTokens.create({
+        userId: userId, tokenId: key, expirationDate: Date.now() + TWO_HOURS
+    })
+    return {token: key};
 }

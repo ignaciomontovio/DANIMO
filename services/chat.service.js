@@ -11,10 +11,16 @@ import {
     evaluateRecentSuicideRisk
 } from "./messageIntention/autoResponseConditionChecker.js";
 import {briefResponseCooldown, saveBriefResponseRegister} from "./messageIntention/briefResponse.js";
+import {saveRoutineRecommended, wasRoutineRecommendedInLast24Hours, 
+    getRecommendedRoutineName} from './messageIntention/routineRecommender.js';
+import {routineRecomendedMessage} from "../utils/routineResponse.js";
 dotenv.config();
 
-function evaluateDateReference(message) {
-    dateEvaluationResponse(message)
+//Variable para definir el riesgo critico (por ahora 6, luego lo pondremos en 7)
+const criticalRiskLevel = 6;
+
+function evaluateDateReference(message,userId) {
+    dateEvaluationResponse(message,userId)
 }
 
 export async function chat({message, userId}) {
@@ -42,16 +48,51 @@ export async function chat({message, userId}) {
         }
         if (hasADateReference === true) {
             console.log("El mensaje contiene una referencia a una fecha");
-            evaluateDateReference(message);
+            evaluateDateReference(message,userId);
         }
-        await riskScoreEvaluation(userId, message)
-        // Obtén la conversación existente y genera el historial de mensajes
-        const messages = await compileConversationHistory(userId, message, prompt);
-        // Envía el mensaje a la API de OpenAI y obtiene la respuesta
-        const assistantReply = await userResponse(messages);
-        // Guarda el mensaje del usuario y la respuesta del asistente en la base de datos
-        await saveMessagesToDB(userId, message, assistantReply);
-        return assistantReply;
+        //Puntaje de riesgo y emociones evaluadas
+        const {riskScore, evaluation} = await riskScoreEvaluation(userId, message)
+        //console.log('Puntaje de riesgo calculado: ' + riskScore)
+        //console.log('Evaluacion obtenida: ' + evaluation)
+        //console.log('Emocion predominante evaluada: ' + getPredominantEmotion(JSON.parse(evaluation)))
+
+        //Me fijo si le recomendé una rutina hace menos de 24 horas
+        const routineRecommended = await wasRoutineRecommendedInLast24Hours(userId);
+        //console.log('¿le recomende una rutina al usuario?: ', routineRecommended)
+
+        if (riskScore < criticalRiskLevel || routineRecommended){
+            //El riesgo no es muy alto o ya le recomende una rutina en las ultimas 24 horas 
+            
+            // Obtén la conversación existente y genera el historial de mensajes
+            const messages = await compileConversationHistory(userId, message, prompt);
+            // Envía el mensaje a la API de OpenAI y obtiene la respuesta
+            const assistantReply = await userResponse(messages);
+            // Guarda el mensaje del usuario y la respuesta del asistente en la base de datos
+            await saveMessagesToDB(userId, message, assistantReply);
+            return assistantReply;
+        }
+        else
+        {
+            //El riesgo es muy alto y no le recomende una rutina en las ultimas 24 horas
+
+            // Obtén la conversación existente y genera el historial de mensajes
+            const messages = await compileConversationHistory(userId, message, prompt);
+            // No enviaré un mensaje a la API. Será DANIMO quien recomiende rutinas
+            
+            //const assistantReply = await userResponse(messages);
+            const routineName = await getRecommendedRoutineName(userId,JSON.parse(evaluation));
+            const assistantReply = `${routineRecomendedMessage}\nTe recomiendo la siguiente rutina: ${routineName}`;
+            
+            // Guarda el mensaje del usuario y la respuesta del asistente en la base de datos
+            await saveMessagesToDB(userId, message, assistantReply);
+
+            //Indico que le recomende una rutina
+            await saveRoutineRecommended(userId, message)
+
+            return assistantReply;
+        }
+
+        
     } catch (error) {
         console.error('Error en el flujo del chat:', error.message);
         throw new Error('Ocurrió un problema al procesar la solicitud del chat.');

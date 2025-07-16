@@ -1,4 +1,5 @@
 import UsersEmotionalState from "./UsersEmotionalState.js";
+import ProfessionalPatientTokens from "./ProfessionalPatientTokens.js";
 
 const defineRelations = (models) => {
     const {
@@ -11,6 +12,7 @@ const defineRelations = (models) => {
         MoodAlternators,
         RecoveryTokens,
         RecoveryTokensProfessionals,
+        ProfessionalPatientTokens,
         Conversations,
         TypeEmotions,
         TypeActivities,
@@ -51,20 +53,6 @@ const defineRelations = (models) => {
         as: "Users",
         foreignKey: "professionalId",
     });
-
-    // Registro diario 1:N Registro de emoción
-    //Comentado
-    /*
-    DailyRegisters.hasMany(EmotionRegisters, {
-        foreignKey: "dailyRegisterId",
-        as: "EmotionRegister",
-    });
-    EmotionRegisters.belongsTo(DailyRegisters, {
-        foreignKey: "dailyRegisterId",
-        as: "DailyRegister",
-    });
-    */
-
     //Registro emocion 1:1 Tipo emocion
     EmotionRegisters.belongsTo(TypeEmotions, {
         foreignKey: {
@@ -183,6 +171,10 @@ const defineRelations = (models) => {
         as: "User",
     });
     RecoveryTokens.belongsTo(Users, {
+        foreignKey: "userId",
+        as: "User",
+    });
+    ProfessionalPatientTokens.belongsTo(Users, {
         foreignKey: "userId",
         as: "User",
     });

@@ -5,7 +5,7 @@ import {
     validateGoogleTokenProf,
     validateAuthorizeProf,
     validateForgotPassword, validateResetPassword, validateToken,
-    validateUpdateInput
+    validateUpdateInput, validateLinkUser
 } from '../utils/validators.js';
 
 export const registerProfessional = async (req, res) => {
@@ -162,3 +162,20 @@ export const updateProfessionalProfile = async (req, res) => {
         res.status(500).json({ error: 'No se pudo actualizar el perfil' });
     }
 };
+
+export const linkUser = async (req, res) => {
+    const { error, value } = validateLinkUser(req.body);
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({ error: error.details[0].message });
+    }
+    try {
+        const professionalId = req.userId;
+        const response = await service.linkUser(professionalId, value.token);
+        console.log("✅ El token " + value.token + " es un token válido.")
+        res.json({ response });
+    } catch (err) {
+        console.error(`❌ Token ${value.token} inválido:`, err);
+        res.status(500).json({ error: err.message });
+    }
+}

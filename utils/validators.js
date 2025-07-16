@@ -49,6 +49,11 @@ export const  validateAuthorizeProf = (data) => Joi.object({
     email: Joi.string().email().required(),
     key: Joi.string().required()
 }).validate(data);
+
+export const validateLinkUser = (data) => Joi.object({
+    token: Joi.string().required()
+}).validate(data);
+
 // ------------------------ Users --------------------------------
 export const validateRegisterInput = (data) => Joi.object({
     password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\={};:"|,.<>?]).{8,}$'))

@@ -8,7 +8,8 @@ import crypto from 'crypto';
 import createError from "http-errors";
 import { generateRandomKey } from '../utils/jwt.js';
 import RecoveryTokensProfessionals from "../models/RecoveryTokensProfessionals.js";
-
+import ProfesionalPatientTokens from "../models/ProfessionalPatientTokens.js";
+import Users from "../models/Users.js";
 const KEY_SIZE = 16
 const SECRET_KEY = process.env.JWT_SECRET
 const HOST = process.env.HOST
@@ -163,4 +164,19 @@ export async function updateProfessionalProfile(userId, updates) {
     if (!profesional) throw new Error('Usuario no encontrado');
 
     await profesional.update(updates);
+}
+
+export async function linkUser(professionalId, token) {
+    const userToken = await ProfesionalPatientTokens.findOne({where : {tokenId: token}})
+    if (!userToken) throw new Error('Token no válido. Los tokens solo pueden ser utilizados una vez.');
+    if (userToken.expirationDate < Date()) throw new Error('Token expirado');
+    await ProfesionalPatientTokens.destroy({where: {tokenId: token}})
+    const userId = userToken.userId
+
+    const professional = await Professionals.findByPk(professionalId);
+    const user = await Users.findByPk(userId);
+
+    // Asocia el usuario al profesional
+    await professional.addUser(user);
+    return 'Usuario vinculado exitosamente al profesional.'
 }

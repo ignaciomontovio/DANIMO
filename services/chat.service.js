@@ -11,7 +11,8 @@ import {
     evaluateRecentSuicideRisk
 } from "./messageIntention/autoResponseConditionChecker.js";
 import {briefResponseCooldown, saveBriefResponseRegister} from "./messageIntention/briefResponse.js";
-import {saveRoutineRecommended, wasRoutineRecommendedInLast24Hours} from './messageIntention/routineRecommender.js';
+import {saveRoutineRecommended, wasRoutineRecommendedInLast24Hours, 
+    getRecommendedRoutineName} from './messageIntention/routineRecommender.js';
 import {routineRecomendedMessage} from "../utils/routineResponse.js";
 dotenv.config();
 
@@ -49,9 +50,11 @@ export async function chat({message, userId}) {
             console.log("El mensaje contiene una referencia a una fecha");
             evaluateDateReference(message,userId);
         }
-        //Puntaje de riesgo
-        const riskScore = await riskScoreEvaluation(userId, message)
+        //Puntaje de riesgo y emociones evaluadas
+        const {riskScore, evaluation} = await riskScoreEvaluation(userId, message)
         //console.log('Puntaje de riesgo calculado: ' + riskScore)
+        //console.log('Evaluacion obtenida: ' + evaluation)
+        //console.log('Emocion predominante evaluada: ' + getPredominantEmotion(JSON.parse(evaluation)))
 
         //Me fijo si le recomendé una rutina hace menos de 24 horas
         const routineRecommended = await wasRoutineRecommendedInLast24Hours(userId);
@@ -75,9 +78,11 @@ export async function chat({message, userId}) {
             // Obtén la conversación existente y genera el historial de mensajes
             const messages = await compileConversationHistory(userId, message, prompt);
             // No enviaré un mensaje a la API. Será DANIMO quien recomiende rutinas
-            //PRUEBA INICIAL PARA VER QUE ESTO NO ROMPE, PERO DESPUES HAY QUE MEJORARLO PARA ELEGIR BIEN LA RUTINA
+            
             //const assistantReply = await userResponse(messages);
-            const assistantReply = routineRecomendedMessage;
+            const routineName = await getRecommendedRoutineName(userId,JSON.parse(evaluation));
+            const assistantReply = `${routineRecomendedMessage}\nTe recomiendo la siguiente rutina: ${routineName}`;
+            
             // Guarda el mensaje del usuario y la respuesta del asistente en la base de datos
             await saveMessagesToDB(userId, message, assistantReply);
 

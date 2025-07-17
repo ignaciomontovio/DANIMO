@@ -2,6 +2,7 @@ import { suicideRiskDetection } from './riskDetection.js';
 import { briefResponse } from './briefResponse.js';
 import { containsDateReference } from './containsDateReference.js';
 import {clearHistoryReference} from "./clearHistory.js";
+import {moodAlternatorDetected} from "./moodAlternatorReference.js";
 
 //agregar http
 const CONTAINS_LINKS_REGEX = /https?:\/\/[^\s/$.?#].[^\s]*/gi;

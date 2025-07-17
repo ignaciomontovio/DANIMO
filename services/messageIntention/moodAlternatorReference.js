@@ -1,7 +1,7 @@
 import { cleanMessage } from '../../utils/textNormalize.js';
 
-export function moodAlternatorDetected(texto) {
-    const cleaned = cleanMessage(texto);
+export function moodAlternatorDetected(text) {
+    const cleaned = cleanMessage(text);
 
     const moodGroups = [
         // Necesidades básicas

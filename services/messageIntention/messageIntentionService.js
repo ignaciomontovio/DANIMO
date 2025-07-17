@@ -13,8 +13,9 @@ export function validateMessageIntention(message) {
     const isBriefResponse = briefResponse(message);
     const hasADateReference = containsDateReference(message);
     const clearHistory = clearHistoryReference(message)
+    const moodAlternator = moodAlternatorDetected(message)
 
-    return { hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory };
+    return { hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator};
 }
 
 export const containsLinksResponse = `En Danimo queremos cuidarte, por eso no aceptamos links en el chat. 

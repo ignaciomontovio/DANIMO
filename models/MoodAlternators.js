@@ -11,8 +11,11 @@ const MoodAlternators = sequelize.define('MoodAlternators', {
     description: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    category: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
-    //COMPLETAR MAS CAMPOS O CREAR NUEVAS CLASES
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente
     timestamps: false // 👈 Esto evita que Sequelize use createdAt y updatedAt

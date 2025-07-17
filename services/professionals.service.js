@@ -15,7 +15,7 @@ const SECRET_KEY = process.env.JWT_SECRET
 const HOST = process.env.HOST
 const TWO_HOURS = 1000 * 60 * 60 * 2;
 
-const findProfessionalByEmail = async (email) => {
+export const findProfessionalByEmail = async (email) => {
     return await Professionals.findOne({ where: { email } });
 };
 
@@ -180,3 +180,4 @@ export async function linkUser(professionalId, token) {
     await professional.addUser(user);
     return 'Usuario vinculado exitosamente al profesional.'
 }
+

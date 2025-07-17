@@ -5,7 +5,7 @@ import {
     validateGoogleTokenProf,
     validateAuthorizeProf,
     validateForgotPassword, validateResetPassword, validateToken,
-    validateUpdateInput, validateLinkUser
+    validateUpdateInput, validateLinkUser, validateEmailBody
 } from '../utils/validators.js';
 
 export const registerProfessional = async (req, res) => {
@@ -179,3 +179,34 @@ export const linkUser = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+export const validateProfessionalEmail = async (req, res) => {
+    const { error, value } = validateEmailBody(req.body);
+    if (error) {
+        console.error("❌ Error de validación Joi:", error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const email = value.email;
+    const tokenProfessionalId = req.userId;
+
+    try {
+        const professional = await service.findProfessionalByEmail(email);
+
+        if (!professional) {
+            console.warn(`⚠️ Profesional con email ${email} no encontrado en la base de datos`);
+            return res.status(404).json({ error: "Profesional no encontrado en la base de datos" });
+        }
+
+        if (professional.id !== tokenProfessionalId) {
+            console.warn(`⛔ Mismatch: professionalId del token (${tokenProfessionalId}) y email  no coincide con el professionalId del email (${professional.id})`);
+            return res.status(403).json({ error: "El usuario autenticado no coincide con el email proporcionado" });
+        }
+
+        console.log("✅ Validación exitosa: el email corresponde al profesional autenticado.");
+        return res.status(200).json({ message: "Validación exitosa. El email corresponde al profesional autenticado con el token." });
+    } catch (err) {
+        console.error("❌ Error interno validando email con token:", err);
+        return res.status(500).json({ error: "Error interno del servidor" });
+    }
+};

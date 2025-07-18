@@ -1,4 +1,4 @@
-export const moodAlteratorPrompt = `Extraé del mensaje los alteradores de ánimo de acuerdo con los siguientes criterios:
+export const moodAlternatorPrompt = `Extraé del mensaje los alteradores de ánimo de acuerdo con los siguientes criterios:
 1. Se considera alterador de ánimo cualquier mención concreta que indique que el hablante se ve afectado emocional o mentalmente por una situación o condición de su entorno.
 2. El evento debe ser **real, concreto y personal**, es decir, algo que el usuario esté viviendo directamente y que tenga un impacto emocional claro o implícito en su estado de ánimo.
 3. Clasificá el alterador dentro de una de las siguientes categorías:
@@ -14,6 +14,6 @@ export const moodAlteratorPrompt = `Extraé del mensaje los alteradores de ánim
 {
   "esSignificativo": false o true,
   "descripcionAlteradorAnimo": "[Breve explicación de cómo afecta al usuario el alterador, o 'null' si no aplica]",
-  "categoriaAlteradorAnimo": "necesidad", "trabajo", "economico", "estacional", "climatica" o "null" si no aplica
+  "categoriaAlteradorAnimo": "necesidad", "trabajo", "economico", "estacional", "climatica" o "ninguna" si no se hubiera detectado
 }
 `;

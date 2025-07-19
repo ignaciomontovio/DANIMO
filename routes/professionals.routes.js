@@ -24,5 +24,6 @@ router.post('/link-user', authMiddleware, controller.linkUser);
 router.post('/token-email', authMiddleware, controller.validateProfessionalEmail);
 router.get('/profile', authMiddleware, controller.getProfessionalProfile);
 router.get('/patients', authMiddleware, controller.getProfessionalPatients);
+router.post('/patient-detail', authMiddleware, controller.getPatientDetailByEmail);
 
 export default router;

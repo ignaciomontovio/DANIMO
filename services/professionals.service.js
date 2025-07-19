@@ -181,3 +181,11 @@ export async function linkUser(professionalId, token) {
     return 'Usuario vinculado exitosamente al profesional.'
 }
 
+export async function getProfessionalProfile(userId) {
+    const professional = await Professionals.findByPk(userId, {
+        attributes: ['firstName', 'lastName', 'birthDate', 'gender', 'occupation', 'livesWith', 'profilePic']
+    });
+
+    if (!professional) throw new Error('Profesional no encontrado');
+    return professional;
+}

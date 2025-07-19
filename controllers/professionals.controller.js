@@ -210,3 +210,16 @@ export const validateProfessionalEmail = async (req, res) => {
         return res.status(500).json({ error: "Error interno del servidor" });
     }
 };
+
+export const getProfessionalProfile = async (req, res) => {
+    const userId = req.userId; // obtenido del middleware
+
+    try {
+        const profile = await service.getProfessionalProfile(userId);
+        console.log("✅ Perfil de usuario obtenido correctamente.");
+        res.status(200).json(profile);
+    } catch (err) {
+        console.error("❌ Error al obtener el perfil de profesional:", err.message);
+        res.status(500).json({ error: "No se pudo obtener el perfil del profesional" });
+    }
+};

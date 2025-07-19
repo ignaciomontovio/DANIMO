@@ -22,5 +22,6 @@ router.post('/reset-password', controller.resetPassword);
 router.patch('/update-profile', authMiddleware, upload.single('profilePic'), controller.updateProfessionalProfile);
 router.post('/link-user', authMiddleware, controller.linkUser);
 router.post('/token-email', authMiddleware, controller.validateProfessionalEmail);
+router.get('/profile', authMiddleware, controller.getProfessionalProfile);
 
 export default router;

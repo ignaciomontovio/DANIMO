@@ -210,3 +210,49 @@ export const validateProfessionalEmail = async (req, res) => {
         return res.status(500).json({ error: "Error interno del servidor" });
     }
 };
+
+export const getProfessionalProfile = async (req, res) => {
+    const userId = req.userId; // obtenido del middleware
+
+    try {
+        const profile = await service.getProfessionalProfile(userId);
+        console.log("✅ Perfil de usuario obtenido correctamente.");
+        res.status(200).json(profile);
+    } catch (err) {
+        console.error("❌ Error al obtener el perfil de profesional:", err.message);
+        res.status(500).json({ error: "No se pudo obtener el perfil del profesional" });
+    }
+};
+
+export const getProfessionalPatients = async (req, res) => {
+    const professionalId = req.userId;
+
+    try {
+        const patients = await service.getProfessionalPatients(professionalId);
+        console.log(`✅ Pacientes obtenidos para profesional ${professionalId}`);
+        res.status(200).json(patients);
+    } catch (err) {
+        console.error(`❌ Error al obtener pacientes para el profesional ${professionalId}:`, err);
+        res.status(500).json({ error: 'Error al obtener los pacientes' });
+    }
+};
+
+export const getPatientDetailByEmail = async (req, res) => {
+    const { error, value } = validateEmailBody(req.body);
+    if (error) {
+        console.error("❌ Error de validación Joi:", error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const professionalId = req.userId;
+    const email = value.email;
+
+    try {
+        const patient = await service.getPatientDetailByEmail(professionalId, email);
+        console.log(`✅ Paciente con email ${email} encontrado`);
+        return res.status(200).json(patient);
+    } catch (err) {
+        console.error(`❌ Error al obtener paciente con email ${email}:`, err.message);
+        return res.status(404).json({ error: err.message });
+    }
+};

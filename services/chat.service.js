@@ -34,10 +34,10 @@ export async function chat({message, userId}) {
         throw new Error('El mensaje y el userId son obligatorios');
     }
     try {
-        const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory} =
+        const {hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator} =
             validateMessageIntention(message);
         const {autoResponse, defaultResponse} =
-            await autoResponseConditionChecker(message, userId, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory)
+            await autoResponseConditionChecker(message, userId, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator)
         if (autoResponse === true) {
             return defaultResponse
         }
@@ -49,6 +49,9 @@ export async function chat({message, userId}) {
         if (hasADateReference === true) {
             console.log("El mensaje contiene una referencia a una fecha");
             evaluateDateReference(message,userId);
+        }
+        if (moodAlternator === true){
+            console.log("El mensaje hace referencia a alteradores de animo");
         }
         //Puntaje de riesgo y emociones evaluadas
         const {riskScore, evaluation} = await riskScoreEvaluation(userId, message)

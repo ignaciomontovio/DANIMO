@@ -1,12 +1,15 @@
 import {
     validateDaniImportantDateResponse,
     validateDaniSuicideRiskResponse,
-    validateStressLevelResponse, validateUserIntentResponse
+    validateStressLevelResponse, validateUserIntentResponse,
+    validateDaniMoodAlternatorResponse
 } from "../utils/validators.js";
 import {suicideRiskPrompt} from "../utils/prompts/suicideRiskPrompt.js";
 import {importantDatePrompt, importantDatePromptFiltrado} from "../utils/prompts/importantDatePrompt.js";
 import {stressLevelEvaluationPrompt} from "../utils/prompts/stressLevelEvaluationPrompt.js";
+import {moodAlternatorPrompt} from "../utils/prompts/moodAlternatorPrompt.js";
 import ImportantEvents from "../models/ImportantEvents.js";
+import MoodAlternators from "../models/MoodAlternators.js";
 import axios from "axios";
 import {v4 as uuidv4} from 'uuid';
 import {format} from "date-fns";
@@ -127,6 +130,30 @@ export async function userIntentMessage(message) {
     }
     console.log("Respuesta de userIntentMessage: conversacionNoDanimo " + reply.conversacionNoDanimo + " intentaBorrarHistorial " + reply.intentaBorrarHistorial);
     return {conversacionNoDanimo: reply.conversacionNoDanimo, intentaBorrarHistorial: reply.intentaBorrarHistorial}
+}
+
+export async function moodAlternatorResponse(message,userId) {
+    const messages = [
+        {role: 'system', content: moodAlternatorPrompt},
+        {role: 'user', content: message}];
+    const reply = await sendMessageToAzureOpenIAWithParseJson(messages);
+    const {error, value} = validateDaniMoodAlternatorResponse(reply);
+
+    if (error) {
+        throw new Error(`Respuesta inválida en moodAlternatorResponse: ${error.details[0].message}`);
+    }
+    if (value.esSignificativo === true && value.categoriaAlteradorAnimo !== 'ninguna') {
+        console.log("Alterador de animo detectado para categoria: " + value.categoriaAlteradorAnimo);
+        //Hay que insertar el alterador en la tabla
+        await MoodAlternators.create({
+            id: "MA-" + uuidv4(),
+            description: value.descripcionAlteradorAnimo,
+            category: value.categoriaAlteradorAnimo,
+            userId: userId
+        })
+        
+    }
+    return value.esSignificativo
 }
 
 // Función para enviar mensajes a la API de OpenAI por fuera de azure (comentada porque no se usa actualmente)

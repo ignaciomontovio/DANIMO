@@ -315,6 +315,18 @@ export const validateUserIntentResponse = (data) => {
 
     return schema.validate(data);
 };
+
+export const validateDaniMoodAlternatorResponse = (data) => {
+    const schema = Joi.object({
+        esSignificativo: Joi.boolean().required(),
+        descripcionAlteradorAnimo: Joi.string().allow(null).allow('null'),
+        categoriaAlteradorAnimo: Joi.string()
+            .valid('necesidad', 'trabajo', 'economico', 'estacional', 'climatica', 'ninguna')
+            .required()
+    });
+
+    return schema.validate(data);    
+};
 // ----------------------Quotes--------------------------
 
 export const validateQuoteInput = (data) => {

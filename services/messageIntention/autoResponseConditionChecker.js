@@ -6,19 +6,20 @@ import {intentaBorrarHistorialDefaultResponse} from "../../utils/prompts/userInt
 import UsersEmotionalState from "../../models/UsersEmotionalState.js";
 import {v4 as uuidv4} from "uuid";
 
-function logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory) {
+function logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator) {
     console.log(`--- Análisis de Intención del Mensaje ---
         ¿Riesgo de suicidio?         : ${hasSuicideRisk}
         ¿Contiene enlaces?           : ${containsLinks}
         ¿Es una respuesta breve?     : ${isBriefResponse}
         ¿Hace referencia a una fecha?: ${hasADateReference}
         ¿Intenta borrar historial?   : ${clearHistory}
+        ¿Hay alteradores de animo?   : ${moodAlternator}
         -----------------------------------------
         `);
 }
 
-export async function autoResponseConditionChecker(message, userId, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory) {
-    logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory);
+export async function autoResponseConditionChecker(message, userId, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator) {
+    logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator);
     if (hasSuicideRisk) {
         if (await suicideRiskResponse(message) === true){
             console.log("Confirmado riesgo de suicidio tras evaluación")

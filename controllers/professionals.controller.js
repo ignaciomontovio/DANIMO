@@ -223,3 +223,16 @@ export const getProfessionalProfile = async (req, res) => {
         res.status(500).json({ error: "No se pudo obtener el perfil del profesional" });
     }
 };
+
+export const getProfessionalPatients = async (req, res) => {
+    const professionalId = req.userId;
+
+    try {
+        const patients = await service.getProfessionalPatients(professionalId);
+        console.log(`✅ Pacientes obtenidos para profesional ${professionalId}`);
+        res.status(200).json(patients);
+    } catch (err) {
+        console.error(`❌ Error al obtener pacientes para el profesional ${professionalId}:`, err);
+        res.status(500).json({ error: 'Error al obtener los pacientes' });
+    }
+};

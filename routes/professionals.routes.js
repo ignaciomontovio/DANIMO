@@ -23,5 +23,6 @@ router.patch('/update-profile', authMiddleware, upload.single('profilePic'), con
 router.post('/link-user', authMiddleware, controller.linkUser);
 router.post('/token-email', authMiddleware, controller.validateProfessionalEmail);
 router.get('/profile', authMiddleware, controller.getProfessionalProfile);
+router.get('/patients', authMiddleware, controller.getProfessionalPatients);
 
 export default router;

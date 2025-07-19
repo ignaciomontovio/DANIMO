@@ -189,3 +189,18 @@ export async function getProfessionalProfile(userId) {
     if (!professional) throw new Error('Profesional no encontrado');
     return professional;
 }
+
+export async function getProfessionalPatients(professionalId) {
+    const professional = await Professionals.findByPk(professionalId, {
+        include: [{
+            model: Users,
+            as: 'Users', // 👈 Este alias es obligatorio por esta definido así en el modelo
+            attributes: ['id', 'firstName', 'lastName'],
+            through: { attributes: [] } // 👈 Esto oculta la tabla intermedia
+        }]
+    });
+
+    if (!professional) throw new Error('Profesional no encontrado');
+
+    return professional.Users;
+}

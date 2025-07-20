@@ -488,3 +488,14 @@ export const validateRoutineAssignInput = (data) => {
 
     return schema.validate(data);
 };
+
+export const validateUnlinkUser = (body) => {
+    const schema = Joi.object({
+        userId: Joi.string().required().messages({
+        'any.required': 'El campo userId es obligatorio.',
+        'string.empty': 'El campo userId no puede estar vacío.'
+        }),
+    });
+
+    return schema.validate(body);
+};

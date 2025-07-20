@@ -5,7 +5,7 @@ import {
     validateGoogleTokenProf,
     validateAuthorizeProf,
     validateForgotPassword, validateResetPassword, validateToken,
-    validateUpdateInput, validateLinkUser, validateEmailBody
+    validateUpdateInput, validateLinkUser, validateEmailBody, validateUnlinkUser
 } from '../utils/validators.js';
 
 export const registerProfessional = async (req, res) => {
@@ -234,5 +234,25 @@ export const getProfessionalPatients = async (req, res) => {
     } catch (err) {
         console.error(`❌ Error al obtener pacientes para el profesional ${professionalId}:`, err);
         res.status(500).json({ error: 'Error al obtener los pacientes' });
+    }
+};
+
+export const unlinkUser = async (req, res) => {
+    const { error, value } = validateUnlinkUser(req.body);
+    if (error) {
+        console.error("❌ Validación fallida:", error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const professionalId = req.userId;
+    const userId = value.userId;
+
+    try {
+        await service.unlinkUser(professionalId, userId);
+        console.log(`✅ Usuario ${userId} desvinculado correctamente del profesional ${professionalId}`);
+        return res.status(200).json({ message: 'Usuario desvinculado correctamente.' });
+    } catch (err) {
+        console.error(`❌ Error al desvincular usuario:`, err);
+        return res.status(500).json({ error: err.message });
     }
 };

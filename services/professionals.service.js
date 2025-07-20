@@ -195,7 +195,8 @@ export async function getProfessionalPatients(professionalId) {
         include: [{
             model: Users,
             as: 'Users', // 👈 Este alias es obligatorio por esta definido así en el modelo
-            attributes: ['id', 'firstName', 'lastName', 'email'],
+            attributes: ['id', 'firstName', 'lastName', 'email', 'birthDate', 
+                'gender', 'occupation', 'livesWith'],
             through: { attributes: [] } // 👈 Esto oculta la tabla intermedia
         }]
     });

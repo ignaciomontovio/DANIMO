@@ -1,6 +1,7 @@
 // utils/seedUsers.js
 import { v4 as uuidv4 } from 'uuid';
 import Users from '../models/Users.js';
+import {hashPassword} from "./password.js";
 
 const mockUsers = [
     {
@@ -8,7 +9,7 @@ const mockUsers = [
         firstName: 'Ana',
         lastName: 'García',
         email: 'ana@example.com',
-        password: 'password1',
+        password: await hashPassword('password1'),
         hasGoogleAccount: false,
         birthDate: new Date('1996-05-12'),
         gender: 'Femenino',
@@ -22,8 +23,8 @@ const mockUsers = [
         firstName: 'Luis',
         lastName: 'Martínez',
         email: 'luis@example.com',
-        password: 'password2',
-        hasGoogleAccount: true,
+        password: await hashPassword('password2'),
+        hasGoogleAccount: false,
         birthDate: new Date('1992-08-22'),
         gender: 'Masculino',
         occupation: 'Ingeniero',
@@ -36,7 +37,7 @@ const mockUsers = [
         firstName: 'Sofía',
         lastName: 'López',
         email: 'sofia@example.com',
-        password: 'password3',
+        password: await hashPassword('password3'),
         hasGoogleAccount: false,
         birthDate: new Date('1999-11-03'),
         gender: 'Femenino',
@@ -50,7 +51,7 @@ const mockUsers = [
         firstName: 'Carlos',
         lastName: 'Pérez',
         email: 'carlos@example.com',
-        password: 'password4',
+        password: await hashPassword('password4'),
         hasGoogleAccount: false,
         birthDate: new Date('1984-02-17'),
         gender: 'Masculino',
@@ -64,8 +65,8 @@ const mockUsers = [
         firstName: 'María',
         lastName: 'Ruiz',
         email: 'maria@example.com',
-        password: 'password5',
-        hasGoogleAccount: true,
+        password: await hashPassword('password5'),
+        hasGoogleAccount: false,
         birthDate: new Date('1989-07-29'),
         gender: 'Femenino',
         occupation: 'Médica',
@@ -78,7 +79,7 @@ const mockUsers = [
         firstName: 'Pedro',
         lastName: 'Fernández',
         email: 'pedro@example.com',
-        password: 'password6',
+        password: await hashPassword('password6'),
         hasGoogleAccount: false,
         birthDate: new Date('1994-12-15'),
         gender: 'Masculino',

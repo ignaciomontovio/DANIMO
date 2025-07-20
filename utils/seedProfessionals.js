@@ -1,6 +1,7 @@
 // utils/seedProfessionals.js
 import { v4 as uuidv4 } from 'uuid';
 import Professionals from '../models/Professionals.js';
+import {hashPassword} from "./password.js";
 
 const mockProfessionals = [
     {
@@ -9,7 +10,7 @@ const mockProfessionals = [
         firstName: 'Laura',
         lastName: 'Gómez',
         email: 'laura.pro@example.com',
-        password: 'profpass1',
+        password: await hashPassword('profpass1'),
         hasGoogleAccount: false,
         birthDate: new Date('1980-03-15'),
         gender: 'Femenino',
@@ -25,8 +26,8 @@ const mockProfessionals = [
         firstName: 'Javier',
         lastName: 'Sánchez',
         email: 'javier.pro@example.com',
-        password: 'profpass2',
-        hasGoogleAccount: true,
+        password: await hashPassword('profpass2'),
+        hasGoogleAccount: false,
         birthDate: new Date('1975-07-22'),
         gender: 'Masculino',
         occupation: 'Psiquiatra',
@@ -41,7 +42,7 @@ const mockProfessionals = [
         firstName: 'Marta',
         lastName: 'Fernández',
         email: 'marta.pro@example.com',
-        password: 'profpass3',
+        password: await hashPassword('profpass3'),
         hasGoogleAccount: false,
         birthDate: new Date('1985-11-30'),
         gender: 'Femenino',
@@ -57,7 +58,7 @@ const mockProfessionals = [
         firstName: 'Pablo',
         lastName: 'López',
         email: 'pablo.pro@example.com',
-        password: 'profpass4',
+        password: await hashPassword('profpass4'),
         hasGoogleAccount: false,
         birthDate: new Date('1990-01-10'),
         gender: 'Masculino',
@@ -73,8 +74,8 @@ const mockProfessionals = [
         firstName: 'Lucía',
         lastName: 'Martínez',
         email: 'lucia.pro@example.com',
-        password: 'profpass5',
-        hasGoogleAccount: true,
+        password: await hashPassword('profpass5'),
+        hasGoogleAccount: false,
         birthDate: new Date('1988-06-18'),
         gender: 'Femenino',
         occupation: 'Coach',
@@ -89,7 +90,7 @@ const mockProfessionals = [
         firstName: 'Andrés',
         lastName: 'Ruiz',
         email: 'andres.pro@example.com',
-        password: 'profpass6',
+        password: await hashPassword('profpass6'),
         hasGoogleAccount: false,
         birthDate: new Date('1982-09-25'),
         gender: 'Masculino',

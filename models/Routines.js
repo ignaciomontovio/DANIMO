@@ -12,6 +12,10 @@ const Routines = sequelize.define('Routines', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     body: {
         type: DataTypes.TEXT,
         allowNull: false,

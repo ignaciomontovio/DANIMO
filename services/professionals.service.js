@@ -195,7 +195,8 @@ export async function getProfessionalPatients(professionalId) {
         include: [{
             model: Users,
             as: 'Users', // 👈 Este alias es obligatorio por esta definido así en el modelo
-            attributes: ['id', 'firstName', 'lastName', 'email'],
+            attributes: ['id', 'firstName', 'lastName', 'email', 'birthDate', 
+                'gender', 'occupation', 'livesWith'],
             through: { attributes: [] } // 👈 Esto oculta la tabla intermedia
         }]
     });
@@ -203,23 +204,4 @@ export async function getProfessionalPatients(professionalId) {
     if (!professional) throw new Error('Profesional no encontrado');
 
     return professional.Users;
-}
-
-export async function getPatientDetailByEmail(professionalId, email) {
-    const professional = await Professionals.findByPk(professionalId, {
-        include: [{
-            model: Users,
-            as: 'Users',
-            where: { email },
-            attributes: ['id', 'firstName', 'lastName', 'email', 'birthDate', 
-                'gender', 'occupation', 'livesWith', 'profilePic'],
-            through: { attributes: [] }
-        }]
-    });
-
-    if (!professional || professional.Users.length === 0) {
-        throw new Error("Paciente no encontrado o no vinculado con este profesional");
-    }
-
-    return professional.Users[0]; // devuelve solo el detalle de ese paciente
 }

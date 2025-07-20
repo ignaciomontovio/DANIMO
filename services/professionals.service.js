@@ -10,6 +10,7 @@ import { generateRandomKey } from '../utils/jwt.js';
 import RecoveryTokensProfessionals from "../models/RecoveryTokensProfessionals.js";
 import ProfesionalPatientTokens from "../models/ProfessionalPatientTokens.js";
 import Users from "../models/Users.js";
+
 const KEY_SIZE = 16
 const SECRET_KEY = process.env.JWT_SECRET
 const HOST = process.env.HOST
@@ -204,4 +205,16 @@ export async function getProfessionalPatients(professionalId) {
     if (!professional) throw new Error('Profesional no encontrado');
 
     return professional.Users;
+}
+
+export async function unlinkUser(professionalId, userId) {
+    const user = await Users.findByPk(userId);
+    const professional = await Professionals.findByPk(professionalId);
+
+    if (user && professional) {
+        await user.removeProfessional(professional); // este método lo genera Sequelize
+        console.log('✅ Asociación eliminada correctamente.');
+    } else {
+        console.log('⚠️ Usuario o profesional no encontrados.');
+    }
 }

@@ -214,3 +214,16 @@ export const generateProfessionalToken = async (req, res) => {
         res.status(500).json({ error: "Error al generar token de vinculacion de profesional" });
     }
 };
+
+export const getUserProfessionals = async (req, res) => {
+    const userId = req.userId;
+
+    try {
+        const professionals = await usersService.getUserProfessionals(userId);
+        console.log(`✅ Profesionales obtenidos para usuario ${userId}`);
+        res.status(200).json(professionals);
+    } catch (err) {
+        console.error(`❌ Error al obtener pacientes para el profesional ${userId}:`, err);
+        res.status(500).json({ error: 'Error al obtener los pacientes' });
+    }
+};

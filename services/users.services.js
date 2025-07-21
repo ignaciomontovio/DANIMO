@@ -8,6 +8,7 @@ import { verifyGoogleToken } from '../utils/google.js';
 import {sendEmail} from '../utils/sendEmail.js';
 import createError from 'http-errors';
 import { generateRandomKey } from '../utils/jwt.js';
+import Professionals from '../models/Professionals.js';
 
 const TWO_HOURS = 1000 * 60 * 60 * 2;
 const findUserByEmail = async (email) => {
@@ -141,4 +142,20 @@ export async function generateProfessionalToken(userId) {
         userId: userId, tokenId: key, expirationDate: Date.now() + TWO_HOURS
     })
     return {token: key};
+}
+
+export async function getUserProfessionals(userId) {
+    const user = await Users.findByPk(userId, {
+        include: [{
+            model: Professionals,
+            as: 'Professionals', // 👈 Este alias es obligatorio por esta definido así en el modelo
+            attributes: ['id', 'firstName', 'lastName', 'email', 'birthDate', 
+                'gender', 'occupation', 'livesWith'],
+            through: { attributes: [] } // 👈 Esto oculta la tabla intermedia
+        }]
+    });
+
+    if (!user) throw new Error('Profesional no encontrado');
+
+    return user.Professionals;
 }

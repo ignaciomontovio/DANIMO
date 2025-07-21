@@ -24,7 +24,7 @@ export const createRoutine = async (req, res) => {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { name, body, emotion: emotionNumber } = req.body;
+    const { name, type, body, emotion: emotionNumber } = req.body;
     const userId = req.userId;
 
     try {
@@ -42,7 +42,7 @@ export const createRoutine = async (req, res) => {
             return res.status(404).json({ error: `No se encontró una emoción con el número ${emotionNumber}` });
         }
 
-        const result = await service.createRoutine({ name, body, emotion: emotion.name, createdBy: userId });
+        const result = await service.createRoutine({ name, type, body, emotion: emotion.name, createdBy: userId });
         console.log(`✅ Rutina creada correctamente por ${userId}: ${name}`);
         res.status(200).json({ message: result });
     } catch (err) {
@@ -58,7 +58,7 @@ export const updateRoutine = async (req, res) => {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { currentName, name, body, emotion: emotionNumber } = req.body;
+    const { currentName, name, type, body, emotion: emotionNumber } = req.body;
     const userId = req.userId;
 
     try {
@@ -80,6 +80,7 @@ export const updateRoutine = async (req, res) => {
         const result = await service.updateRoutine({
             currentName,
             name,
+            type,
             body,
             emotionName,
             userId

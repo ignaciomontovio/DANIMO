@@ -12,6 +12,7 @@ export async function seedRoutines() {
         {
             id: uuidv4(),
             name: 'Abrazá tu tristeza',
+            type: 'Pasos',
             body: '1. Escribí lo que sentís en un diario\n2. Hacé una caminata tranquila\n3. Llamá a alguien de confianza',
             emotion: 'Tristeza',
             createdBy: 'system',
@@ -19,6 +20,7 @@ export async function seedRoutines() {
         {
             id: uuidv4(),
             name: 'Transformá el miedo en calma',
+            type: 'Pasos',
             body: '1. Respiración profunda durante 5 minutos\n2. Hacé una lista de lo que te da miedo y qué podés controlar\n3. Practicá grounding (5 cosas que ves, 4 que tocás, etc.)',
             emotion: 'Miedo',
             createdBy: 'system',
@@ -26,14 +28,16 @@ export async function seedRoutines() {
         {
             id: uuidv4(),
             name: 'Liberá tu enojo con inteligencia',
-            body: '1. Alejate del estímulo\n2. Escribí lo que te molestó sin filtros\n3. Hacé actividad física o ejercicios de respiración',
+            type: 'Texto',
+            body: 'Alejate del estímulo que te hace enojar. Escribí lo que te molestó sin filtros. Hacé actividad física o ejercicios de respiración.',
             emotion: 'Enojo',
             createdBy: 'system',
         },
         {
         id: uuidv4(),
             name: 'Domá tu ansiedad',
-            body: '1. Hacé respiraciones lentas y profundas\n2. Tomá una infusión caliente\n3. Probá una técnica de relajación muscular progresiva',
+            type: 'Video',
+            body: 'https://www.youtube.com/watch?v=ifKLyrl2mTk',
             emotion: 'Ansiedad',
             createdBy: 'system',
         }

@@ -65,7 +65,7 @@ export async function getRoutinesByUser(userId) {
     return routines;
 }
 
-export async function createRoutine({ name, body, emotion, createdBy }) {
+export async function createRoutine({ name, type, body, emotion, createdBy }) {
     const existing = await Routines.findOne({
         where: {
             name
@@ -79,6 +79,7 @@ export async function createRoutine({ name, body, emotion, createdBy }) {
     await Routines.create({
         id: uuidv4(),
         name,
+        type,
         body,
         emotion,
         createdBy
@@ -87,7 +88,7 @@ export async function createRoutine({ name, body, emotion, createdBy }) {
     return '¡Rutina creada correctamente!';
 }
 
-export async function updateRoutine({ currentName, name, body, emotionName, userId }) {
+export async function updateRoutine({ currentName, name, type, body, emotionName, userId }) {
     const routine = await Routines.findOne({ where: { name: currentName, createdBy: userId } });
 
     if (!routine) {
@@ -103,6 +104,7 @@ export async function updateRoutine({ currentName, name, body, emotionName, user
 
     const updateFields = {};
     if (name) updateFields.name = name;
+    if (type) updateFields.type = type;
     if (body) updateFields.body = body;
     if (emotionName) updateFields.emotion = emotionName;
 

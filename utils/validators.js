@@ -54,6 +54,17 @@ export const validateLinkUser = (data) => Joi.object({
     token: Joi.string().uppercase().required()
 }).validate(data);
 
+export const validateUnlinkUser = (body) => {
+    const schema = Joi.object({
+        userId: Joi.string().required().messages({
+        'any.required': 'El campo userId es obligatorio.',
+        'string.empty': 'El campo userId no puede estar vacío.'
+        }),
+    });
+
+    return schema.validate(body);
+};
+
 // ------------------------ Users --------------------------------
 export const validateRegisterInput = (data) => Joi.object({
     password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\={};:"|,.<>?]).{8,}$'))
@@ -421,6 +432,11 @@ export const validateRoutineCreationInput = (data) => {
             'string.base': '"name" debe ser un texto válido',
             'string.empty': '"name" no puede estar vacío'
         }),
+        type: Joi.string().required().messages({
+            'any.required': '"type" es obligatorio',
+            'string.base': '"type" debe ser un texto válido',
+            'string.empty': '"type" no puede estar vacío'
+        }),
         body: Joi.string().required().messages({
             'any.required': '"body" es obligatorio',
             'string.base': '"body" debe ser un texto válido',
@@ -446,6 +462,9 @@ export const validateRoutineEditInput = (data) => {
         name: Joi.string().optional().messages({
             'string.base': '"name" debe ser un texto válido',
         }),
+        type: Joi.string().optional().messages({
+            'string.base': '"type" debe ser un texto válido',
+        }),
         body: Joi.string().optional().messages({
             'string.base': '"body" debe ser un texto válido',
         }),
@@ -454,7 +473,7 @@ export const validateRoutineEditInput = (data) => {
             'number.min': '"emotion" debe estar entre 1 y 5',
             'number.max': '"emotion" debe estar entre 1 y 5',
         })
-    }).or('name', 'body', 'emotion').messages({
+    }).or('name', 'type', 'body', 'emotion').messages({
         'object.missing': 'Debes proveer al menos un campo a modificar (name, body o emotion)',
     });
 
@@ -487,15 +506,4 @@ export const validateRoutineAssignInput = (data) => {
     });
 
     return schema.validate(data);
-};
-
-export const validateUnlinkUser = (body) => {
-    const schema = Joi.object({
-        userId: Joi.string().required().messages({
-        'any.required': 'El campo userId es obligatorio.',
-        'string.empty': 'El campo userId no puede estar vacío.'
-        }),
-    });
-
-    return schema.validate(body);
 };

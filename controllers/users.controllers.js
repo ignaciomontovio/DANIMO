@@ -7,7 +7,8 @@ import {
     validateResetPassword,
     validateUpdateInput,
     validateToken,
-    validateEmailBody
+    validateEmailBody,
+    validateUnlinkProfessional
 } from '../utils/validators.js';
 import { signToken, verifyToken, signRefreshToken } from '../utils/jwt.js';
 
@@ -212,5 +213,38 @@ export const generateProfessionalToken = async (req, res) => {
     } catch (err) {
         console.error("❌ Error al generar token de vinculacion de profesional:", err.message);
         res.status(500).json({ error: "Error al generar token de vinculacion de profesional" });
+    }
+};
+
+export const getUserProfessionals = async (req, res) => {
+    const userId = req.userId;
+
+    try {
+        const professionals = await usersService.getUserProfessionals(userId);
+        console.log(`✅ Profesionales obtenidos para usuario ${userId}`);
+        res.status(200).json(professionals);
+    } catch (err) {
+        console.error(`❌ Error al obtener pacientes para el profesional ${userId}:`, err);
+        res.status(500).json({ error: 'Error al obtener los pacientes' });
+    }
+};
+
+export const unlinkProfessional = async (req, res) => {
+    const { error, value } = validateUnlinkProfessional(req.body);
+    if (error) {
+        console.error("❌ Validación fallida:", error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const professionalId = value.professionalId;
+    const userId = req.userId;
+
+    try {
+        await usersService.unlinkProfessional(professionalId, userId);
+        console.log(`✅ Usuario ${userId} desvinculado correctamente del profesional ${professionalId}`);
+        return res.status(200).json({ message: 'Usuario desvinculado correctamente.' });
+    } catch (err) {
+        console.error(`❌ Error al desvincular usuario:`, err);
+        return res.status(500).json({ error: err.message });
     }
 };

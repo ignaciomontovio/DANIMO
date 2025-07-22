@@ -26,6 +26,7 @@ import sms from '../routes/sms.routers.js';
 import medication from '../routes/medications.routers.js';
 import notification from '../routes/notifications.routers.js';
 import routine from '../routes/routines.routers.js';
+import stats from '../routes/stats.routers.js';
 
 app.use('/auth', usersRoutes);
 app.use('/auth/professional', professionalsRoutes);
@@ -39,5 +40,6 @@ app.use('/sms', sms)
 app.use('/medication',medication)
 app.use('/notification',notification)
 app.use('/routine',routine)
+app.use('/stats', stats);
 
 export default app;

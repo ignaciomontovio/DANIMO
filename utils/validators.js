@@ -152,6 +152,17 @@ export function validateEmailBody(data) {
 
     return schema.validate(data);
 }
+
+export const validateUnlinkProfessional = (body) => {
+    const schema = Joi.object({
+        professionalId: Joi.string().required().messages({
+        'any.required': 'El campo professionalId es obligatorio.',
+        'string.empty': 'El campo professionalId no puede estar vacío.'
+        }),
+    });
+
+    return schema.validate(body);
+};
 // ----------------------Emotions --------------------------
 
 export const validateEmotionRegisterInput = (data) => {
@@ -502,6 +513,27 @@ export const validateRoutineAssignInput = (data) => {
             'array.min': 'Debe proporcionar al menos un email',
             'any.required': '"emails" es obligatorio',
             'string.email': 'Todos los elementos de "emails" deben ser correos válidos',
+        })
+    });
+
+    return schema.validate(data);
+};
+
+// ----------------------Stats--------------------------
+
+export const validateStatsEmotionsInput = (data) => {
+    const schema = Joi.object({
+        id: Joi.string().optional(),
+        since: Joi.date().iso().required().messages({
+        'any.required': 'La fecha de inicio (since) es obligatoria.',
+        'date.base': 'La fecha de inicio (since) debe ser una fecha válida.',
+        'date.format': 'La fecha de inicio (since) debe estar en formato ISO.'
+        }),
+        until: Joi.date().iso().greater(Joi.ref('since')).required().messages({
+        'any.required': 'La fecha de fin (until) es obligatoria.',
+        'date.base': 'La fecha de fin (until) debe ser una fecha válida.',
+        'date.greater': 'La fecha de fin (until) debe ser posterior a la fecha de inicio (since).',
+        'date.format': 'La fecha de fin (until) debe estar en formato ISO.'
         })
     });
 

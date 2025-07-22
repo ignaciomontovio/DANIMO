@@ -19,5 +19,6 @@ router.get('/profile', authMiddleware, usersController.getUserProfile);
 
 router.post('/generate/professional-token', authMiddleware, usersController.generateProfessionalToken);
 router.get('/professionals', authMiddleware, usersController.getUserProfessionals);
+router.post('/unlink-professional', authMiddleware, usersController.unlinkProfessional);
 
 export default router;

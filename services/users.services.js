@@ -155,7 +155,19 @@ export async function getUserProfessionals(userId) {
         }]
     });
 
-    if (!user) throw new Error('Profesional no encontrado');
+    if (!user) throw new Error('Usuario no encontrado');
 
     return user.Professionals;
+}
+
+export async function unlinkProfessional(professionalId, userId) {
+    const user = await Users.findByPk(userId);
+    const professional = await Professionals.findByPk(professionalId);
+
+    if (user && professional) {
+        await user.removeProfessional(professional); // este método lo genera Sequelize
+        console.log('✅ Asociación eliminada correctamente.');
+    } else {
+        console.log('⚠️ Usuario o profesional no encontrados.');
+    }
 }

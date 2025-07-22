@@ -152,6 +152,17 @@ export function validateEmailBody(data) {
 
     return schema.validate(data);
 }
+
+export const validateUnlinkProfessional = (body) => {
+    const schema = Joi.object({
+        professionalId: Joi.string().required().messages({
+        'any.required': 'El campo professionalId es obligatorio.',
+        'string.empty': 'El campo professionalId no puede estar vacío.'
+        }),
+    });
+
+    return schema.validate(body);
+};
 // ----------------------Emotions --------------------------
 
 export const validateEmotionRegisterInput = (data) => {

@@ -518,3 +518,24 @@ export const validateRoutineAssignInput = (data) => {
 
     return schema.validate(data);
 };
+
+// ----------------------Stats--------------------------
+
+export const validateStatsEmotionsInput = (data) => {
+    const schema = Joi.object({
+        id: Joi.string().optional(),
+        since: Joi.date().iso().required().messages({
+        'any.required': 'La fecha de inicio (since) es obligatoria.',
+        'date.base': 'La fecha de inicio (since) debe ser una fecha válida.',
+        'date.format': 'La fecha de inicio (since) debe estar en formato ISO.'
+        }),
+        until: Joi.date().iso().greater(Joi.ref('since')).required().messages({
+        'any.required': 'La fecha de fin (until) es obligatoria.',
+        'date.base': 'La fecha de fin (until) debe ser una fecha válida.',
+        'date.greater': 'La fecha de fin (until) debe ser posterior a la fecha de inicio (since).',
+        'date.format': 'La fecha de fin (until) debe estar en formato ISO.'
+        })
+    });
+
+    return schema.validate(data);
+};

@@ -3,7 +3,8 @@ import admin from 'firebase-admin'
 import cron from 'node-cron'
 import Users from '../models/Users.js'
 const FIREBASE_NOTIFICATION_KEY = process.env.FIREBASE_NOTIFICATION_KEY
-
+const PUSH_TITLE = 'Hola soy dani 😀!'
+const PUSH_BODY = '🚀 Recuerda registrar tu estado de ánimo diario 🚀'
 export async function registerFirebaseToken(userId, token) {
     return await Users.update(
         {firebaseToken: token},
@@ -30,8 +31,8 @@ export function tryPushNotificationService() {
 }
 
 export function sendPushNotificationToUser(userId) {
-    const title = "Titulo de prueba"
-    const body = "Cuerpo de prueba";
+    const title = PUSH_TITLE
+    const body = PUSH_BODY;
     return Users.findOne({where: {id: userId}, attributes: ['firebaseToken']})
         .then(user => {
             if (!user) {
@@ -65,6 +66,6 @@ cron.schedule('0 14 * * *', async () => {
     .map(user => user.firebaseToken) // extraer solo el token
     .filter(token => typeof token === 'string' && token !== '') // filtrar vacíos/nulos
     .forEach(token => {
-        sendPushNotification(token, 'Hola soy dani 😀!', '🚀 Recuerda registrar tu estado de ánimo diario 🚀');
+        sendPushNotification(token, PUSH_TITLE, PUSH_BODY);
     });
 });

@@ -486,11 +486,13 @@ export const validateRoutineEditInput = (data) => {
         body: Joi.string().optional().messages({
             'string.base': '"body" debe ser un texto válido',
         }),
-        emotion: Joi.number().integer().min(1).max(5).optional().messages({
-            'number.base': '"emotion" debe ser un número',
-            'number.min': '"emotion" debe estar entre 1 y 5',
-            'number.max': '"emotion" debe estar entre 1 y 5',
-        })
+        emotion: Joi.array()
+            .items(Joi.number().integer().min(1).max(5).messages({
+                'number.base': 'Cada emoción debe ser un número',
+                'number.min': 'Cada emoción debe ser >= 1',
+                'number.max': 'Cada emoción debe ser <= 5'
+            }))
+            .optional()
     }).or('name', 'type', 'body', 'emotion').messages({
         'object.missing': 'Debes proveer al menos un campo a modificar (name, body o emotion)',
     });

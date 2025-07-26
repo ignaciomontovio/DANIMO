@@ -84,7 +84,7 @@ export async function createRoutine({ name, type, body, emotion, createdBy }) {
     return '¡Rutina creada correctamente!';
 }
 
-export async function updateRoutine({ currentName, name, type, body, emotionName, userId }) {
+export async function updateRoutine({ currentName, name, type, body, emotionNames, userId }) {
     const routine = await Routines.findOne({ where: { name: currentName, createdBy: userId } });
 
     if (!routine) {
@@ -102,7 +102,7 @@ export async function updateRoutine({ currentName, name, type, body, emotionName
     if (name) updateFields.name = name;
     if (type) updateFields.type = type;
     if (body) updateFields.body = body;
-    if (emotionName) updateFields.emotion = emotionName;
+    if (emotionNames) updateFields.emotion = emotionNames.join(', '); // Guardamos como string
 
     await routine.update(updateFields);
 

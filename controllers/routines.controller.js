@@ -71,7 +71,7 @@ export const updateRoutine = async (req, res) => {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { currentName, name, type, body, emotion: emotionNumber } = req.body;
+    const { currentName, name, type, body, emotion: emotionNumbers } = req.body;
     const userId = req.userId;
 
     try {
@@ -81,13 +81,15 @@ export const updateRoutine = async (req, res) => {
             return res.status(403).json({ error: 'Solo los profesionales pueden editar rutinas' });
         }
 
-        let emotionName = null;
-        if (emotionNumber !== undefined) {
-            const emotion = await TypeEmotions.findOne({ where: { number: emotionNumber } });
-            if (!emotion) {
-                return res.status(404).json({ error: `No se encontró una emoción con el número ${emotionNumber}` });
+        let emotionNames = null;
+        if (emotionNumbers !== undefined) {
+            const emotions = await TypeEmotions.findAll({ where: { number: emotionNumbers } });
+
+            if (emotions.length !== emotionNumbers.length) {
+                return res.status(404).json({ error: 'Una o más emociones no existen' });
             }
-            emotionName = emotion.name;
+
+            emotionNames = emotions.map(e => e.name); // Array de nombres
         }
 
         const result = await service.updateRoutine({
@@ -95,7 +97,7 @@ export const updateRoutine = async (req, res) => {
             name,
             type,
             body,
-            emotionName,
+            emotionNames, // Pasamos array si existe
             userId
         });
 

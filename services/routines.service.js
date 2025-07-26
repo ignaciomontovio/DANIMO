@@ -66,11 +66,7 @@ export async function getRoutinesByUser(userId) {
 }
 
 export async function createRoutine({ name, type, body, emotion, createdBy }) {
-    const existing = await Routines.findOne({
-        where: {
-            name
-        }
-    });
+    const existing = await Routines.findOne({ where: { name } });
 
     if (existing) {
         throw new Error(`Ya existe una rutina llamada "${name}".`);
@@ -81,7 +77,7 @@ export async function createRoutine({ name, type, body, emotion, createdBy }) {
         name,
         type,
         body,
-        emotion,
+        emotion: Array.isArray(emotion) ? emotion.join(', ') : emotion, // Guardamos en string
         createdBy
     });
 

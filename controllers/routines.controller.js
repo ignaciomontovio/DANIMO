@@ -24,7 +24,7 @@ export const createRoutine = async (req, res) => {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { name, type, body, emotion: emotionNumber } = req.body;
+    const { name, type, body, emotion: emotionNumbers } = req.body;
     const userId = req.userId;
 
     try {
@@ -35,16 +35,29 @@ export const createRoutine = async (req, res) => {
             return res.status(403).json({ error: 'Solo los profesionales pueden crear rutinas' });
         }
 
-        const emotion = await TypeEmotions.findOne({ where: { number: emotionNumber } });
+        // Buscar todas las emociones
+        const emotions = await TypeEmotions.findAll({
+            where: { number: emotionNumbers }
+        });
 
-        if (!emotion) {
-            console.warn(`❌ No se encontró emoción con número=${emotionNumber}`);
-            return res.status(404).json({ error: `No se encontró una emoción con el número ${emotionNumber}` });
+        if (emotions.length !== emotionNumbers.length) {
+            console.warn(`❌ Algunas emociones no fueron encontradas`);
+            return res.status(404).json({ error: 'Una o más emociones no existen' });
         }
 
-        const result = await service.createRoutine({ name, type, body, emotion: emotion.name, createdBy: userId });
-        console.log(`✅ Rutina creada correctamente por ${userId}: ${name}`);
+        const emotionNames = emotions.map(e => e.name);
+
+        const result = await service.createRoutine({
+            name,
+            type,
+            body,
+            emotion: emotionNames, // <-- Array de nombres
+            createdBy: userId
+        });
+
+        console.log(`✅ Rutina creada correctamente por ${userId}: ${name} (emociones: ${emotionNames.join(', ')})`);
         res.status(200).json({ message: result });
+
     } catch (err) {
         console.error('❌ Error al crear rutina:', err.message);
         res.status(500).json({ error: 'Error al crear rutina' });

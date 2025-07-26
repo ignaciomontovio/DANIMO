@@ -453,12 +453,19 @@ export const validateRoutineCreationInput = (data) => {
             'string.base': '"body" debe ser un texto válido',
             'string.empty': '"body" no puede estar vacío'
         }),
-        emotion: Joi.number().integer().min(1).max(5).required().messages({
-            'any.required': '"emotion" es obligatorio',
-            'number.base': '"emotion" debe ser un número',
-            'number.min': '"emotion" debe ser un número entre 1 y 5',
-            'number.max': '"emotion" debe ser un número entre 1 y 5'
-        })
+        emotion: Joi.array()
+            .items(Joi.number().integer().min(1).max(5).messages({
+                'number.base': 'Cada emoción debe ser un número',
+                'number.min': 'Cada emoción debe ser >= 1',
+                'number.max': 'Cada emoción debe ser <= 5'
+            }))
+            .min(1)
+            .required()
+            .messages({
+                'any.required': '"emotion" es obligatorio y debe ser un array con al menos un valor',
+                'array.base': '"emotion" debe ser un array de números',
+                'array.min': 'Debe enviar al menos una emoción'
+            })
     });
 
     return schema.validate(data);

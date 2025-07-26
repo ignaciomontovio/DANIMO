@@ -78,7 +78,11 @@ export async function getRecommendedRoutineName(userId, evaluation) {
     // Filtramos por la emoción predominante
     let filtered = [];
     if (predominantEmotion) {
-        filtered = allRoutines.filter(r => r.emotion === predominantEmotion);
+        filtered = allRoutines.filter(r => {
+            if (!r.emotion) return false;
+            const emotionsArray = r.emotion.split(',').map(e => e.trim().toLowerCase());
+            return emotionsArray.includes(predominantEmotion.toLowerCase());
+        });
     }
 
     // Seleccionamos el conjunto base para elegir

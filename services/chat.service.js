@@ -2,7 +2,7 @@ import Conversations from '../models/Conversations.js';
 import {validateMessageIntention} from './messageIntention/messageIntentionService.js';
 import {v4 as generateUUID} from 'uuid';
 import {generalPrompt} from '../utils/prompts/generalPrompt.js';
-import {userResponse, dateEvaluationResponse} from './openai.service.js';
+import {userResponse, dateEvaluationResponse, moodAlternatorResponse} from './openai.service.js';
 import dotenv from 'dotenv';
 import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
 import {riskScoreEvaluation} from "./messageIntention/riskScoreEvaluation.js";
@@ -21,6 +21,10 @@ const criticalRiskLevel = 6;
 
 function evaluateDateReference(message,userId) {
     dateEvaluationResponse(message,userId)
+}
+
+function evaluateMoodAlternator(message,userId){
+    moodAlternatorResponse(message,userId)
 }
 
 export async function chat({message, userId}) {
@@ -52,6 +56,7 @@ export async function chat({message, userId}) {
         }
         if (moodAlternator === true){
             console.log("El mensaje hace referencia a alteradores de animo");
+            evaluateMoodAlternator(message,userId);
         }
         //Puntaje de riesgo y emociones evaluadas
         const {riskScore, evaluation} = await riskScoreEvaluation(userId, message)

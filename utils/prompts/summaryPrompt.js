@@ -1,5 +1,5 @@
 export function summaryPrompt(summaryLength = 100) {
-    return `Vas a recibir una transcripción de una conversación entre una persona y un modelo como ChatGPT.
+    return `
 Tu tarea es generar un resumen emocional narrativo semanal, dividido en tres momentos (inicio, mitad y fin de semana), reflejando solo lo que la persona efectivamente expresó en la conversación.
 Instrucciones obligatorias:
 No inventes emociones, eventos ni reflexiones que la persona no haya mencionado directamente o de forma clara.

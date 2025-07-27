@@ -156,7 +156,7 @@ export async function summary(userId, startDate, endDate) {
 
 function compileConversationHistoryForSummary(userId, prompt, startDate, endDate) {
     const messages = [{role: 'system', content: prompt}];
-
+    console.log(`Summary date from ${startDate} to ${endDate}`);
     return Conversations.findAll({
         where: {
             userId,

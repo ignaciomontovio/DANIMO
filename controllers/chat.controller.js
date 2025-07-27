@@ -24,7 +24,7 @@ export const weeklySummaryController = async (req, res) => {
         const today = new Date();
         const sevenDaysAgo = new Date(today);
         sevenDaysAgo.setDate(today.getDate() - 7);
-        const response = await summary(req.userId, today, sevenDaysAgo)
+        const response = await summary(req.userId, sevenDaysAgo, today)
         console.log(`✅ Respuesta ${response.summary} devuelta.`);
         res.json(response);
     } catch (err) {

@@ -25,7 +25,8 @@ export const weeklySummaryController = async (req, res) => {
         const sevenDaysAgo = new Date(today);
         sevenDaysAgo.setDate(today.getDate() - 7);
         const response = await summary(req.userId, today, sevenDaysAgo)
-        console.log(`✅ Respuesta ${response} devuelta.`);
+        console.log(`✅ Respuesta ${response.summary} devuelta.`);
+        res.json(response);
     } catch (err) {
         console.error('❌ Error en /summary dani:', err);
         return res.status(500).json({error: `Error al crear resumen semanal ${err.message}`});

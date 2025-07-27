@@ -150,7 +150,7 @@ const createMessage = async (type, text, userId) => {
 
 export async function summary(userId, startDate, endDate) {
     const messages = await compileConversationHistoryForSummary(userId, summaryPrompt, startDate, endDate);
-    const response = userResponse(messages)
+    const response = await userResponse(messages)
     return {"summary": response, "userId": userId};
 }
 
@@ -170,7 +170,7 @@ function compileConversationHistoryForSummary(userId, prompt, startDate, endDate
             console.log("No hay conversaciones para resumir");
             throw Error('No hay conversaciones para resumir');
         }
-        conversations.forEach(({type, text}) => {
+        conversations.forEach(({type, text, messageDate}) => {
             messages.push({role: type, content: text, date: messageDate});
         });
         return messages;

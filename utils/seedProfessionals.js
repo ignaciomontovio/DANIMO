@@ -99,6 +99,38 @@ const mockProfessionals = [
         profilePic: null,
         license: 'PSY6789',
         authorized: true
+    },
+    {
+        id: uuidv4(),
+        dni: 23490123,
+        firstName: 'Martin',
+        lastName: 'Lecuona',
+        email: 'robertlecuona@gmail.com',
+        password: await hashPassword('DNJSSB0rd%'),
+        hasGoogleAccount: false,
+        birthDate: new Date('1982-09-25'),
+        gender: 'Masculino',
+        occupation: 'Psicólogo',
+        livesWith: 'Amigos',
+        profilePic: null,
+        license: 'EFE6789',
+        authorized: true
+    },
+    {
+        id: uuidv4(),
+        dni: 654390123,
+        firstName: 'Martin',
+        lastName: 'Lecuona',
+        email: 'lecuonamartin@proton.me',
+        password: await hashPassword('CkzQgCzv7^'),
+        hasGoogleAccount: false,
+        birthDate: new Date('1982-09-25'),
+        gender: 'Masculino',
+        occupation: 'Psicólogo',
+        livesWith: 'Amigos',
+        profilePic: null,
+        license: 'EEA6789',
+        authorized: true
     }
 ];
 

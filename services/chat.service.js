@@ -148,14 +148,15 @@ const createMessage = async (type, text, userId) => {
     });
 };
 
-export async function summary(userId, startDate, endDate) {
-    const messages = await compileConversationHistoryForSummary(userId, summaryPrompt, startDate, endDate);
+export async function summary(userId, startDate, endDate, summaryLength) {
+    const messages = await compileConversationHistoryForSummary(userId, summaryPrompt(summaryLength), startDate, endDate);
     const response = await userResponse(messages)
     return {"summary": response, "userId": userId};
 }
 
 function compileConversationHistoryForSummary(userId, prompt, startDate, endDate) {
     const messages = [{role: 'system', content: prompt}];
+    const auxMessages = [];
     console.log(`Summary date from ${startDate} to ${endDate}`);
     return Conversations.findAll({
         where: {
@@ -171,8 +172,15 @@ function compileConversationHistoryForSummary(userId, prompt, startDate, endDate
             throw Error('No hay conversaciones para resumir');
         }
         conversations.forEach(({type, text, messageDate}) => {
-            messages.push({role: type, content: text, date: messageDate});
+            auxMessages.push({role: type, content: text, date: new Date(messageDate).toISOString().slice(0, 10)});
         });
+        messages.push({role: 'user', content: auxMessages});
+
+        console.log(`
+        
+        ${JSON.stringify(messages)}
+        
+        }`)
         return messages;
     });
 }

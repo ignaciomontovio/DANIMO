@@ -23,8 +23,9 @@ export const weeklySummaryController = async (req, res) => {
     try {
         const today = new Date();
         const sevenDaysAgo = new Date(today);
+        const SUMMARY_LENGTH = 1000; // Longitud del resumen en palabras
         sevenDaysAgo.setDate(today.getDate() - 7);
-        const response = await summary(req.userId, sevenDaysAgo, today)
+        const response = await summary(req.userId, sevenDaysAgo, today, SUMMARY_LENGTH)
         console.log(`✅ Respuesta ${response.summary} devuelta.`);
         res.json(response);
     } catch (err) {

@@ -173,7 +173,7 @@ function compileConversationHistoryForSummary(userId, prompt, startDate, endDate
         conversations.forEach(({type, text, messageDate}) => {
             messages.push({role: type, content: text + `. Fecha del mensaje ${new Date(messageDate).toISOString().slice(0, 10)}`});
         });
-        messages.push({role: 'user', content: summaryPrompt(100)});
+        messages.push({role: 'user', content: summaryPrompt(100) + ". El dia de hoy es " + new Date().toISOString().slice(0, 10)});
 
         console.log(`
         

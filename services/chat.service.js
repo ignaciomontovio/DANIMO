@@ -14,6 +14,8 @@ import {briefResponseCooldown, saveBriefResponseRegister} from "./messageIntenti
 import {saveRoutineRecommended, wasRoutineRecommendedInLast24Hours, 
     getRecommendedRoutineName} from './messageIntention/routineRecommender.js';
 import {routineRecomendedMessage} from "../utils/routineResponse.js";
+import {summaryPrompt} from "../utils/prompts/summaryPrompt.js";
+import {Op} from "sequelize";
 dotenv.config();
 
 //Variable para definir el riesgo critico (por ahora 6, luego lo pondremos en 7)
@@ -145,3 +147,32 @@ const createMessage = async (type, text, userId) => {
         userId,
     });
 };
+
+export async function summary(userId, startDate, endDate) {
+    const messages = await compileConversationHistoryForSummary(userId, summaryPrompt, startDate, endDate);
+    const response = userResponse(messages)
+    return {"summary": response, "userId": userId};
+}
+
+function compileConversationHistoryForSummary(userId, prompt, startDate, endDate) {
+    const messages = [{role: 'system', content: prompt}];
+
+    return Conversations.findAll({
+        where: {
+            userId,
+            messageDate: {
+                [Op.between]: [startDate.getTime(), endDate.getTime()]
+            }
+        },
+        order: [['messageDate', 'ASC']]
+    }).then(conversations => {
+        if(conversations === null || conversations.length === 0) {
+            console.log("No hay conversaciones para resumir");
+            throw Error('No hay conversaciones para resumir');
+        }
+        conversations.forEach(({type, text}) => {
+            messages.push({role: type, content: text, date: messageDate});
+        });
+        return messages;
+    });
+}

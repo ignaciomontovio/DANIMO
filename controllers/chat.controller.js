@@ -1,5 +1,5 @@
 import { validateChatInput } from '../utils/validators.js';
-import { chat } from '../services/chat.service.js';
+import { chat, summary } from '../services/chat.service.js';
 
 export const chatController = async (req, res) => {
     const {error, value} = validateChatInput(req.body);
@@ -16,5 +16,18 @@ export const chatController = async (req, res) => {
     } catch (err) {
         console.error('❌ Error en /chat dani:', err);
         return res.status(500).json({error: 'Error al crear mensaje'});
+    }
+}
+
+export const weeklySummaryController = async (req, res) => {
+    try {
+        const today = new Date();
+        const sevenDaysAgo = new Date(today);
+        sevenDaysAgo.setDate(today.getDate() - 7);
+        const response = await summary(req.userId, today, sevenDaysAgo)
+        console.log(`✅ Respuesta ${response} devuelta.`);
+    } catch (err) {
+        console.error('❌ Error en /summary dani:', err);
+        return res.status(500).json({error: `Error al crear resumen semanal ${err.message}`});
     }
 }

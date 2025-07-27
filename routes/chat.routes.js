@@ -6,4 +6,5 @@ const router = express.Router();
 
 router.post('/chat', authMiddleware, chatController.chatController);
 
+router.post('/weeklySummary', authMiddleware, chatController.weeklySummaryController);
 export default router;

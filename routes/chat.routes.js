@@ -7,4 +7,7 @@ const router = express.Router();
 router.post('/chat', authMiddleware, chatController.chatController);
 
 router.post('/weeklySummary', authMiddleware, chatController.weeklySummaryController);
+
+router.post('/summary', authMiddleware, chatController.summaryController);
+
 export default router;

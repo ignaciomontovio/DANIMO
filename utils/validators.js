@@ -548,3 +548,21 @@ export const validateStatsEmotionsInput = (data) => {
 
     return schema.validate(data);
 };
+
+// --------------Summary-----------------
+
+export const validateSummaryInput = (data) => {
+    const schema = Joi.object({
+        startDate: Joi.date().iso().required().messages({
+            'any.required': '"startDate" es obligatorio',
+            'date.base': '"startDate" debe ser una fecha válida en formato ISO'
+        }),
+        endDate: Joi.date().iso().greater(Joi.ref('startDate')).required().messages({
+            'any.required': '"endDate" es obligatorio',
+            'date.base': '"endDate" debe ser una fecha válida en formato ISO',
+            'date.greater': '"endDate" debe ser mayor que startDate'
+        })
+    });
+
+    return schema.validate(data);
+};

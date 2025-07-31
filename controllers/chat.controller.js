@@ -1,5 +1,5 @@
-import { validateChatInput } from '../utils/validators.js';
-import { chat, summary } from '../services/chat.service.js';
+import { validateChatInput, validateSummaryInput } from '../utils/validators.js';
+import { chat, summary, createSummary } from '../services/chat.service.js';
 
 export const chatController = async (req, res) => {
     const {error, value} = validateChatInput(req.body);
@@ -33,3 +33,22 @@ export const weeklySummaryController = async (req, res) => {
         return res.status(500).json({error: `Error al crear resumen semanal ${err.message}`});
     }
 }
+
+// Nuevo controlador para summary
+export const summaryController = async (req, res) => {
+    const { error, value } = validateSummaryInput(req.body);
+    if (error) {
+        console.error("❌ Error en validación de summary:", error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    try {
+        const { startDate, endDate } = value;
+        const response = await createSummary(req.userId, new Date(startDate), new Date(endDate));
+        console.log(`✅ Resumen generado para userId ${req.userId}`);
+        res.json(response);
+    } catch (err) {
+        console.error('❌ Error en /summary:', err);
+        return res.status(500).json({ error: `Error al crear resumen: ${err.message}` });
+    }
+};

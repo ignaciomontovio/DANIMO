@@ -1,5 +1,6 @@
 import { validateChatInput, validateSummaryInput } from '../utils/validators.js';
-import { chat, summary, createSummary } from '../services/chat.service.js';
+import { chat } from '../services/chat.service.js';
+import {createSummary, summary} from "../services/summary.service.js";
 
 export const chatController = async (req, res) => {
     const {error, value} = validateChatInput(req.body);

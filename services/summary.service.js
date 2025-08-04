@@ -71,7 +71,7 @@ export async function createSummary(userId, startDate, endDate) {
 
     if (!conversations || conversations.length === 0) {
         const error = new Error('No hay conversaciones para resumir en el rango de fechas proporcionado');
-        error.statusCode = 404;
+        error.statusCode = 409;
         throw error;
     }
 

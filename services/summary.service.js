@@ -1,10 +1,16 @@
-import {summaryPrompt} from "../utils/prompts/summaryPrompt.js";
+import {historicalSummaryPrompt, summaryPrompt} from "../utils/prompts/summaryPrompt.js";
 import {userResponse} from "./openai.service.js";
 import Conversations from "../models/Conversations.js";
 import {Op} from "sequelize";
 
 export async function summary(userId, startDate, endDate, summaryLength) {
     const messages = await compileConversationHistoryForSummary(userId, summaryPrompt(summaryLength), startDate, endDate);
+    const response = await userResponse(messages)
+    return {"summary": response, "userId": userId};
+}
+
+export async function historicalSummary(userId,summaryLength) {
+    const messages = await compileConversationHistoryForSummary(userId, historicalSummaryPrompt(summaryLength), new Date(2000, 0, 1), new Date());
     const response = await userResponse(messages)
     return {"summary": response, "userId": userId};
 }
@@ -33,7 +39,7 @@ function compileConversationHistoryForSummary(userId, prompt, startDate, endDate
         });
         messages.push({
             role: 'user',
-            content: summaryPrompt(100) + ". El dia de hoy es " + new Date().toISOString().slice(0, 10)
+            content: prompt + ". El dia de hoy es " + new Date().toISOString().slice(0, 10)
         });
 
         console.log(`

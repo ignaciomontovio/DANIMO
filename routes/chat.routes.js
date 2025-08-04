@@ -8,6 +8,8 @@ router.post('/chat', authMiddleware, chatController.chatController);
 
 router.post('/weeklySummary', authMiddleware, chatController.weeklySummaryController);
 
+router.post('/historicalSummary', authMiddleware, chatController.historicalSummaryController);
+
 router.post('/summary', authMiddleware, chatController.summaryController);
 
 export default router;

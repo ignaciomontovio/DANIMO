@@ -1,4 +1,4 @@
-import {historicalSummaryPrompt, summaryPrompt} from "../utils/prompts/summaryPrompt.js";
+import {historicalSummaryPrompt, summaryPrompt, rangeSummaryPrompt} from "../utils/prompts/summaryPrompt.js";
 import {userResponse} from "./openai.service.js";
 import Conversations from "../models/Conversations.js";
 import {Op} from "sequelize";
@@ -54,6 +54,9 @@ function compileConversationHistoryForSummary(userId, prompt, startDate, endDate
 export async function createSummary(userId, startDate, endDate) {
     console.log(`Generando resumen para userId ${userId} entre ${startDate} y ${endDate}`);
 
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
+
     // Buscar conversaciones del usuario en el rango indicado
     const conversations = await Conversations.findAll({
         where: {
@@ -70,8 +73,11 @@ export async function createSummary(userId, startDate, endDate) {
         throw new Error('No hay conversaciones para resumir en el rango de fechas proporcionado');
     }
 
+    //Longitud del resumen en palabras
+    const summaryLength = 300;
+
     // Construir el prompt para IA
-    const messages = [{role: 'system', content: summaryPrompt()}];
+    const messages = [{role: 'system', content: rangeSummaryPrompt(summaryLength,startDate,endDate)}];
     conversations.forEach(({text, messageDate}) => {
         messages.push({
             role: 'user',

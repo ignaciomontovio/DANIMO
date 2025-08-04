@@ -65,7 +65,9 @@ export const summaryController = async (req, res) => {
         res.json(response);
     } catch (err) {
         console.error('❌ Error en /summary:', err);
-        return res.status(500).json({ error: `Error al crear resumen: ${err.message}` });
+        // Usar err.statusCode si existe, sino 500
+        const status = err.statusCode || 500;
+        return res.status(status).json({ error: `Error al crear resumen: ${err.message}` });
     }
 };
 

@@ -70,7 +70,9 @@ export async function createSummary(userId, startDate, endDate) {
     });
 
     if (!conversations || conversations.length === 0) {
-        throw new Error('No hay conversaciones para resumir en el rango de fechas proporcionado');
+        const error = new Error('No hay conversaciones para resumir en el rango de fechas proporcionado');
+        error.statusCode = 404;
+        throw error;
     }
 
     //Longitud del resumen en palabras

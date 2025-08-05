@@ -3,8 +3,7 @@ import Users from '../models/Users.js';
 import Professionals from '../models/Professionals.js';
 import { v4 as uuidv4 } from 'uuid';
 
-export async function getRoutinesByUser(userId) {
-    // ¿Es usuario o profesional?
+export async function getRoutinesByUser(userId, emotionParam = null) {
     const isUser = await Users.findByPk(userId);
     const isProfessional = await Professionals.findByPk(userId);
 
@@ -12,57 +11,68 @@ export async function getRoutinesByUser(userId) {
         throw new Error('El usuario no existe.');
     }
 
-    let routines = [];
+    // Caso: Profesional (se ignora emotionParam, comportamiento original)
+    if (isProfessional) {
+        let routines = await Routines.findAll({
+            where: { createdBy: [userId, 'system'] },
+            include: [{
+                model: Users,
+                as: 'Users',
+                attributes: ['email'],
+                through: { attributes: [] }
+            }]
+        });
 
-    if (isUser) {
+        // Ocultar info de usuarios en rutinas del sistema
+        routines = routines.map(routine => {
+            const json = routine.toJSON();
+            if (json.createdBy !== userId) {
+                delete json.Users;
+            }
+            return json;
+        });
+
+        return routines;
+    }
+
+    // Caso: Usuario
     const user = await Users.findByPk(userId, {
         include: {
-        model: Routines,
-        as: 'Routines',
-        through: { attributes: [] }
+            model: Routines,
+            as: 'Routines',
+            through: { attributes: [] }
         }
-    });
-
-    const systemRoutines = await Routines.findAll({
-        where: { createdBy: 'system' }
     });
 
     const assignedRoutines = user?.Routines || [];
+    const systemRoutines = await Routines.findAll({ where: { createdBy: 'system' } });
 
-    // Evitar duplicados por id
-    const combinedMap = new Map();
-    [...systemRoutines, ...assignedRoutines].forEach(r => {
-        combinedMap.set(r.id, r); // usa el ID como clave para evitar repetidos
-    });
-
-    routines = Array.from(combinedMap.values());
+    // Si NO hay emotionParam, devolver todas (comportamiento original)
+    if (!emotionParam) {
+        const combinedMap = new Map();
+        [...systemRoutines, ...assignedRoutines].forEach(r => combinedMap.set(r.id, r));
+        return Array.from(combinedMap.values());
     }
 
-    if (isProfessional) {
-        // 👨‍⚕️ Si es profesional: obtener rutinas propias y del sistema
-        routines = await Routines.findAll({
-        where: {
-            createdBy: [userId, 'system']
-        },
-        include: [{
-            model: Users,
-            as: 'Users', // 👈 Usá el alias definido en la asociación belongsToMany
-            attributes: ['email'],
-            through: { attributes: [] }
-        }]
-        });
+    // Si hay emotionParam, buscar aleatoriamente entre rutinas asignadas con esa emoción
+    const assignedFiltered = assignedRoutines.filter(r =>
+        r.emotion && r.emotion.split(',').map(e => e.trim().toLowerCase()).includes(emotionParam.toLowerCase())
+    );
 
-        // Para rutinas que no son suyas, omitimos los usuarios
-        routines = routines.map(routine => {
-        const json = routine.toJSON();
-        if (json.createdBy !== userId) {
-            delete json.Users;
-        }
-        return json;
-        });
+    if (assignedFiltered.length > 0) {
+        return [assignedFiltered[Math.floor(Math.random() * assignedFiltered.length)]];
     }
 
-    return routines;
+    // Si no hay en asignadas, buscar entre rutinas del sistema
+    const systemFiltered = systemRoutines.filter(r =>
+        r.emotion && r.emotion.split(',').map(e => e.trim().toLowerCase()).includes(emotionParam.toLowerCase())
+    );
+
+    if (systemFiltered.length > 0) {
+        return [systemFiltered[Math.floor(Math.random() * systemFiltered.length)]];
+    }
+
+    throw new Error(`No se encontraron rutinas con la emoción "${emotionParam}".`);
 }
 
 export async function createRoutine({ name, type, body, emotion, createdBy }) {

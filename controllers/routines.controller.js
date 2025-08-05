@@ -6,10 +6,12 @@ import Professionals from '../models/Professionals.js';
 import TypeEmotions from '../models/TypeEmotions.js';
 
 export const obtainRoutines = async (req, res) => {
-  const userId = req.userId; //viene del middleware
+    const userId = req.userId; // viene del middleware
+    const { emotion } = req.query; // query param opcional
+
     try {
-        const routines = await service.getRoutinesByUser(userId);
-        console.log(`✅ Rutinas obtenidas exitosamente para ${userId}`);
+        const routines = await service.getRoutinesByUser(userId, emotion);
+        console.log(`✅ Rutinas obtenidas exitosamente para ${userId} ${emotion ? `(filtradas por emoción: ${emotion})` : ''}`);
         res.json(routines);
     } catch (err) {
         console.error(`❌ Error en /routines/obtain para ${userId}:`, err.message);

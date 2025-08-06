@@ -10,10 +10,14 @@ export const chatController = async (req, res) => {
     }
     try {
         const {message} = req.body;
-        const response = await chat({message: message, userId: req.userId});
+        const { assistantReply, predominantEmotion, recommendRoutine } = await chat({message: message, userId: req.userId});
         console.log(`✅ Mensaje ${value.message} enviado correctamente.`);
-        console.log(`✅ Respuesta ${response} devuelta.`);
-        res.json({message: response});
+        console.log(`✅ Respuesta ${assistantReply} devuelta.`);
+        return res.json({
+            message: assistantReply,
+            predominantEmotion: predominantEmotion,
+            recommendRoutine: recommendRoutine
+        });
     } catch (err) {
         console.error('❌ Error en /chat dani:', err);
         return res.status(500).json({error: 'Error al crear mensaje'});

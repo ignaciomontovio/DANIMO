@@ -2,7 +2,7 @@ import Conversations from '../models/Conversations.js';
 import {validateMessageIntention} from './messageIntention/messageIntentionService.js';
 import {v4 as generateUUID} from 'uuid';
 import {generalPrompt} from '../utils/prompts/generalPrompt.js';
-import {userResponse, dateEvaluationResponse} from './openai.service.js';
+import {dateEvaluationResponse, moodAlternatorResponse, userResponse} from './openai.service.js';
 import dotenv from 'dotenv';
 import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
 import {riskScoreEvaluation} from "./messageIntention/riskScoreEvaluation.js";
@@ -11,9 +11,14 @@ import {
     evaluateRecentSuicideRisk
 } from "./messageIntention/autoResponseConditionChecker.js";
 import {briefResponseCooldown, saveBriefResponseRegister} from "./messageIntention/briefResponse.js";
-import {saveRoutineRecommended, wasRoutineRecommendedInLast24Hours, 
-    getRecommendedRoutineName} from './messageIntention/routineRecommender.js';
+import {
+    getRecommendedRoutineName,
+    getPredominantEmotion,
+    saveRoutineRecommended,
+    wasRoutineRecommendedInLast24Hours
+} from './messageIntention/routineRecommender.js';
 import {routineRecomendedMessage} from "../utils/routineResponse.js";
+
 dotenv.config();
 
 //Variable para definir el riesgo critico (por ahora 6, luego lo pondremos en 7)
@@ -21,6 +26,10 @@ const criticalRiskLevel = 6;
 
 function evaluateDateReference(message,userId) {
     dateEvaluationResponse(message,userId)
+}
+
+function evaluateMoodAlternator(message,userId){
+    moodAlternatorResponse(message,userId)
 }
 
 export async function chat({message, userId}) {
@@ -52,6 +61,7 @@ export async function chat({message, userId}) {
         }
         if (moodAlternator === true){
             console.log("El mensaje hace referencia a alteradores de animo");
+            evaluateMoodAlternator(message,userId);
         }
         //Puntaje de riesgo y emociones evaluadas
         const {riskScore, evaluation} = await riskScoreEvaluation(userId, message)
@@ -59,43 +69,29 @@ export async function chat({message, userId}) {
         //console.log('Evaluacion obtenida: ' + evaluation)
         //console.log('Emocion predominante evaluada: ' + getPredominantEmotion(JSON.parse(evaluation)))
 
+          // Variables solicitadas
+        let predominantEmotion = null;
+        let recommendRoutine = false;
+
         //Me fijo si le recomendé una rutina hace menos de 24 horas
         const routineRecommended = await wasRoutineRecommendedInLast24Hours(userId);
-        //console.log('¿le recomende una rutina al usuario?: ', routineRecommended)
 
-        if (riskScore < criticalRiskLevel || routineRecommended){
-            //El riesgo no es muy alto o ya le recomende una rutina en las ultimas 24 horas 
-            
-            // Obtén la conversación existente y genera el historial de mensajes
-            const messages = await compileConversationHistory(userId, message, prompt);
+        // Si el riesgo supera el critico y no le recomendé una rutina en las ultimas 24 horas
+        if (riskScore >= criticalRiskLevel && !routineRecommended) {
+            //obtengo la emocion predominante
+            predominantEmotion = await getPredominantEmotion(JSON.parse(evaluation));
+            //pongo en true el flag para recomendar una rutina
+            recommendRoutine = true;
+            //guardo en la base que le recomiendo una rutina
+            await saveRoutineRecommended(userId, message);
+        }
+
+        const messages = await compileConversationHistory(userId, message, prompt);
             // Envía el mensaje a la API de OpenAI y obtiene la respuesta
-            const assistantReply = await userResponse(messages);
+        const assistantReply = await userResponse(messages);
             // Guarda el mensaje del usuario y la respuesta del asistente en la base de datos
-            await saveMessagesToDB(userId, message, assistantReply);
-            return assistantReply;
-        }
-        else
-        {
-            //El riesgo es muy alto y no le recomende una rutina en las ultimas 24 horas
-
-            // Obtén la conversación existente y genera el historial de mensajes
-            const messages = await compileConversationHistory(userId, message, prompt);
-            // No enviaré un mensaje a la API. Será DANIMO quien recomiende rutinas
-            
-            //const assistantReply = await userResponse(messages);
-            const routineName = await getRecommendedRoutineName(userId,JSON.parse(evaluation));
-            const assistantReply = `${routineRecomendedMessage}\nTe recomiendo la siguiente rutina: ${routineName}`;
-            
-            // Guarda el mensaje del usuario y la respuesta del asistente en la base de datos
-            await saveMessagesToDB(userId, message, assistantReply);
-
-            //Indico que le recomende una rutina
-            await saveRoutineRecommended(userId, message)
-
-            return assistantReply;
-        }
-
-        
+        await saveMessagesToDB(userId, message, assistantReply);
+        return { assistantReply, predominantEmotion, recommendRoutine };        
     } catch (error) {
         console.error('Error en el flujo del chat:', error.message);
         throw new Error('Ocurrió un problema al procesar la solicitud del chat.');
@@ -140,3 +136,4 @@ const createMessage = async (type, text, userId) => {
         userId,
     });
 };
+

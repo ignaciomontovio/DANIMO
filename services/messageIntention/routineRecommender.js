@@ -78,20 +78,29 @@ export async function getRecommendedRoutineName(userId, evaluation) {
     // Filtramos por la emoción predominante
     let filtered = [];
     if (predominantEmotion) {
-        filtered = allRoutines.filter(r => r.emotion === predominantEmotion);
+        filtered = allRoutines.filter(r => {
+            if (!r.emotion) return false;
+            const emotionsArray = r.emotion.split(',').map(e => e.trim().toLowerCase());
+            return emotionsArray.includes(predominantEmotion.toLowerCase());
+        });
     }
 
-    let routineToRecommend;
+    // Seleccionamos el conjunto base para elegir
+    const selectionPool = filtered.length > 0 ? filtered : allRoutines;
+    console.log(`📊 Seleccionando rutina entre ${selectionPool.length} opciones`);
 
-    if (filtered.length > 0) {
-        // Si hay rutinas para la emoción predominante, elegir una al azar
-        routineToRecommend = filtered[Math.floor(Math.random() * filtered.length)];
-    } else {
-        // Si no hay rutinas con esa emoción, elegir una al azar de todas
-        routineToRecommend = allRoutines[Math.floor(Math.random() * allRoutines.length)];
-        console.log('🔄 No se encontró rutina con la emoción predominante. Seleccionada una al azar.');
+    // Construimos lista ponderada: asignadas con más peso
+    let weightedPool = [];
+    for (const routine of selectionPool) {
+        const weight = routine.createdBy === 'system' ? 1 : 3; // Asignadas pesan más
+        for (let i = 0; i < weight; i++) {
+            weightedPool.push(routine);
+        }
     }
 
-    console.log(`✅ Rutina recomendada: ${routineToRecommend.name}`);
+    // Elección aleatoria con ponderación
+    const routineToRecommend = weightedPool[Math.floor(Math.random() * weightedPool.length)];
+
+    console.log(`✅ Rutina recomendada: ${routineToRecommend.name} (prioridad aplicada)`);
     return routineToRecommend.name;
 }

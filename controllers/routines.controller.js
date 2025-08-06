@@ -6,10 +6,12 @@ import Professionals from '../models/Professionals.js';
 import TypeEmotions from '../models/TypeEmotions.js';
 
 export const obtainRoutines = async (req, res) => {
-  const userId = req.userId; //viene del middleware
+    const userId = req.userId; // viene del middleware
+    const { emotion } = req.query; // query param opcional
+
     try {
-        const routines = await service.getRoutinesByUser(userId);
-        console.log(`✅ Rutinas obtenidas exitosamente para ${userId}`);
+        const routines = await service.getRoutinesByUser(userId, emotion);
+        console.log(`✅ Rutinas obtenidas exitosamente para ${userId} ${emotion ? `(filtradas por emoción: ${emotion})` : ''}`);
         res.json(routines);
     } catch (err) {
         console.error(`❌ Error en /routines/obtain para ${userId}:`, err.message);
@@ -24,7 +26,7 @@ export const createRoutine = async (req, res) => {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { name, type, body, emotion: emotionNumber } = req.body;
+    const { name, type, body, emotion: emotionNumbers } = req.body;
     const userId = req.userId;
 
     try {
@@ -35,16 +37,29 @@ export const createRoutine = async (req, res) => {
             return res.status(403).json({ error: 'Solo los profesionales pueden crear rutinas' });
         }
 
-        const emotion = await TypeEmotions.findOne({ where: { number: emotionNumber } });
+        // Buscar todas las emociones
+        const emotions = await TypeEmotions.findAll({
+            where: { number: emotionNumbers }
+        });
 
-        if (!emotion) {
-            console.warn(`❌ No se encontró emoción con número=${emotionNumber}`);
-            return res.status(404).json({ error: `No se encontró una emoción con el número ${emotionNumber}` });
+        if (emotions.length !== emotionNumbers.length) {
+            console.warn(`❌ Algunas emociones no fueron encontradas`);
+            return res.status(404).json({ error: 'Una o más emociones no existen' });
         }
 
-        const result = await service.createRoutine({ name, type, body, emotion: emotion.name, createdBy: userId });
-        console.log(`✅ Rutina creada correctamente por ${userId}: ${name}`);
+        const emotionNames = emotions.map(e => e.name);
+
+        const result = await service.createRoutine({
+            name,
+            type,
+            body,
+            emotion: emotionNames, // <-- Array de nombres
+            createdBy: userId
+        });
+
+        console.log(`✅ Rutina creada correctamente por ${userId}: ${name} (emociones: ${emotionNames.join(', ')})`);
         res.status(200).json({ message: result });
+
     } catch (err) {
         console.error('❌ Error al crear rutina:', err.message);
         res.status(500).json({ error: 'Error al crear rutina' });
@@ -58,7 +73,7 @@ export const updateRoutine = async (req, res) => {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { currentName, name, type, body, emotion: emotionNumber } = req.body;
+    const { currentName, name, type, body, emotion: emotionNumbers } = req.body;
     const userId = req.userId;
 
     try {
@@ -68,13 +83,15 @@ export const updateRoutine = async (req, res) => {
             return res.status(403).json({ error: 'Solo los profesionales pueden editar rutinas' });
         }
 
-        let emotionName = null;
-        if (emotionNumber !== undefined) {
-            const emotion = await TypeEmotions.findOne({ where: { number: emotionNumber } });
-            if (!emotion) {
-                return res.status(404).json({ error: `No se encontró una emoción con el número ${emotionNumber}` });
+        let emotionNames = null;
+        if (emotionNumbers !== undefined) {
+            const emotions = await TypeEmotions.findAll({ where: { number: emotionNumbers } });
+
+            if (emotions.length !== emotionNumbers.length) {
+                return res.status(404).json({ error: 'Una o más emociones no existen' });
             }
-            emotionName = emotion.name;
+
+            emotionNames = emotions.map(e => e.name); // Array de nombres
         }
 
         const result = await service.updateRoutine({
@@ -82,7 +99,7 @@ export const updateRoutine = async (req, res) => {
             name,
             type,
             body,
-            emotionName,
+            emotionNames, // Pasamos array si existe
             userId
         });
 

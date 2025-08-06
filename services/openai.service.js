@@ -47,9 +47,9 @@ export async function sendMessageToAzureOpenIAWithParseJson(messages, model = AZ
 }
 
 // Función para enviar mensajes a la API de OpenAI
-export async function userResponse(messages) {
+export async function userResponse(messages, prompt = AZURE_OPENAI_API_GPT4_URL) {
     try {
-        const reply = await sendMessageToAzureOpenIA(messages, AZURE_OPENAI_API_GPT4_URL);
+        const reply = await sendMessageToAzureOpenIA(messages, prompt);
 
         return reply;
     } catch (error) {

@@ -12,6 +12,8 @@ import {notificationServiceInitialize} from './services/notifications.services.j
 import seedUsersIfEmpty from './utils/seedUsers.js';
 import seedProfessionalsIfEmpty from "./utils/seedProfessionals.js";
 import seedUserProfessionalLinks from "./utils/seedLinkedPatients.js";
+import seedAnaGarciaChat from "./utils/seedChats/seedAnaGarciaChat.js";
+import seedLuisMartinezChat from "./utils/seedChats/seedLuisMartinezChat.js";
 
 const PORT = process.env.PORT || 3000;
 
@@ -28,5 +30,7 @@ app.listen(PORT, async () => {
     await seedProfessionalsIfEmpty();
     await seedUserProfessionalLinks();
     await notificationServiceInitialize()
+    await seedAnaGarciaChat()
+    await seedLuisMartinezChat()
     console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });

@@ -149,8 +149,7 @@ export async function getUserProfessionals(userId) {
         include: [{
             model: Professionals,
             as: 'Professionals', // 👈 Este alias es obligatorio por esta definido así en el modelo
-            attributes: ['id', 'firstName', 'lastName', 'email', 'birthDate', 
-                'gender', 'occupation', 'livesWith'],
+            attributes: ['id', 'firstName', 'lastName', 'occupation'],
             through: { attributes: [] } // 👈 Esto oculta la tabla intermedia
         }]
     });

@@ -453,12 +453,19 @@ export const validateRoutineCreationInput = (data) => {
             'string.base': '"body" debe ser un texto válido',
             'string.empty': '"body" no puede estar vacío'
         }),
-        emotion: Joi.number().integer().min(1).max(5).required().messages({
-            'any.required': '"emotion" es obligatorio',
-            'number.base': '"emotion" debe ser un número',
-            'number.min': '"emotion" debe ser un número entre 1 y 5',
-            'number.max': '"emotion" debe ser un número entre 1 y 5'
-        })
+        emotion: Joi.array()
+            .items(Joi.number().integer().min(1).max(5).messages({
+                'number.base': 'Cada emoción debe ser un número',
+                'number.min': 'Cada emoción debe ser >= 1',
+                'number.max': 'Cada emoción debe ser <= 5'
+            }))
+            .min(1)
+            .required()
+            .messages({
+                'any.required': '"emotion" es obligatorio y debe ser un array con al menos un valor',
+                'array.base': '"emotion" debe ser un array de números',
+                'array.min': 'Debe enviar al menos una emoción'
+            })
     });
 
     return schema.validate(data);
@@ -479,11 +486,13 @@ export const validateRoutineEditInput = (data) => {
         body: Joi.string().optional().messages({
             'string.base': '"body" debe ser un texto válido',
         }),
-        emotion: Joi.number().integer().min(1).max(5).optional().messages({
-            'number.base': '"emotion" debe ser un número',
-            'number.min': '"emotion" debe estar entre 1 y 5',
-            'number.max': '"emotion" debe estar entre 1 y 5',
-        })
+        emotion: Joi.array()
+            .items(Joi.number().integer().min(1).max(5).messages({
+                'number.base': 'Cada emoción debe ser un número',
+                'number.min': 'Cada emoción debe ser >= 1',
+                'number.max': 'Cada emoción debe ser <= 5'
+            }))
+            .optional()
     }).or('name', 'type', 'body', 'emotion').messages({
         'object.missing': 'Debes proveer al menos un campo a modificar (name, body o emotion)',
     });
@@ -534,6 +543,24 @@ export const validateStatsEmotionsInput = (data) => {
         'date.base': 'La fecha de fin (until) debe ser una fecha válida.',
         'date.greater': 'La fecha de fin (until) debe ser posterior a la fecha de inicio (since).',
         'date.format': 'La fecha de fin (until) debe estar en formato ISO.'
+        })
+    });
+
+    return schema.validate(data);
+};
+
+// --------------Summary-----------------
+
+export const validateSummaryInput = (data) => {
+    const schema = Joi.object({
+        startDate: Joi.date().iso().required().messages({
+            'any.required': '"startDate" es obligatorio',
+            'date.base': '"startDate" debe ser una fecha válida en formato ISO'
+        }),
+        endDate: Joi.date().iso().greater(Joi.ref('startDate')).required().messages({
+            'any.required': '"endDate" es obligatorio',
+            'date.base': '"endDate" debe ser una fecha válida en formato ISO',
+            'date.greater': '"endDate" debe ser mayor que startDate'
         })
     });
 

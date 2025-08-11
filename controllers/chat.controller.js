@@ -1,6 +1,6 @@
 import { validateChatInput, validateSummaryInput } from '../utils/validators.js';
 import { chat } from '../services/chat.service.js';
-import {createSummary, summary, historicalSummary} from "../services/summary.service.js";
+import {createSummary, weeklySummary, historicalSummary} from "../services/summary.service.js";
 
 export const chatController = async (req, res) => {
     const {error, value} = validateChatInput(req.body);
@@ -30,7 +30,7 @@ export const weeklySummaryController = async (req, res) => {
         const sevenDaysAgo = new Date(today);
         const SUMMARY_LENGTH = 100; // Longitud del resumen en palabras
         sevenDaysAgo.setDate(today.getDate() - 7);
-        const response = await summary(req.userId, sevenDaysAgo, today, SUMMARY_LENGTH)
+        const response = await weeklySummary(req.userId, sevenDaysAgo, today, SUMMARY_LENGTH)
         console.log(`✅ Respuesta ${response.summary} devuelta.`);
         res.json(response);
     } catch (err) {

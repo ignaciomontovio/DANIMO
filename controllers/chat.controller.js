@@ -58,6 +58,7 @@ export const rangedSummaryController = async (req, res) => {
         const { startDate, endDate } = value;
         const response = await rangedSummmary(req.userId, new Date(startDate), new Date(endDate));
         console.log(`✅ Resumen generado para userId ${req.userId}`);
+        console.log(`✅ Respuesta ${response.summary} devuelta.`);
         res.json(response);
     } catch (err) {
         console.error('❌ Error en /summary:', err);

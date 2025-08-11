@@ -10,6 +10,6 @@ router.post('/weeklySummary', authMiddleware, chatController.weeklySummaryContro
 
 router.post('/historicalSummary', authMiddleware, chatController.historicalSummaryController);
 
-router.post('/summary', authMiddleware, chatController.summaryController);
+router.post('/summary', authMiddleware, chatController.rangedSummaryController);
 
 export default router;

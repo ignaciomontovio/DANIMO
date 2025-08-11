@@ -28,7 +28,7 @@ claramente sustentado por la evidencia discursiva**.
 - El dia de hoy es ${new Date().toISOString().slice(0, 10)}`
 }
 
-export function rangeSummaryPrompt(summaryLength = 300, startDate, endDate) {
+export function rangedSummaryPrompt(summaryLength = 300, startDate, endDate) {
     return `
 Genera un resumen clínico-emocional del período analizado a partir de los mensajes proporcionados, redactado específicamente para un psicólogo o psiquiatra.
 Instrucciones obligatorias:

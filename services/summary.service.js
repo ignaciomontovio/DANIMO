@@ -1,4 +1,4 @@
-import {historicalSummaryPrompt, summaryPrompt, rangeSummaryPrompt} from "../utils/prompts/summaryPrompt.js";
+import {historicalSummaryPrompt, summaryPrompt, rangedSummaryPrompt} from "../utils/prompts/summaryPrompt.js";
 import {userResponse} from "./openai.service.js";
 import Conversations from "../models/Conversations.js";
 import {Op} from "sequelize";
@@ -59,53 +59,16 @@ function getConversationMessagesForSummary(userId, prompt, startDate, endDate) {
     });
 }
 
-export async function createSummary(userId, startDate, endDate) {
+export async function rangedSummmary(userId, startDate, endDate) {
+    const RANGED_SUMMARY_LENGTH = 300;
+
     console.log(`Generando resumen para userId ${userId} entre ${startDate} y ${endDate}`);
 
     startDate = new Date(startDate);
     endDate = new Date(endDate);
 
-    // Buscar conversaciones del usuario en el rango indicado
-    const conversations = await Conversations.findAll({
-        where: {
-            userId,
-            type: 'user', // Solo mensajes del usuario
-            messageDate: {
-                [Op.between]: [startDate.getTime(), endDate.getTime()]
-            }
-        },
-        order: [['messageDate', 'ASC']]
-    });
-
-    if (!conversations || conversations.length === 0) {
-        const error = new Error('No hay conversaciones para resumir en el rango de fechas proporcionado');
-        error.statusCode = 409;
-        throw error;
-    }
-
-    //Longitud del resumen en palabras
-    const summaryLength = 300;
-
-    // Construir el prompt para IA
-    const messages = [{role: 'system', content: rangeSummaryPrompt(summaryLength,startDate,endDate)}];
-    conversations.forEach(({text, messageDate}) => {
-        messages.push({
-            role: 'user',
-            content: `${text} (Fecha: ${new Date(messageDate).toISOString().slice(0, 10)})`
-        });
-    });
-
-    // Agregar indicación final
-    //messages.push({
-    //    role: 'user',
-    //    content: `Por favor genera un resumen claro y conciso. Hoy es ${new Date().toISOString().slice(0, 10)}`
-    //});
-
-    // Llamar a la IA para generar resumen
-    const aiResponse = await userResponse(messages);
-
-    return {
-        summary: aiResponse,
-        userId: userId
-    };
+    const prompt = rangedSummaryPrompt(RANGED_SUMMARY_LENGTH, startDate, endDate);
+    const messages = await getConversationMessagesForSummary(userId, prompt, startDate, endDate);
+    const response = await userResponse(messages);
+    return {"summary": response, "userId": userId};
 }

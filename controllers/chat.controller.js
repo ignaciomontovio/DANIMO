@@ -26,11 +26,7 @@ export const chatController = async (req, res) => {
 
 export const weeklySummaryController = async (req, res) => {
     try {
-        const today = new Date();
-        const sevenDaysAgo = new Date(today);
-        const SUMMARY_LENGTH = 100; // Longitud del resumen en palabras
-        sevenDaysAgo.setDate(today.getDate() - 7);
-        const response = await weeklySummary(req.userId, sevenDaysAgo, today, SUMMARY_LENGTH)
+        const response = await weeklySummary(req.userId)
         console.log(`✅ Respuesta ${response.summary} devuelta.`);
         res.json(response);
     } catch (err) {
@@ -41,11 +37,7 @@ export const weeklySummaryController = async (req, res) => {
 
 export const historicalSummaryController = async (req, res) => {
     try {
-        const today = new Date();
-        const sevenDaysAgo = new Date(today);
-        const HISTORICAL_SUMMARY_LENGTH = 1000; // Longitud del resumen en palabras
-        sevenDaysAgo.setDate(today.getDate() - 7);
-        const response = await historicalSummary(req.userId, HISTORICAL_SUMMARY_LENGTH)
+        const response = await historicalSummary(req.userId)
         console.log(`✅ Respuesta ${response.summary} devuelta.`);
         res.json(response);
     } catch (err) {

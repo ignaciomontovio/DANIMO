@@ -3,14 +3,22 @@ import {userResponse} from "./openai.service.js";
 import Conversations from "../models/Conversations.js";
 import {Op} from "sequelize";
 
-export async function weeklySummary(userId, startDate, endDate, summaryLength) {
-    const messages = await getConversationMessagesForSummary(userId, summaryPrompt(summaryLength), startDate, endDate);
+export async function weeklySummary(userId) {
+    const today = new Date();
+    const sevenDaysAgo = new Date(today);
+    sevenDaysAgo.setDate(today.getDate() - 7);
+    const SUMMARY_LENGTH = 100;
+
+    const messages = await getConversationMessagesForSummary(userId, summaryPrompt(SUMMARY_LENGTH), sevenDaysAgo, today);
     const response = await userResponse(messages)
     return {"summary": response, "userId": userId};
 }
 
 export async function historicalSummary(userId,summaryLength) {
-    const messages = await getConversationMessagesForSummary(userId, historicalSummaryPrompt(summaryLength), new Date(2000, 0, 1), new Date());
+    const HISTORICAL_SUMMARY_LENGTH = 1000;
+
+    // Traigo todas las conversacion del usuario
+    const messages = await getConversationMessagesForSummary(userId, historicalSummaryPrompt(HISTORICAL_SUMMARY_LENGTH), new Date(2000, 0, 1), new Date());
     const response = await userResponse(messages)
     return {"summary": response, "userId": userId};
 }

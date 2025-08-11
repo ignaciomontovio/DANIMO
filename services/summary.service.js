@@ -1,4 +1,4 @@
-import {historicalSummaryPrompt, summaryPrompt, rangedSummaryPrompt} from "../utils/prompts/summaryPrompt.js";
+import {historicalSummaryPrompt, weeklySummaryPrompt, rangedSummaryPrompt} from "../utils/prompts/weeklySummaryPrompt.js";
 import {userResponse} from "./openai.service.js";
 import Conversations from "../models/Conversations.js";
 import {Op} from "sequelize";
@@ -9,7 +9,7 @@ export async function weeklySummary(userId) {
     sevenDaysAgo.setDate(today.getDate() - 7);
     const SUMMARY_LENGTH = 100;
 
-    const messages = await getConversationMessagesForSummary(userId, summaryPrompt(SUMMARY_LENGTH), sevenDaysAgo, today);
+    const messages = await getConversationMessagesForSummary(userId, weeklySummaryPrompt(SUMMARY_LENGTH), sevenDaysAgo, today);
     const response = await userResponse(messages)
     return {"summary": response, "userId": userId};
 }

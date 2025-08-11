@@ -39,7 +39,7 @@ function compileConversationHistoryForSummary(userId, prompt, startDate, endDate
         });
         messages.push({
             role: 'user',
-            content: prompt + ". El dia de hoy es " + new Date().toISOString().slice(0, 10)
+            content: prompt
         });
 
         console.log(`

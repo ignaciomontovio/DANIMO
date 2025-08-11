@@ -45,7 +45,7 @@ export const historicalSummaryController = async (req, res) => {
         const sevenDaysAgo = new Date(today);
         const HISTORICAL_SUMMARY_LENGTH = 1000; // Longitud del resumen en palabras
         sevenDaysAgo.setDate(today.getDate() - 7);
-        const response = await historicalSummary(req.userId, sevenDaysAgo, today, HISTORICAL_SUMMARY_LENGTH)
+        const response = await historicalSummary(req.userId, HISTORICAL_SUMMARY_LENGTH)
         console.log(`✅ Respuesta ${response.summary} devuelta.`);
         res.json(response);
     } catch (err) {

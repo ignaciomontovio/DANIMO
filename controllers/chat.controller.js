@@ -1,6 +1,6 @@
 import { validateChatInput, validateSummaryInput } from '../utils/validators.js';
 import { chat } from '../services/chat.service.js';
-import {createSummary, summary, historicalSummary} from "../services/summary.service.js";
+import {rangedSummmary, weeklySummary, historicalSummary} from "../services/summary.service.js";
 
 export const chatController = async (req, res) => {
     const {error, value} = validateChatInput(req.body);
@@ -26,11 +26,7 @@ export const chatController = async (req, res) => {
 
 export const weeklySummaryController = async (req, res) => {
     try {
-        const today = new Date();
-        const sevenDaysAgo = new Date(today);
-        const SUMMARY_LENGTH = 100; // Longitud del resumen en palabras
-        sevenDaysAgo.setDate(today.getDate() - 7);
-        const response = await summary(req.userId, sevenDaysAgo, today, SUMMARY_LENGTH)
+        const response = await weeklySummary(req.userId)
         console.log(`✅ Respuesta ${response.summary} devuelta.`);
         res.json(response);
     } catch (err) {
@@ -41,11 +37,7 @@ export const weeklySummaryController = async (req, res) => {
 
 export const historicalSummaryController = async (req, res) => {
     try {
-        const today = new Date();
-        const sevenDaysAgo = new Date(today);
-        const HISTORICAL_SUMMARY_LENGTH = 1000; // Longitud del resumen en palabras
-        sevenDaysAgo.setDate(today.getDate() - 7);
-        const response = await historicalSummary(req.userId, sevenDaysAgo, today, HISTORICAL_SUMMARY_LENGTH)
+        const response = await historicalSummary(req.userId)
         console.log(`✅ Respuesta ${response.summary} devuelta.`);
         res.json(response);
     } catch (err) {
@@ -55,7 +47,7 @@ export const historicalSummaryController = async (req, res) => {
 }
 
 // Nuevo controlador para summary
-export const summaryController = async (req, res) => {
+export const rangedSummaryController = async (req, res) => {
     const { error, value } = validateSummaryInput(req.body);
     if (error) {
         console.error("❌ Error en validación de summary:", error.details[0].message);
@@ -64,8 +56,9 @@ export const summaryController = async (req, res) => {
 
     try {
         const { startDate, endDate } = value;
-        const response = await createSummary(req.userId, new Date(startDate), new Date(endDate));
+        const response = await rangedSummmary(req.userId, new Date(startDate), new Date(endDate));
         console.log(`✅ Resumen generado para userId ${req.userId}`);
+        console.log(`✅ Respuesta ${response.summary} devuelta.`);
         res.json(response);
     } catch (err) {
         console.error('❌ Error en /summary:', err);

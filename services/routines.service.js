@@ -11,6 +11,15 @@ export async function getRoutinesByUser(userId, emotionParam = null) {
         throw new Error('El usuario no existe.');
     }
 
+    // Función auxiliar para transformar el campo emotion a array
+    const transformEmotionField = (routine) => {
+        const json = routine.toJSON ? routine.toJSON() : routine;
+        json.emotion = json.emotion
+            ? json.emotion.split(',').map(e => e.trim())
+            : [];
+        return json;
+    };
+
     // Caso: Profesional (se ignora emotionParam, comportamiento original)
     if (isProfessional) {
         let routines = await Routines.findAll({
@@ -23,9 +32,9 @@ export async function getRoutinesByUser(userId, emotionParam = null) {
             }]
         });
 
-        // Ocultar info de usuarios en rutinas del sistema
+        // Ocultar info de usuarios en rutinas del sistema y transformar emociones
         routines = routines.map(routine => {
-            const json = routine.toJSON();
+            let json = transformEmotionField(routine);
             if (json.createdBy !== userId) {
                 delete json.Users;
             }
@@ -44,8 +53,9 @@ export async function getRoutinesByUser(userId, emotionParam = null) {
         }
     });
 
-    const assignedRoutines = user?.Routines || [];
-    const systemRoutines = await Routines.findAll({ where: { createdBy: 'system' } });
+    const assignedRoutines = (user?.Routines || []).map(transformEmotionField);
+    const systemRoutines = (await Routines.findAll({ where: { createdBy: 'system' } }))
+        .map(transformEmotionField);
 
     // Si NO hay emotionParam, devolver todas (comportamiento original)
     if (!emotionParam) {
@@ -56,7 +66,7 @@ export async function getRoutinesByUser(userId, emotionParam = null) {
 
     // Si hay emotionParam, buscar aleatoriamente entre rutinas asignadas con esa emoción
     const assignedFiltered = assignedRoutines.filter(r =>
-        r.emotion && r.emotion.split(',').map(e => e.trim().toLowerCase()).includes(emotionParam.toLowerCase())
+        r.emotion.map(e => e.toLowerCase()).includes(emotionParam.toLowerCase())
     );
 
     if (assignedFiltered.length > 0) {
@@ -65,7 +75,7 @@ export async function getRoutinesByUser(userId, emotionParam = null) {
 
     // Si no hay en asignadas, buscar entre rutinas del sistema
     const systemFiltered = systemRoutines.filter(r =>
-        r.emotion && r.emotion.split(',').map(e => e.trim().toLowerCase()).includes(emotionParam.toLowerCase())
+        r.emotion.map(e => e.toLowerCase()).includes(emotionParam.toLowerCase())
     );
 
     if (systemFiltered.length > 0) {

@@ -561,8 +561,22 @@ export const validateSummaryInput = (data) => {
             'any.required': '"endDate" es obligatorio',
             'date.base': '"endDate" debe ser una fecha válida en formato ISO',
             'date.greater': '"endDate" debe ser mayor que startDate'
+        }),
+        userId: Joi.string().required().messages({
+            'any.required': 'El campo userId es obligatorio.',
+            'string.empty': 'El campo userId no puede estar vacío.'
         })
     });
 
+    return schema.validate(data);
+};
+
+export const validateSummaryForProfessionalInput = (data) => {
+    const schema = Joi.object({
+        userId: Joi.string().required().messages({
+            'any.required': 'El campo userId es obligatorio.',
+            'string.empty': 'El campo userId no puede estar vacío.'
+        }),
+    });
     return schema.validate(data);
 };

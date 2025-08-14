@@ -1,7 +1,7 @@
 import { cleanMessage } from '../../utils/textNormalize.js';
 
 export function suicideRiskDetection(texto) {
-    const limpio = cleanMessage(texto)
+    const cleanText = cleanMessage(texto)
 
     const riskGroups = [
         // Intención directa
@@ -62,8 +62,10 @@ export function suicideRiskDetection(texto) {
         ['quisiera', 'no', 'ser'],
         ['sigo', 'vivo', 'por', 'inercia']
     ];
-
+    const riskWordsDetected = cleanText.split(' ').some(palabra =>
+        palabra.startsWith('mat') || palabra.startsWith('suicid') || palabra.startsWith('morir')
+    )
     return riskGroups.some((grupo) =>
-        grupo.every((palabra) => limpio.includes(palabra))
-    );
+        grupo.every((palabra) => cleanText.includes(palabra))
+    ) || riskWordsDetected;
 }

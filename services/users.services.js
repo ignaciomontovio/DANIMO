@@ -129,7 +129,7 @@ export { findUserByEmail }; // 👈 necesario para usarlo desde el controller
 
 export async function getUserProfile(userId) {
     const user = await Users.findByPk(userId, {
-        attributes: ['firstName', 'lastName', 'birthDate', 'gender', 'occupation', 'livesWith', 'profilePic']
+        attributes: ['firstName', 'lastName', 'birthDate', 'gender', 'occupation', 'livesWith', 'profilePic', 'hasAcceptedTerms']
     });
 
     if (!user) throw new Error('Usuario no encontrado');

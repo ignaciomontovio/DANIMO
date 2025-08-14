@@ -1,5 +1,5 @@
 import * as service from '../services/stats.service.js';
-import { validateStatsEmotionsInput } from '../utils/validators.js';
+import { validateStatsEmotionsInput, validateMonthStatsInput } from '../utils/validators.js';
 import Users from '../models/Users.js';
 import Professionals from '../models/Professionals.js';
 
@@ -71,6 +71,42 @@ export const getWeeklyEmotions = async (req, res) => {
         return res.status(200).json(stats);
     } catch (err) {
         console.error(`❌ Error en /stats/week:`, err.message);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+export const getEmotionsMonth = async (req, res) => {
+    const authUserId = req.userId;
+    const { userId, month, year } = req.body;
+
+    const { error } = validateMonthStatsInput(req.body);
+    if (error) {
+        console.warn(`⚠️ Validación fallida en /stats/month:`, error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    try {
+        const isUser = await Users.findByPk(authUserId);
+        const isProfessional = await Professionals.findByPk(authUserId);
+
+        if (!isUser && !isProfessional) {
+        return res.status(403).json({ error: 'Usuario no autorizado.' });
+        }
+
+        const targetUserId = isUser ? authUserId : userId;
+        if (isProfessional && !userId) {
+        return res.status(400).json({ error: 'Falta el userId del usuario a consultar.' });
+        }
+
+        // Calcular primer y último día del mes
+        const startDate = new Date(year, month - 1, 1);
+        const endDate = new Date(year, month, 0, 23, 59, 59); // último día del mes
+
+        const stats = await service.getPredominantEmotionStatsForUser(targetUserId, startDate, endDate);
+        console.log(`Emociones del mes ${month}/${year} para usuario ${targetUserId}`);
+        return res.status(200).json(stats);
+    } catch (err) {
+        console.error(`❌ Error al obtener estadísticas mensuales:`, err.message);
         return res.status(500).json({ error: 'Error interno del servidor' });
     }
 };

@@ -6,5 +6,7 @@ const router = express.Router();
 
 router.get('/emotions', authMiddleware, controller.getEmotionsStats);
 router.post('/week', authMiddleware, controller.getWeeklyEmotions);
+router.post('/month', authMiddleware, controller.getEmotionsMonth);
+
 
 export default router;

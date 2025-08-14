@@ -8,17 +8,26 @@ export async function weeklySummary(userId) {
     const sevenDaysAgo = new Date(today);
     sevenDaysAgo.setDate(today.getDate() - 7);
     const SUMMARY_LENGTH = 100;
-
-    const messages = await getConversationMessagesForSummary(userId, weeklySummaryPrompt(SUMMARY_LENGTH), sevenDaysAgo, today);
+    let messages
+    try {
+        const messages = await getConversationMessagesForSummary(userId, weeklySummaryPrompt(SUMMARY_LENGTH), sevenDaysAgo, today);
+    } catch (e) {
+        return {"summary": "No hay conversaciones para resumir en los ultimos 7 dias.", "userId": userId};
+    }
     const response = await userResponse(messages)
     return {"summary": response, "userId": userId};
 }
 
-export async function historicalSummary(userId,summaryLength) {
+export async function historicalSummary(userId) {
     const HISTORICAL_SUMMARY_LENGTH = 1000;
 
     // Traigo todas las conversacion del usuario
-    const messages = await getConversationMessagesForSummary(userId, historicalSummaryPrompt(HISTORICAL_SUMMARY_LENGTH), new Date(2000, 0, 1), new Date());
+    let messages
+    try{
+        messages = await getConversationMessagesForSummary(userId, historicalSummaryPrompt(HISTORICAL_SUMMARY_LENGTH), new Date(2000, 0, 1), new Date());
+    } catch (e) {
+        return {"summary": "El usuario nunca ha interactuado con Dani.", "userId": userId};
+    }
     const response = await userResponse(messages)
     return {"summary": response, "userId": userId};
 }
@@ -68,7 +77,12 @@ export async function rangedSummmary(userId, startDate, endDate) {
     endDate = new Date(endDate);
 
     const prompt = rangedSummaryPrompt(RANGED_SUMMARY_LENGTH, startDate, endDate);
-    const messages = await getConversationMessagesForSummary(userId, prompt, startDate, endDate);
+    let messages
+    try {
+        messages = await getConversationMessagesForSummary(userId, prompt, startDate, endDate);
+    } catch (e) {
+        return {"summary": "No hay conversaciones para resumir en el rango solicitado.", "userId": userId};
+    }
     const response = await userResponse(messages);
     return {"summary": response, "userId": userId};
 }

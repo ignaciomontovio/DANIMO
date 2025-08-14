@@ -549,6 +549,22 @@ export const validateStatsEmotionsInput = (data) => {
     return schema.validate(data);
 };
 
+export const validateMonthStatsInput = (data) => {
+    return Joi.object({
+        userId: Joi.string().optional(), // Solo requerido si es profesional
+        month: Joi.number().integer().min(1).max(12).required(),
+        year: Joi.number().integer().min(1900).max(2100).required()
+    }).validate(data);
+};
+
+export const validateStatsYearInput = (data) => {
+    const schema = Joi.object({
+        userId: Joi.string().optional(), // requerido solo si es Professional
+        year: Joi.number().integer().min(1900).max(2100).optional()
+    });
+    return schema.validate(data);
+};
+
 // --------------Summary-----------------
 
 export const validateSummaryInput = (data) => {

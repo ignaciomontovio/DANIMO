@@ -45,7 +45,8 @@ export async function registerUser({firstName, lastName, email, password, birthD
         email,
         password: passwordHash,
         hasGoogleAccount: false, ...(birthDate && {birthDate}),
-        gender
+        gender,
+        hasAcceptedTerms: false
     });
 
     return '¡Usuario registrado correctamente!';

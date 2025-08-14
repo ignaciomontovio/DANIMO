@@ -16,6 +16,7 @@ router.post('/reset-password', usersController.resetPassword);
 router.patch('/update-profile', authMiddleware, upload.single('profilePic'), usersController.updateUserProfile);
 router.post('/token-email', authMiddleware, usersController.validateUserEmail);
 router.get('/profile', authMiddleware, usersController.getUserProfile);
+router.post('/acceptTerms', authMiddleware, usersController.acceptTerms);
 
 router.post('/generate/professional-token', authMiddleware, usersController.generateProfessionalToken);
 router.get('/professionals', authMiddleware, usersController.getUserProfessionals);

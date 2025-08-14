@@ -9,6 +9,7 @@ import {sendEmail} from '../utils/sendEmail.js';
 import createError from 'http-errors';
 import { generateRandomKey } from '../utils/jwt.js';
 import Professionals from '../models/Professionals.js';
+import { where } from 'sequelize';
 
 const TWO_HOURS = 1000 * 60 * 60 * 2;
 const findUserByEmail = async (email) => {
@@ -170,4 +171,11 @@ export async function unlinkProfessional(professionalId, userId) {
     } else {
         console.log('⚠️ Usuario o profesional no encontrados.');
     }
+}
+
+export async function acceptTerms(userId) {
+    const user = await Users.findByPk(userId);
+    if (!user) throw new Error('Usuario no encontrado');
+
+    await user.update({hasAcceptedTerms: true});
 }

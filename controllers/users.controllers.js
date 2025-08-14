@@ -248,3 +248,15 @@ export const unlinkProfessional = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 };
+
+export const acceptTerms = async (req, res) => {
+    const userId = req.userId;
+    try {
+        await usersService.acceptTerms(userId);
+        console.log(`✅ Usuario ${userId} acepto terminos y condiciones`);
+        return res.status(200).json({ message: 'Usuario acepto terminos y condiciones correctamente.' });
+    } catch (err) {
+        console.error(`❌ Error al aceptar terminos y condiciones:`, err);
+        return res.status(500).json({ error: err.message });
+    }
+}

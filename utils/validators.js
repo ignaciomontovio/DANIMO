@@ -557,6 +557,14 @@ export const validateMonthStatsInput = (data) => {
     }).validate(data);
 };
 
+export const validateStatsYearInput = (data) => {
+    const schema = Joi.object({
+        userId: Joi.string().optional(), // requerido solo si es Professional
+        year: Joi.number().integer().min(1900).max(2100).optional()
+    });
+    return schema.validate(data);
+};
+
 // --------------Summary-----------------
 
 export const validateSummaryInput = (data) => {

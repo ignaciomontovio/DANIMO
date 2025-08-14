@@ -1,5 +1,5 @@
 import * as service from '../services/stats.service.js';
-import { validateStatsEmotionsInput, validateMonthStatsInput } from '../utils/validators.js';
+import { validateStatsEmotionsInput, validateMonthStatsInput, validateStatsYearInput } from '../utils/validators.js';
 import Users from '../models/Users.js';
 import Professionals from '../models/Professionals.js';
 
@@ -107,6 +107,48 @@ export const getEmotionsMonth = async (req, res) => {
         return res.status(200).json(stats);
     } catch (err) {
         console.error(`❌ Error al obtener estadísticas mensuales:`, err.message);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+export const getYearStats = async (req, res) => {
+    const authUserId = req.userId; // viene del middleware
+    const { userId, year } = req.body;
+
+    // Validación con Joi
+    const { error } = validateStatsYearInput({ userId, year });
+    if (error) {
+        console.warn(`⚠️ Validación fallida en /stats/year:`, error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    try {
+        // Verifico si es User o Professional
+        const isUser = await Users.findByPk(authUserId);
+        const isProfessional = await Professionals.findByPk(authUserId);
+
+        if (!isUser && !isProfessional) {
+            return res.status(403).json({ error: 'Usuario no autorizado.' });
+        }
+
+        const targetUserId = isUser ? authUserId : userId;
+        if (isProfessional && !userId) {
+            return res.status(400).json({ error: 'Falta el userId del usuario a consultar.' });
+        }
+
+        // Si no viene year, uso el actual
+        const targetYear = year || new Date().getFullYear();
+
+        // Primer y último día del año
+        const since = new Date(targetYear, 0, 1); // 1 de enero
+        const until = new Date(targetYear, 11, 31, 23, 59, 59); // 31 de diciembre
+
+        // Llamo al servicio
+        const stats = await service.getPredominantEmotionStatsForUser(targetUserId, since, until);
+        console.log(`📊 Emociones devueltas para el usuario ${targetUserId} en el año ${targetYear}`);
+        return res.status(200).json(stats);
+    } catch (err) {
+        console.error(`❌ Error en /stats/year:`, err.message);
         return res.status(500).json({ error: 'Error interno del servidor' });
     }
 };

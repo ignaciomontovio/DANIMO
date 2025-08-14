@@ -58,6 +58,10 @@ const Users = sequelize.define('Users', {
         allowNull: true,
         unique: false,
         defaultValue: null
+    },
+    hasAcceptedTerms:{
+        type: DataTypes.BOOLEAN,
+        allowNull: true
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

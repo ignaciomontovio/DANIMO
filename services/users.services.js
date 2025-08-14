@@ -9,6 +9,7 @@ import {sendEmail} from '../utils/sendEmail.js';
 import createError from 'http-errors';
 import { generateRandomKey } from '../utils/jwt.js';
 import Professionals from '../models/Professionals.js';
+import { where } from 'sequelize';
 
 const TWO_HOURS = 1000 * 60 * 60 * 2;
 const findUserByEmail = async (email) => {
@@ -45,7 +46,8 @@ export async function registerUser({firstName, lastName, email, password, birthD
         email,
         password: passwordHash,
         hasGoogleAccount: false, ...(birthDate && {birthDate}),
-        gender
+        gender,
+        hasAcceptedTerms: false
     });
 
     return '¡Usuario registrado correctamente!';
@@ -127,7 +129,7 @@ export { findUserByEmail }; // 👈 necesario para usarlo desde el controller
 
 export async function getUserProfile(userId) {
     const user = await Users.findByPk(userId, {
-        attributes: ['firstName', 'lastName', 'birthDate', 'gender', 'occupation', 'livesWith', 'profilePic']
+        attributes: ['firstName', 'lastName', 'birthDate', 'gender', 'occupation', 'livesWith', 'profilePic', 'hasAcceptedTerms']
     });
 
     if (!user) throw new Error('Usuario no encontrado');
@@ -169,4 +171,11 @@ export async function unlinkProfessional(professionalId, userId) {
     } else {
         console.log('⚠️ Usuario o profesional no encontrados.');
     }
+}
+
+export async function acceptTerms(userId) {
+    const user = await Users.findByPk(userId);
+    if (!user) throw new Error('Usuario no encontrado');
+
+    await user.update({hasAcceptedTerms: true});
 }

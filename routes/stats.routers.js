@@ -5,5 +5,6 @@ import { authMiddleware } from '../middleware/middleware.js';
 const router = express.Router();
 
 router.get('/emotions', authMiddleware, controller.getEmotionsStats);
+router.post('/week', authMiddleware, controller.getWeeklyEmotions);
 
 export default router;

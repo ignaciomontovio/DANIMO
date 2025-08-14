@@ -36,3 +36,41 @@ export const getEmotionsStats = async (req, res) => {
         return res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
+
+export const getWeeklyEmotions = async (req, res) => {
+    const requesterId = req.userId; // viene del middleware
+    const { userId: bodyUserId } = req.body;
+
+    try {
+        const isUser = await Users.findByPk(requesterId);
+        const isProfessional = await Professionals.findByPk(requesterId);
+
+        if (!isUser && !isProfessional) {
+            return res.status(403).json({ error: 'Usuario no autorizado.' });
+        }
+
+        // Determinar el usuario objetivo
+        let targetUserId;
+        if (isUser) {
+            targetUserId = requesterId;
+        } else if (isProfessional) {
+            if (!bodyUserId) {
+                return res.status(400).json({ error: 'Falta el userId del paciente a consultar.' });
+            }
+            targetUserId = bodyUserId;
+        }
+
+        // Calcular rango de fechas
+        const until = new Date(); // ahora
+        const since = new Date();
+        since.setDate(until.getDate() - 7);
+
+        const stats = await service.getEmotionStatsForUser(targetUserId, since, until);
+
+        console.log(`📊 Emociones de la semana para el usuario ${targetUserId}`);
+        return res.status(200).json(stats);
+    } catch (err) {
+        console.error(`❌ Error en /stats/week:`, err.message);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};

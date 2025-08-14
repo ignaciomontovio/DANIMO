@@ -47,8 +47,9 @@ export async function chat({message, userId}) {
             validateMessageIntention(message);
         const {autoResponse, defaultResponse} =
             await autoResponseConditionChecker(message, userId, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator)
+        //console.log("Respuesta obtenida: "+defaultResponse);            
         if (autoResponse === true) {
-            return defaultResponse
+            return { assistantReply: defaultResponse, predominantEmotion:null, recommendRoutine:false };
         }
         if (isBriefResponse === true && await briefResponseCooldown(userId) === false) {
             console.log("El mensaje es una respuesta breve");

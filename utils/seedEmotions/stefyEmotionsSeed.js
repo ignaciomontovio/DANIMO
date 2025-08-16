@@ -6,7 +6,7 @@ import Users from '../../models/Users.js';
 const stefyEmail = 'stefaniavioliali97@gmail.com';
 
 const fechas = Array.from({length: 27}, (_, i) => {
-    return new Date(2024, 1, 27 + i); // Mes 1 = febrero (0-indexado)
+    return new Date(2025, 1, 27 + i); // Mes 1 = febrero (0-indexado)
 });
 
 const emociones = ['Alegria', 'Ansiedad', 'Enojo', 'Miedo', 'Tristeza'];

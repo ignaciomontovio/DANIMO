@@ -39,7 +39,7 @@ export async function createEmotionRegister({ userId, emotion, isPredominant, ac
 
     // 1. Creamos el registro sin las actividades todavía
     const register = await EmotionRegisters.create({
-        id: `U-${uuidv4()}`,
+        id: `EM-${uuidv4()}`,
         emotionName: emotion,
         isPredominant,
         photoId: photoId,

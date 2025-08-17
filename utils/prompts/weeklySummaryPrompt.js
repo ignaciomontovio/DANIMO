@@ -1,6 +1,5 @@
 export function weeklySummaryPrompt(summaryLength = 100) {
-    return `
-Tu tarea es generar un resumen clínico-emocional basado exclusivamente en la información expresada por la persona en la conversación.
+    return `Tu tarea es generar un resumen clínico-emocional basado exclusivamente en la información expresada por la persona en la conversación.
 Instrucciones obligatorias:
 - No inventes emociones, eventos, interpretaciones ni síntomas no mencionados explícitamente.
 - No realices diagnósticos, inferencias clínicas ni juicios profesionales. Limítate a describir lo expresado por la persona.

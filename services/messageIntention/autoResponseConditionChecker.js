@@ -1,5 +1,5 @@
 import {suicideRiskResponse, userIntentMessage} from '../openai.service.js';
-import {suicideRiskDefaultResponse} from "../../utils/prompts/suicideRiskPrompt.js";
+import {crisisRiskDefaultResponse} from "../../utils/prompts/suicideRiskPrompt.js";
 import {containsLinksResponse} from "./messageIntentionService.js";
 import {conversacionNoDanimoDefaultResponse} from "../../utils/prompts/userIntentPrompt.js";
 import {intentaBorrarHistorialDefaultResponse} from "../../utils/prompts/userIntentPrompt.js";
@@ -34,7 +34,7 @@ export async function autoResponseConditionChecker(message, userId, hasSuicideRi
                     userId: userId
                 }
             )
-            return {autoResponse: true, defaultResponse: suicideRiskDefaultResponse};
+            return {autoResponse: true, defaultResponse: crisisRiskDefaultResponse};
         }
     }
 

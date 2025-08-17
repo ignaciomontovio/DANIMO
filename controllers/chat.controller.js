@@ -1,6 +1,9 @@
 import {validateChatInput, validateSummaryForProfessionalInput, validateSummaryInput} from '../utils/validators.js';
 import { chat } from '../services/chat.service.js';
 import {rangedSummmary, weeklySummary, historicalSummary} from "../services/summary.service.js";
+import userCache from '../utils/userCache.js';
+const HISTORICAL_SUMMARY_CACHE_KEY = 'historicalSummary';
+const WEEKLY_SUMMARY_CACHE_KEY = 'weeklySummary';
 
 export const chatController = async (req, res) => {
     const {error, value} = validateChatInput(req.body);
@@ -31,7 +34,11 @@ export const weeklySummaryController = async (req, res) => {
             console.error("❌ Error in joi validation Error:" + error.details[0].message)
             return res.status(400).json({error: error.details[0].message});
         }
+        const cacheSummary = userCache.get(value.userId, WEEKLY_SUMMARY_CACHE_KEY);
+        if(cacheSummary != null)
+            return res.json(cacheSummary);
         const response = await weeklySummary(value.userId)
+        userCache.set(value.userId, WEEKLY_SUMMARY_CACHE_KEY, response);
         console.log(`✅ Respuesta ${response.summary} devuelta.`);
         res.json(response);
     } catch (err) {
@@ -47,7 +54,11 @@ export const historicalSummaryController = async (req, res) => {
             console.error("❌ Error in joi validation Error:" + error.details[0].message)
             return res.status(400).json({error: error.details[0].message});
         }
+        const cacheSummary = userCache.get(value.userId, HISTORICAL_SUMMARY_CACHE_KEY);
+        if(cacheSummary != null)
+            return res.json(cacheSummary);
         const response = await historicalSummary(value.userId)
+        userCache.set(value.userId, HISTORICAL_SUMMARY_CACHE_KEY, response);
         console.log(`✅ Respuesta ${response.summary} devuelta.`);
         res.json(response);
     } catch (err) {

@@ -2,6 +2,7 @@ import {historicalSummaryPrompt, weeklySummaryPrompt, rangedSummaryPrompt} from 
 import {userResponse} from "./openai.service.js";
 import Conversations from "../models/Conversations.js";
 import {Op} from "sequelize";
+import UsersEmotionalState from "../models/UsersEmotionalState.js";
 
 export async function weeklySummary(userId) {
     const today = new Date();
@@ -10,12 +11,13 @@ export async function weeklySummary(userId) {
     const SUMMARY_LENGTH = 100;
     let messages
     try {
-        const messages = await getConversationMessagesForSummary(userId, weeklySummaryPrompt(SUMMARY_LENGTH), sevenDaysAgo, today);
+        messages = await getConversationMessagesForSummary(userId, weeklySummaryPrompt(SUMMARY_LENGTH), sevenDaysAgo, today);
     } catch (e) {
         return {"summary": "No hay conversaciones para resumir en los ultimos 7 dias.", "userId": userId};
     }
     const response = await userResponse(messages)
-    return {"summary": response, "userId": userId};
+    const riskMessages = await getRiskMessagesInRange(userId, sevenDaysAgo, today)
+    return {"summary": response, "userId": userId, riskMessages};
 }
 
 export async function historicalSummary(userId) {
@@ -23,17 +25,20 @@ export async function historicalSummary(userId) {
 
     // Traigo todas las conversacion del usuario
     let messages
+    const startTime = new Date(2000, 0, 1)
+    const endTime = new Date()
     try{
-        messages = await getConversationMessagesForSummary(userId, historicalSummaryPrompt(HISTORICAL_SUMMARY_LENGTH), new Date(2000, 0, 1), new Date());
+        messages = await getConversationMessagesForSummary(userId, historicalSummaryPrompt(HISTORICAL_SUMMARY_LENGTH), startTime, endTime);
     } catch (e) {
         return {"summary": "El usuario nunca ha interactuado con Dani.", "userId": userId};
     }
     const response = await userResponse(messages)
-    return {"summary": response, "userId": userId};
+    const riskMessages = await getRiskMessagesInRange(userId, startTime, endTime)
+    return {"summary": response, "userId": userId, riskMessages};
 }
 
 function getConversationMessagesForSummary(userId, prompt, startDate, endDate) {
-    const messages = [];
+    const messages = [{role: 'system', content: "Eres un asistente que ayuda a los usuarios a resumir sus conversaciones pasadas."}];
     console.log(`Summary date from ${startDate} to ${endDate}`);
     return Conversations.findAll({
         where: {
@@ -84,5 +89,20 @@ export async function rangedSummmary(userId, startDate, endDate) {
         return {"summary": "No hay conversaciones para resumir en el rango solicitado.", "userId": userId};
     }
     const response = await userResponse(messages);
-    return {"summary": response, "userId": userId};
+    const riskMessages = await getRiskMessagesInRange(userId, startDate, endDate)
+    return {"summary": response, "userId": userId, riskMessages};
+}
+
+async function getRiskMessagesInRange(userId, startDate, endDate) {
+    return await UsersEmotionalState.findAll({
+        where: {
+            userId,
+            date: {
+                [Op.between]: [startDate.getTime(), endDate.getTime()]
+            },
+            suicideRiskDetected: true,
+        },
+        order: [['date', 'ASC']],
+        attributes: ['message', 'date']
+    });
 }

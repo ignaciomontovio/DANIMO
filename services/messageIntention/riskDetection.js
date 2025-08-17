@@ -63,7 +63,7 @@ export function suicideRiskDetection(texto) {
         ['sigo', 'vivo', 'por', 'inercia']
     ];
     const riskWordsDetected = cleanText.split(' ').some(palabra =>
-        palabra.startsWith('mat') || palabra.startsWith('suicid') || palabra.startsWith('morir')
+        palabra.startsWith('mat') || palabra.startsWith('suicid') || palabra.startsWith('morir') || palabra.startsWith('vida')
     )
     return riskGroups.some((grupo) =>
         grupo.every((palabra) => cleanText.includes(palabra))

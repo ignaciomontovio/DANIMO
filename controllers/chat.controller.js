@@ -1,5 +1,5 @@
 import {validateChatInput, validateSummaryForProfessionalInput, validateSummaryInput} from '../utils/validators.js';
-import { chat } from '../services/chat.service.js';
+import {chat, generateChat} from '../services/chat.service.js';
 import {rangedSummmary, weeklySummary, historicalSummary} from "../services/summary.service.js";
 import userCache from '../utils/userCache.js';
 const HISTORICAL_SUMMARY_CACHE_KEY = 'historicalSummary';
@@ -13,13 +13,19 @@ export const chatController = async (req, res) => {
     }
     try {
         const {message} = req.body;
-        const { assistantReply, predominantEmotion, recommendRoutine } = await chat({message: message, userId: req.userId});
+        const {
+            assistantReply,
+            predominantEmotion,
+            recommendRoutine,
+            riskDetected
+        } = await generateChat({message: message, userId: req.userId});
         console.log(`✅ Mensaje ${value.message} enviado correctamente.`);
         console.log(`✅ Respuesta ${assistantReply} devuelta.`);
         return res.json({
             message: assistantReply,
             predominantEmotion: predominantEmotion,
-            recommendRoutine: recommendRoutine
+            recommendRoutine: recommendRoutine,
+            riskDetected: riskDetected
         });
     } catch (err) {
         console.error('❌ Error en /chat dani:', err);

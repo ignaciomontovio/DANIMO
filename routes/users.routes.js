@@ -17,6 +17,7 @@ router.patch('/update-profile', authMiddleware, upload.single('profilePic'), use
 router.post('/token-email', authMiddleware, usersController.validateUserEmail);
 router.get('/profile', authMiddleware, usersController.getUserProfile);
 router.post('/acceptTerms', authMiddleware, usersController.acceptTerms);
+router.get('/redFlags', authMiddleware, usersController.getRedFlags);
 
 router.post('/generate/professional-token', authMiddleware, usersController.generateProfessionalToken);
 router.get('/professionals', authMiddleware, usersController.getUserProfessionals);

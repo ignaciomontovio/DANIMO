@@ -9,7 +9,8 @@ import {sendEmail} from '../utils/sendEmail.js';
 import createError from 'http-errors';
 import { generateRandomKey } from '../utils/jwt.js';
 import Professionals from '../models/Professionals.js';
-import { where } from 'sequelize';
+import UsersEmotionalState from '../models/UsersEmotionalState.js';
+import { where, Op } from 'sequelize';
 
 const TWO_HOURS = 1000 * 60 * 60 * 2;
 const findUserByEmail = async (email) => {
@@ -178,4 +179,25 @@ export async function acceptTerms(userId) {
     if (!user) throw new Error('Usuario no encontrado');
 
     await user.update({hasAcceptedTerms: true});
+}
+
+export async function getRedFlags(userId) {
+    const user = await Users.findByPk(userId);
+    if (!user) throw new Error('Usuario no encontrado');
+    // Calcular rango de fechas: desde hace 24 horas hasta ahora
+    const endDate = new Date(); // ahora
+    const startDate = new Date(endDate.getTime() - 24 * 60 * 60 * 1000); // hace 24 horas
+    // Buscar registros de UsersEmotionalState con suicideRiskDetected = true
+    const redFlags = await UsersEmotionalState.findAll({
+        where: {
+            userId,
+            suicideRiskDetected: true,
+            date: {
+                [Op.between]: [startDate, endDate]
+            }
+        },
+        attributes: ['suicideRiskDetected']
+    });
+
+    return redFlags;
 }

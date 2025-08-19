@@ -260,3 +260,16 @@ export const acceptTerms = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 }
+
+export const getRedFlags = async (req, res) => {
+    const userId = req.userId;
+
+    try {
+        const redFlags = await usersService.getRedFlags(userId);
+        console.log(`✅ Red Flags obtenidas para usuario ${userId}`);
+        res.status(200).json(redFlags);
+    } catch (err) {
+        console.error(`❌ Error al obtener Red Flags para ${userId}:`, err);
+        res.status(500).json({ error: 'Error al obtener Red Flags' });
+    }
+};

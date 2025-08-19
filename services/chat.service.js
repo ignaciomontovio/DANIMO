@@ -45,6 +45,7 @@ async function handleAutoResponses({ message, userId }) {
     return {
         autoResponse,
         defaultResponse,
+        hasSuicideRisk,
         isBriefResponse,
         hasADateReference,
         moodAlternator
@@ -67,7 +68,7 @@ async function handleRoutineRecommendation({ userId, message, riskScore, evaluat
 export async function generateChat({ message, userId }) {
     if (await evaluateRecentSuicideRisk(userId) === true) {
         console.log("El usuario tiene riesgo de suicidio reciente, no se procesará el mensaje.");
-        return "No podemos procesar tu mensaje en este momento. Por favor, contacta a un profesional de salud mental.";
+        return {assistantReply: "No podemos procesar tu mensaje en este momento. Por favor, contacta a un profesional de salud mental.", riskDetected: true};
     }
     return chat({ message, userId });
 }
@@ -91,6 +92,7 @@ export async function chat({ message, userId }) {
         const {
             autoResponse,
             defaultResponse,
+            hasSuicideRisk,
             isBriefResponse,
             hasADateReference,
             moodAlternator
@@ -114,7 +116,7 @@ export async function chat({ message, userId }) {
         const messages = await compileConversationHistory(userId, message, prompt);
         const assistantReply = await userResponse(messages);
         await saveMessagesToDB(userId, message, assistantReply);
-        return { assistantReply, predominantEmotion, recommendRoutine };
+        return { assistantReply, predominantEmotion, recommendRoutine, riskDetected: hasSuicideRisk };
     } catch (error) {
         console.error('Error en el flujo del chat:', error.message);
         throw new Error('Ocurrió un problema al procesar la solicitud del chat.');

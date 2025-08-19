@@ -98,7 +98,7 @@ export async function chat({ message, userId }) {
             moodAlternator
         } = await handleAutoResponses({ message, userId });
         if (autoResponse === true) {
-            return { assistantReply: defaultResponse, predominantEmotion: null, recommendRoutine: false };
+            return { assistantReply: defaultResponse, predominantEmotion: null, recommendRoutine: false, riskDetected: hasSuicideRisk };
         }
         if (isBriefResponse === true && await briefResponseCooldown(userId) === false) {
             console.log("El mensaje es una respuesta breve");
@@ -116,7 +116,7 @@ export async function chat({ message, userId }) {
         const messages = await compileConversationHistory(userId, message, prompt);
         const assistantReply = await userResponse(messages);
         await saveMessagesToDB(userId, message, assistantReply);
-        return { assistantReply, predominantEmotion, recommendRoutine, riskDetected: hasSuicideRisk };
+        return { assistantReply, predominantEmotion, recommendRoutine };
     } catch (error) {
         console.error('Error en el flujo del chat:', error.message);
         throw new Error('Ocurrió un problema al procesar la solicitud del chat.');

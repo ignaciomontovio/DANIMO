@@ -1,8 +1,6 @@
 import UsersEmotionalState from "../../models/UsersEmotionalState.js";
 import { Op } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
-import Routines from "../../models/Routines.js";
-import Users from "../../models/Users.js";
 
 export function saveRoutineRecommended(userId, message) {
     UsersEmotionalState.create({
@@ -32,6 +30,7 @@ export async function wasRoutineRecommendedInLast24Hours(userId) {
     return !!recentRecommendation; // true si existe, false si no
 }
 
+//REVISAR AGREGAR MAS CATEGORIAS DE EMOCIONES
 export function getPredominantEmotion(evaluation) {
     const emotionMap = {
         Tristeza: (evaluation.tristeza || 0) + (evaluation.culpa || 0),
@@ -44,63 +43,4 @@ export function getPredominantEmotion(evaluation) {
     const [predominantEmotion, score] = sorted[0];
 
     return score > 0 ? predominantEmotion : null;
-}
-
-export async function getRecommendedRoutineName(userId, evaluation) {
-    const predominantEmotion = getPredominantEmotion(evaluation);
-    console.log(`🎯 Emoción predominante detectada: ${predominantEmotion || 'Ninguna'}`);
-
-    // Buscamos el usuario junto con las rutinas que tenga asignadas
-    const user = await Users.findByPk(userId, {
-        include: {
-            model: Routines,
-            as: 'Routines', // 👈 asegurate que el alias coincida con la definición belongsToMany
-            through: { attributes: [] }
-        }
-    });
-
-    if (!user) {
-        console.warn(`⚠️ Usuario con id=${userId} no encontrado`);
-        return null;
-    }
-
-    // Obtenemos rutinas del sistema y rutinas asignadas
-    const systemRoutines = await Routines.findAll({ where: { createdBy: 'system' } });
-    const assignedRoutines = user.Routines || [];
-
-    const allRoutines = [...systemRoutines, ...assignedRoutines];
-
-    if (allRoutines.length === 0) {
-        console.warn('⚠️ No se encontraron rutinas disponibles para el usuario');
-        return null;
-    }
-
-    // Filtramos por la emoción predominante
-    let filtered = [];
-    if (predominantEmotion) {
-        filtered = allRoutines.filter(r => {
-            if (!r.emotion) return false;
-            const emotionsArray = r.emotion.split(',').map(e => e.trim().toLowerCase());
-            return emotionsArray.includes(predominantEmotion.toLowerCase());
-        });
-    }
-
-    // Seleccionamos el conjunto base para elegir
-    const selectionPool = filtered.length > 0 ? filtered : allRoutines;
-    console.log(`📊 Seleccionando rutina entre ${selectionPool.length} opciones`);
-
-    // Construimos lista ponderada: asignadas con más peso
-    let weightedPool = [];
-    for (const routine of selectionPool) {
-        const weight = routine.createdBy === 'system' ? 1 : 3; // Asignadas pesan más
-        for (let i = 0; i < weight; i++) {
-            weightedPool.push(routine);
-        }
-    }
-
-    // Elección aleatoria con ponderación
-    const routineToRecommend = weightedPool[Math.floor(Math.random() * weightedPool.length)];
-
-    console.log(`✅ Rutina recomendada: ${routineToRecommend.name} (prioridad aplicada)`);
-    return routineToRecommend.name;
 }

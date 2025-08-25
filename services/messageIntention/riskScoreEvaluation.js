@@ -19,7 +19,6 @@ async function importantDateNearby(userId) {
             console.log(`¡Atención! La fecha importante "${impD.eventDescription}" está a ${diff} días de distancia.`);
             return true
         } else {
-            console.log(`La fecha importante "${impD.eventDescription}" está a más de 7 días de distancia.`);
             return false
         }
     })

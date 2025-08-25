@@ -49,6 +49,10 @@ export async function autoResponseConditionChecker(message, userId, hasSuicideRi
     }
 
     const {conversacionNoDanimo, intentaBorrarHistorial} = await userIntentMessage(message);
+    if (intentaBorrarHistorial === true) {
+        console.log("El usuario intenta borrar el historial de conversaciones");
+        return {autoResponse: true, defaultResponse: intentaBorrarHistorialDefaultResponse};
+    }
     if (conversacionNoDanimo === true) {
         console.log("El usuario habló de un tema no relacionado con el ánimo");
         return {autoResponse: true, defaultResponse: conversacionNoDanimoDefaultResponse};

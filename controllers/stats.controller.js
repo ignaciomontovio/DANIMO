@@ -3,6 +3,36 @@ import { validateStatsEmotionsInput, validateMonthStatsInput, validateStatsYearI
 import Users from '../models/Users.js';
 import Professionals from '../models/Professionals.js';
 
+export const getImportantEvents = async (req, res) => {
+    const { error, value } = validateImportantEventsInput(req.body);
+    if (error) {
+        console.warn(`⚠️ Validación fallida en /stats/important-events:`, error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+
+    try {
+        const isProfessional = await Professionals.findByPk(req.userId);
+
+        if (!isProfessional) {
+            return res.status(403).json({ error: 'Esta ruta solo esta disponible para profesionales autorizados.' });
+        }
+        const user = await Users.findByPk(value.userId);
+
+        if (!user) {
+            return res.status(400).json({ error: 'El userId proporcionado no corresponde a un usuario válido.' });
+        }
+
+        const importantDates = await service.getImportantEventsForUser(value.userId);
+        console.log(`Fechas importantes devueltas para el usuario ${value.userId}`);
+        return res.status(200).json(importantDates);
+    } catch (err) {
+        console.error(`❌ Error al obtener fechas importantes:`, err.message);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+}
+
+
 export const getEmotionsStats = async (req, res) => {
     const userId = req.userId;
     const { id, since, until } = req.body;

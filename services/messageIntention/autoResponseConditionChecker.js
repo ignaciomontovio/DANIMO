@@ -62,11 +62,12 @@ export async function autoResponseConditionChecker(message, userId, hasSuicideRi
 
 export async function evaluateRecentSuicideRisk(userId) {
     const today = new Date()
-    const [day, month, year] = [today.getDay(), today.getMonth(), today.getFullYear()];
+    const [day, month, year] = [today.getDate(), today.getMonth(), today.getFullYear()];
     const userStates = await UsersEmotionalState.findAll({ where: { userId } });
     console.log(userStates)
     if(userStates.some(state => state.suicideRiskDetected === true
         && state.date.getDay() === day && state.date.getMonth() === month && state.date.getFullYear() === year)) {
+        console.log(`La fecha de hoy es: ${today} dia: ${day} mes: ${month} anio ${year}`);
         console.log("El usuario ha tenido riesgo de suicidio hoy. Se bloqueará el envío de mensajes.");
         return true;
     }

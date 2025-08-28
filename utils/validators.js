@@ -565,6 +565,13 @@ export const validateStatsYearInput = (data) => {
     return schema.validate(data);
 };
 
+export const validateImportantEventsInput = (data) => {
+    const schema = Joi.object({
+        userId: Joi.string().required()
+    });
+    return schema.validate(data);
+};
+
 // --------------Summary-----------------
 
 export const validateSummaryInput = (data) => {

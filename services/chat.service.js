@@ -55,14 +55,14 @@ async function handleAutoResponses({ message, userId }) {
 // Función auxiliar para manejar lógica de rutina recomendada
 async function handleRoutineRecommendation({ userId, message, riskScore, evaluation }) {
     let predominantEmotion = null;
-    let recommendRoutine = false;
     const routineRecommended = await wasRoutineRecommendedInLast24Hours(userId);
     if (riskScore >= criticalRiskLevel && !routineRecommended) {
         predominantEmotion = await getPredominantEmotion(JSON.parse(evaluation));
-        recommendRoutine = true;
         await saveRoutineRecommended(userId, message);
+        return { predominantEmotion, recommendRoutine: true };
+
     }
-    return { predominantEmotion, recommendRoutine };
+    return { predominantEmotion, recommendRoutine: false };
 }
 
 export async function generateChat({ message, userId }) {
@@ -101,7 +101,7 @@ export async function chat({ message, userId }) {
             return { assistantReply: defaultResponse, predominantEmotion: null, recommendRoutine: false, riskDetected: hasSuicideRisk };
         }
         if (isBriefResponse === true && await briefResponseCooldown(userId) === false) {
-            console.log("El mensaje es una respuesta breve");
+            console.log("El mensaje es una respuesta breve. Se mandará un disparador de conversacion.");
             saveBriefResponseRegister(userId, message);
             prompt = briefResponsePrompt;
         }
@@ -144,7 +144,6 @@ async function compileConversationHistory(userId, currentMessage, prompt) {
 
 // Función para guardar mensajes en la base de datos
 async function saveMessagesToDB(userId, userMessage, assistantReply) {
-    console.log(`Se guardara ${userId} `)
     await Promise.all([
         createMessage('user', userMessage, userId),
         createMessage('assistant', assistantReply, userId),

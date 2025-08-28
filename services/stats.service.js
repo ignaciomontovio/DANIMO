@@ -1,5 +1,14 @@
 import EmotionRegisters from '../models/EmotionRegisters.js';
 import { Op, Sequelize } from 'sequelize';
+import ImportantEvents from "../models/ImportantEvents.js";
+import MoodAlternators from "../models/MoodAlternators.js";
+
+export async function getImportantEventsForUser(userId) {
+    const importantEvents = await ImportantEvents.findAll({ where: { userId} });
+    const moodAlternators = await MoodAlternators.findAll({ where: { userId} });
+    return { importantEvents, moodAlternators };
+}
+
 
 export async function getPredominantEmotionStatsForUser(userId, since, until) {
     const results = await EmotionRegisters.findAll({

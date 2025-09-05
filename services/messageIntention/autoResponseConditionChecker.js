@@ -62,7 +62,7 @@ export async function autoResponseConditionChecker(message, userId, hasSuicideRi
 
 export async function evaluateRecentSuicideRisk(userId) {
     const today = new Date()
-    const [day, month, year] = [today.getDate(), today.getMonth(), today.getFullYear()];
+    const [day, month, year] = [today.getUTCDate(), today.getMonth(), today.getFullYear()];
     const userStates = await UsersEmotionalState.findAll({ where: { userId } });
     console.log(userStates)
     if(userStates.some(state => state.suicideRiskDetected === true

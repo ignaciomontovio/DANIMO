@@ -17,6 +17,7 @@ import seedLuisMartinezChat from "./utils/seedChats/seedLuisMartinezChat.js";
 import seedCarlosPerezChat from "./utils/seedChats/seedCarlosPerezChat.js";
 import seedPedroFernandezChat from "./utils/seedChats/seedPedroFernandezChat.js";
 import seedStefyEmotions from "./utils/seedEmotions/stefyEmotionsSeed.js";
+import seedMariaRuizChat from "./utils/seedChats/seedMariaRuizChat.js";
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
@@ -37,5 +38,6 @@ app.listen(PORT, async () => {
     await seedCarlosPerezChat()
     await seedPedroFernandezChat()
     await seedStefyEmotions()
+    await seedMariaRuizChat()
     console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });

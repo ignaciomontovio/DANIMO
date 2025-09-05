@@ -5,7 +5,7 @@ import {conversacionNoDanimoDefaultResponse} from "../../utils/prompts/userInten
 import {intentaBorrarHistorialDefaultResponse} from "../../utils/prompts/userIntentPrompt.js";
 import UsersEmotionalState from "../../models/UsersEmotionalState.js";
 import {v4 as uuidv4} from "uuid";
-
+const MILLISECONDS_IN_A_HOUR = 60 * 60 * 1000
 function logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator) {
     console.log(`--- Análisis de Intención del Mensaje ---
         ¿Riesgo de suicidio?         : ${hasSuicideRisk}
@@ -61,14 +61,15 @@ export async function autoResponseConditionChecker(message, userId, hasSuicideRi
 }
 
 export async function evaluateRecentSuicideRisk(userId) {
-    const today = new Date()
-    const [day, month, year] = [today.getUTCDate(), today.getMonth(), today.getFullYear()];
-    const userStates = await UsersEmotionalState.findAll({ where: { userId } });
-    console.log(userStates)
-    if(userStates.some(state => state.suicideRiskDetected === true
-        && state.date.getDay() === day && state.date.getMonth() === month && state.date.getFullYear() === year)) {
-        console.log(`La fecha de hoy es: ${today} dia: ${day} mes: ${month} anio ${year}`);
-        console.log("El usuario ha tenido riesgo de suicidio hoy. Se bloqueará el envío de mensajes.");
-        return true;
+    const userStates = await UsersEmotionalState.findAll({
+        where: { userId, suicideRiskDetected: true },
+        order: [['date', 'DESC']],
+        limit: 1
+    });
+    if(userStates.length === 0) {
+        return false;
     }
+    const lastRiskState = userStates[0];
+    //Devuelvo true si pasaron menos de 24 horas desde el último estado de riesgo
+    return (new Date() - lastRiskState.date) / MILLISECONDS_IN_A_HOUR < 24;
 }

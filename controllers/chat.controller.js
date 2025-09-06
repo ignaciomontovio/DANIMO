@@ -42,7 +42,7 @@ export const weeklySummaryController = async (req, res) => {
             return res.status(400).json({error: error.details[0].message});
         }
         if(value.refreshCache === true) {
-            userCache.delete(value.userId, HISTORICAL_SUMMARY_CACHE_KEY)
+            userCache.delete(value.userId, WEEKLY_SUMMARY_CACHE_KEY)
         }
         const cacheSummary = userCache.get(value.userId, WEEKLY_SUMMARY_CACHE_KEY);
         if(cacheSummary != null)

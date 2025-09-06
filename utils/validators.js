@@ -600,7 +600,7 @@ export const validateSummaryForProfessionalInput = (data) => {
             'any.required': 'El campo userId es obligatorio.',
             'string.empty': 'El campo userId no puede estar vacío.'
         }),
-        refreshCache: Joi.Boolean().default(false),
+        refreshCache: Joi.boolean().default(false),
     });
     return schema.validate(data);
 };

@@ -30,6 +30,12 @@ class UserCache {
         const key = `${userId}:${type}`;
         return this.cache[key] || null;
     }
+
+    delete(userId, type) {
+        this._checkDay();
+        const key = `${userId}:${type}`;
+        delete this.cache[key];
+    }
 }
 
 export default new UserCache();

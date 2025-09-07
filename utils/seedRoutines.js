@@ -1,48 +1,39 @@
-import { v4 as uuidv4 } from 'uuid';
-import Routines from '../models/Routines.js';
+import {createRoutine} from '../services/routines.service.js';
 
 export async function seedRoutines() {
-    const existing = await Routines.findOne({ where: { createdBy: 'system' } });
-    if (existing) {
-        console.log('⚠️ Rutinas ya fueron seedadas por el sistema.');
-        return;
-    }
 
     const routines = [
         {
-            id: uuidv4(),
             name: 'Abrazá tu tristeza',
             type: 'Pasos',
-            body: '1. Escribí lo que sentís en un diario\n2. Hacé una caminata tranquila\n3. Llamá a alguien de confianza',
-            emotion: 'Tristeza',
+            body: `[{"id":1718299140000,"titulo":"Paso 1","descripcion":"Escribí lo que sentís en un diario"},{"id": 1718299140001,"titulo": "Paso 2","descripcion": "Hacé una caminata tranquila"},{"id": 1718299140002,"titulo": "Paso 3","descripcion": "Llamá a alguien de confianza"}]`,
+            emotion: ['Tristeza'],
             createdBy: 'system',
         },
         {
-            id: uuidv4(),
             name: 'Transformá el miedo en calma',
             type: 'Pasos',
-            body: '1. Respiración profunda durante 5 minutos\n2. Hacé una lista de lo que te da miedo y qué podés controlar\n3. Practicá grounding (5 cosas que ves, 4 que tocás, etc.)',
-            emotion: 'Miedo',
+            body: `[{"id":1718299140000,"titulo":"Paso 1","descripcion":"Escribí lo que sentís en un diario"},{"id":1718299140001,"titulo":"Paso 2","descripcion":"Hacé una caminata tranquila"},{"id":1718299140002,"titulo":"Paso 3","descripcion":"Llamá a alguien de confianza"}]`,
+            emotion: ['Miedo'],
             createdBy: 'system',
         },
         {
-            id: uuidv4(),
             name: 'Liberá tu enojo con inteligencia',
             type: 'Texto',
             body: 'Alejate del estímulo que te hace enojar. Escribí lo que te molestó sin filtros. Hacé actividad física o ejercicios de respiración.',
-            emotion: 'Enojo',
+            emotion: ['Enojo'],
             createdBy: 'system',
         },
         {
-        id: uuidv4(),
             name: 'Domá tu ansiedad',
             type: 'Video',
             body: 'https://www.youtube.com/watch?v=ifKLyrl2mTk',
-            emotion: 'Ansiedad',
+            emotion: ['Ansiedad'],
             createdBy: 'system',
         }
     ];
-
-    await Routines.bulkCreate(routines);
+    for (const routine of routines) {
+        await createRoutine(routine);
+    }
     console.log('✅ Rutinas seedeadas correctamente.');
 }

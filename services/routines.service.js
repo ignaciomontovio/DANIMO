@@ -93,12 +93,12 @@ export async function createRoutine({ name, type, body, emotion, createdBy }) {
     }
 
     await Routines.create({
-        id: uuidv4(),
-        name,
-        type,
-        body,
+        id: `R-${uuidv4()}`,
+        name: name,
+        type: type,
+        body: body,
         emotion: Array.isArray(emotion) ? emotion.join(', ') : emotion, // Guardamos en string
-        createdBy
+        createdBy: createdBy
     });
 
     return '¡Rutina creada correctamente!';

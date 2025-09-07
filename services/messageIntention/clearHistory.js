@@ -3,13 +3,7 @@ import { cleanMessage } from '../../utils/textNormalize.js';
 export function clearHistoryReference(text) {
     const cleaned = cleanMessage(text);
     const words = cleaned.split(/\s+/);
-/*
-    const clearWords = [
-        'borrar', 'eliminar', 'limpiar', 'quitar', 'resetear', 'reiniciar', 'vaciar',
-        'borrá', 'eliminá', 'limpiá', 'reseteá', 'reiniciá', 'vaciá',
-        'historial', 'conversación', 'chat', 'mensajes', 'conversaciones'
-    ];
-*/
+
     const clearPhrases = [
         ['borrar', 'historial'],
         ['eliminar', 'historial'],

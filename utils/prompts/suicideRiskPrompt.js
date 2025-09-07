@@ -12,11 +12,3 @@ export const crisisRiskDefaultResponse = 'Quiero contarte que, si bien estoy ac�
     '📞 107 (emergencias médicas)\n' +
     'También podés acercarte al hospital, centro de salud o comisaría más cercana.\n' +
     'No estás solo/a. Tu seguridad y la de los demás es prioritaria. Hay personas dispuestas a ayudarte de manera urgente y segura. 💚';
-
-export const suicideRiskDefaultResponse = 'Quiero contarte que, si bien estoy acá para acompañarte, no estoy capacitado/a para intervenir en situaciones de riesgo de suicidio o autolesiones.\n' +
-    'Si estás pasando por un momento difícil, te recomiendo que te contactes con profesionales que puedan ayudarte de forma inmediata y especializada. En Argentina, podés comunicarte gratis y de forma confidencial con:\n' +
-    '📞 Línea 135 (desde CABA y Gran Buenos Aires)\n' +
-    '📞 0800 345 1435 (desde cualquier punto del país)\n' +
-    'Están disponibles las 24 horas, todos los días del año.\n' +
-    'También podés acercarte al hospital o centro de salud más cercano, o llamar al 107 o 911 si es una emergencia.\n' +
-    'No estás solo/a. Hay personas dispuestas a ayudarte. 💚'

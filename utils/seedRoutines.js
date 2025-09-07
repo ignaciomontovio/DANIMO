@@ -75,7 +75,7 @@ export async function seedRoutines() {
         {
             name: 'Respiracion para dormir',
             type: 'Video',
-            body: 'https://www.youtube.com/shorts/h6cBMK7UMG8',
+            body: 'https://www.youtube.com/watch?v=IShkpOm63gg',
             emotion: ['Ansiedad', 'Miedo'],
             createdBy: 'system',
         }

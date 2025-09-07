@@ -117,7 +117,6 @@ const mockUsers = [
         firebaseToken: null
     }
 ];
-
 export default async function seedUsersIfEmpty() {
     for (const user of mockUsers) {
         const exists = await Users.findOne({ where: { email: user.email } });

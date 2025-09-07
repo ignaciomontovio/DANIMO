@@ -16,6 +16,7 @@ import {
     saveRoutineRecommended,
     wasRoutineRecommendedInLast24Hours
 } from './messageIntention/routineRecommender.js';
+import {crisisRiskDefaultResponse} from "../utils/prompts/suicideRiskPrompt.js";
 
 dotenv.config();
 
@@ -68,7 +69,7 @@ async function handleRoutineRecommendation({ userId, message, riskScore, evaluat
 export async function generateChat({ message, userId }) {
     if (await evaluateRecentSuicideRisk(userId) === true) {
         console.log("El usuario tiene riesgo de suicidio reciente, no se procesará el mensaje.");
-        return {assistantReply: "No podemos procesar tu mensaje en este momento. Por favor, contacta a un profesional de salud mental.", riskDetected: true};
+        return {assistantReply: crisisRiskDefaultResponse, riskDetected: true};
     }
     return chat({ message, userId });
 }

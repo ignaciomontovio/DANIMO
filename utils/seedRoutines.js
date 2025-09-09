@@ -1,4 +1,5 @@
 import { createRoutine } from '../services/routines.service.js';
+import Routines from "../models/Routines.js";
 
 export async function seedRoutines() {
     const routines = [
@@ -81,7 +82,8 @@ export async function seedRoutines() {
         }
     ];
     for (const routine of routines) {
-        await createRoutine(routine);
+        if(!await Routines.findOne({ where: { name: routine.name } }))
+            await createRoutine(routine);
     }
     console.log('✅ Rutinas seedeadas correctamente.');
 }

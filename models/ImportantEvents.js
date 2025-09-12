@@ -20,6 +20,10 @@ const ImportantEvents = sequelize.define('ImportantEvents', {
         type: DataTypes.DATE,
         allowNull: true,
         unique: false
+    },
+    message: {
+        type: DataTypes.STRING,
+        allowNull: true,
     }
 }, {
     freezeTableName: true, // ✅ No pluralizar automáticamente

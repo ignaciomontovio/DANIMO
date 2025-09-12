@@ -1,9 +1,9 @@
 import ImportantEvents from "../../models/ImportantEvents.js";
 import {stressLevelEvaluationResponse} from "../openai.service.js";
 
-async function importantDateNearby(userId) {
-    const actualMonth = new Date().getMonth() + 1; // Los meses en JavaScript van de 0 a 11
-    const actualDay = new Date().getDate();
+async function importantDateNearby(userId, date) {
+    const actualMonth = date.getMonth() + 1; // Los meses en JavaScript van de 0 a 11
+    const actualDay = date.getDate();
     const importantDates = await ImportantEvents.findAll({
         where: {
             userId
@@ -36,7 +36,7 @@ async function stressLevelEvaluation(message) {
     return {risk: emotionWithRiskLevel(evaluation), evaluation: evaluation};
 }
 
-export async function riskScoreEvaluation(userId, message) {
+export async function riskScoreEvaluation(userId, message, date) {
     let totalScore = 0
     const importantDates = await importantDateNearby(userId)
     if (importantDates.length > 0){

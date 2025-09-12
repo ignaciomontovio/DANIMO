@@ -24,7 +24,7 @@ dotenv.config();
 const criticalRiskLevel = 6;
 
 // Función auxiliar para manejar respuestas automáticas y prompts
-async function handleAutoResponses({ message, userId }) {
+async function handleAutoResponses({ message, userId, date }) {
     const {
         hasSuicideRisk,
         containsLinks,
@@ -41,7 +41,8 @@ async function handleAutoResponses({ message, userId }) {
         isBriefResponse,
         hasADateReference,
         clearHistory,
-        moodAlternator
+        moodAlternator,
+        date
     );
     return {
         autoResponse,
@@ -54,9 +55,9 @@ async function handleAutoResponses({ message, userId }) {
 }
 
 // Función auxiliar para manejar lógica de rutina recomendada
-async function handleRoutineRecommendation({ userId, message, riskScore, evaluation }) {
+async function handleRoutineRecommendation({ userId, message, riskScore, evaluation, date }) {
     let predominantEmotion = null;
-    const routineRecommended = await wasRoutineRecommendedInLast24Hours(userId);
+    const routineRecommended = await wasRoutineRecommendedInLast24Hours(userId, date);
     if (riskScore >= criticalRiskLevel && !routineRecommended) {
         predominantEmotion = await getPredominantEmotion(JSON.parse(evaluation));
         await saveRoutineRecommended(userId, message);
@@ -66,19 +67,19 @@ async function handleRoutineRecommendation({ userId, message, riskScore, evaluat
     return { predominantEmotion, recommendRoutine: false };
 }
 
-export async function generateChat({ message, userId }) {
-    if (await evaluateRecentSuicideRisk(userId) === true) {
+export async function generateChat({ message, date, ignoreRiskEvaluation, userId }) {
+    if (ignoreRiskEvaluation === false && await evaluateRecentSuicideRisk(userId) === true) {
         console.log("El usuario tiene riesgo de suicidio reciente, no se procesará el mensaje.");
         return {assistantReply: crisisRiskDefaultResponse, riskDetected: true};
     }
-    return chat({ message, userId });
+    return chat({ message, userId, date});
 }
 
 function collectInformationAsync(hasADateReference, message, userId, moodAlternator) {
     if (hasADateReference === true) {
         console.log("El mensaje contiene una referencia a una fecha");
         //Validamos de forma asincrona si el mensaje contiene una fecha importante y la guardamos
-        dateEvaluationResponse(message, userId);
+        dateEvaluationResponse(message, userId, date);
     }
     if (moodAlternator === true) {
         console.log("El mensaje hace referencia a alteradores de animo");
@@ -87,7 +88,7 @@ function collectInformationAsync(hasADateReference, message, userId, moodAlterna
     }
 }
 
-export async function chat({ message, userId }) {
+export async function chat({ message, userId, date}) {
     let prompt = generalPrompt;
     try {
         const {
@@ -97,24 +98,25 @@ export async function chat({ message, userId }) {
             isBriefResponse,
             hasADateReference,
             moodAlternator
-        } = await handleAutoResponses({ message, userId });
+        } = await handleAutoResponses({ message, userId, date });
         if (autoResponse === true) {
             return { assistantReply: defaultResponse, predominantEmotion: null, recommendRoutine: false, riskDetected: hasSuicideRisk };
         }
-        if (isBriefResponse === true && await briefResponseCooldown(userId) === false) {
+        if (isBriefResponse === true && await briefResponseCooldown(userId, date) === false) {
             console.log("El mensaje es una respuesta breve. Se mandará un disparador de conversacion.");
-            saveBriefResponseRegister(userId, message);
+            saveBriefResponseRegister(userId, message, date);
             prompt = briefResponsePrompt;
         }
         collectInformationAsync(hasADateReference, message, userId, moodAlternator);
-        const { riskScore, evaluation } = await riskScoreEvaluation(userId, message);
+        const { riskScore, evaluation } = await riskScoreEvaluation(userId, message, date);
         const { predominantEmotion, recommendRoutine } = await handleRoutineRecommendation({
             userId,
             message,
             riskScore,
-            evaluation
+            evaluation,
+            date
         });
-        const messages = await compileConversationHistory(userId, message, prompt);
+        const messages = await compileConversationHistory(userId, message, prompt, date);
         const assistantReply = await userResponse(messages);
         await saveMessagesToDB(userId, message, assistantReply);
         return { assistantReply, predominantEmotion, recommendRoutine };
@@ -125,12 +127,13 @@ export async function chat({ message, userId }) {
 }
 
 // Función responsable de compilar el historial de conversación
-async function compileConversationHistory(userId, currentMessage, prompt) {
+async function compileConversationHistory(userId, currentMessage, prompt, date) {
     const messages = [{role: 'system', content: prompt}];
 
     const conversations = await Conversations.findAll({where: {userId}});
     if (conversations?.length > 0) {
         conversations
+            .filter(conversation => conversation.messageDate < date)
             .sort((a, b) => a.messageDate - b.messageDate)
             .forEach(({type, text}) => {
                 messages.push({role: type, content: text});

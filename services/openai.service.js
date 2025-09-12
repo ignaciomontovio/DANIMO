@@ -81,10 +81,10 @@ export async function suicideRiskResponse(message) {
     }
 }
 
-export async function dateEvaluationResponse(message,userId) {
+export async function dateEvaluationResponse(message,userId, date) {
     const messages = [
         {role: 'system', content: importantDatePromptFiltrado},
-        {role: 'user', content: message + ". La fecha de hoy es " + format(new Date(), 'yyyy-MM-dd')}];
+        {role: 'user', content: message + ". La fecha de hoy es " + format(date, 'yyyy-MM-dd')}];
     const reply = await sendMessageToAzureOpenIAWithParseJson(messages);
     const {error, value} = validateDaniImportantDateResponse(reply);
 

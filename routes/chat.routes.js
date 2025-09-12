@@ -6,6 +6,8 @@ const router = express.Router();
 
 router.post('/chat', authMiddleware, chatController.chatController);
 
+router.post('/chat/generate', chatController.chatGenerateController);
+
 router.post('/weeklySummary', authMiddleware, chatController.weeklySummaryController);
 
 router.post('/historicalSummary', authMiddleware, chatController.historicalSummaryController);

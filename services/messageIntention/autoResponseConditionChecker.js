@@ -18,7 +18,7 @@ function logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateRefere
         `);
 }
 
-export async function autoResponseConditionChecker(message, userId, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator) {
+export async function autoResponseConditionChecker(message, userId, hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator, date) {
     logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator);
     if (hasSuicideRisk) {
         if (await suicideRiskResponse(message) === true){
@@ -30,7 +30,7 @@ export async function autoResponseConditionChecker(message, userId, hasSuicideRi
                     routineRecomended: false,
                     suicideRiskDetected: true,
                     message: message,
-                    date: new Date(),
+                    date: date,
                     userId: userId
                 }
             )

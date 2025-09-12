@@ -29,11 +29,11 @@ export function briefResponse(text) {
     return (wordMatch || phraseMatch) && cleaned.length < 20;
 }
 
-export async function briefResponseCooldown(userId) {
+export async function briefResponseCooldown(userId, date) {
     const briefResponses = await UsersEmotionalState.findAll({where: {briefResponseDetected: true, userId: userId}})
     console.log(briefResponses)
     return briefResponses.some( br => {
-        const now = new Date();
+        const now = date;
         const diff = now - br.date;
         const diffInMinutes = Math.floor(diff / (1000 * 60));
         console.log(`Diferencia en minutos desde la última respuesta breve: ${diffInMinutes}`);
@@ -41,7 +41,7 @@ export async function briefResponseCooldown(userId) {
     })
 }
 
-export function saveBriefResponseRegister(userId, message) {
+export function saveBriefResponseRegister(userId, message, date) {
     UsersEmotionalState.create({
         id: `BR-${uuidv4()}`,
         userId: userId,
@@ -49,6 +49,6 @@ export function saveBriefResponseRegister(userId, message) {
         briefResponseDetected: true,
         routineRecomended: false,
         suicideRiskDetected: false,
-        date: new Date()
+        date: date
     });
 }

@@ -274,6 +274,19 @@ export const validateChatInput = (data) => {
     return schema.validate(data);
 }
 
+export const validateChatGenerateInput = (data) => {
+    const schema = Joi.object({
+        message: Joi.string().required(),
+        email: Joi.string().email().lowercase().required().messages({
+            'any.required': 'El email es obligatorio.',
+            'string.email': 'El email no es válido.',
+            'string.empty': 'El email es obligatoria.'
+        }),
+        date: Joi.date().iso().required(),
+    });
+    return schema.validate(data);
+}
+
 export const validateDaniResponse = (data) => {
     const schema = Joi.object({
         rtaParaUsuario: Joi.string().required(),

@@ -1,10 +1,48 @@
-import {validateChatInput, validateSummaryForProfessionalInput, validateSummaryInput} from '../utils/validators.js';
+import {
+    validateChatGenerateInput,
+    validateChatInput,
+    validateSummaryForProfessionalInput,
+    validateSummaryInput
+} from '../utils/validators.js';
 import {generateChat} from '../services/chat.service.js';
 import {rangedSummmary, weeklySummary, historicalSummary} from "../services/summary.service.js";
 import userCache from '../utils/userCache.js';
+import Users from "../models/Users.js";
 
 const HISTORICAL_SUMMARY_CACHE_KEY = 'historicalSummary';
 const WEEKLY_SUMMARY_CACHE_KEY = 'weeklySummary';
+
+export const chatGenerateController = async (req, res) => {
+    const {error, value} = validateChatGenerateInput(req.body);
+    if (error) {
+        console.error("❌ Error in joi validation Error:" + error.details[0].message)
+        return res.status(400).json({error: error.details[0].message});
+    }
+    try {
+        const {message, date} = req.body;
+        const userFound = await Users.findOne({where: {email: value.email}})
+        if (!userFound) {
+            return res.status(404).json({error: 'Usuario no encontrado'});
+        }
+        const {
+            assistantReply,
+            predominantEmotion,
+            recommendRoutine,
+            riskDetected
+        } = await generateChat({message: message, date: new Date(date), ignoreRiskEvaluation: true, userId: userFound.id});
+        console.log(`✅ Mensaje ${value.message} enviado correctamente.`);
+        console.log(`✅ Respuesta ${assistantReply} devuelta.`);
+        return res.json({
+            message: assistantReply,
+            predominantEmotion: predominantEmotion,
+            recommendRoutine: recommendRoutine,
+            riskDetected: riskDetected
+        });
+    } catch (err) {
+        console.error('❌ Error en /chat dani:', err);
+        return res.status(500).json({error: 'Error al crear mensaje'});
+    }
+}
 
 export const chatController = async (req, res) => {
     const {error, value} = validateChatInput(req.body);
@@ -19,7 +57,7 @@ export const chatController = async (req, res) => {
             predominantEmotion,
             recommendRoutine,
             riskDetected
-        } = await generateChat({message: message, userId: req.userId});
+        } = await generateChat({message: message, date: new Date(Date.now()), ignoreRiskEvaluation: false, userId: req.userId});
         console.log(`✅ Mensaje ${value.message} enviado correctamente.`);
         console.log(`✅ Respuesta ${assistantReply} devuelta.`);
         return res.json({

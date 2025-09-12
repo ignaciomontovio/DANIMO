@@ -98,6 +98,7 @@ export async function dateEvaluationResponse(message,userId, date) {
             eventDescription: value.descripcionFechaImportante,
             eventType: value.categoriaFechaImportante,
             eventDate: value.fechaImportante,
+            message: message,
             userId: userId
         })
     }

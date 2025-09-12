@@ -75,7 +75,7 @@ export async function generateChat({ message, date, ignoreRiskEvaluation, userId
     return chat({ message, userId, date});
 }
 
-function collectInformationAsync(hasADateReference, message, userId, moodAlternator) {
+function collectInformationAsync(hasADateReference, message, userId, moodAlternator, date) {
     if (hasADateReference === true) {
         console.log("El mensaje contiene una referencia a una fecha");
         //Validamos de forma asincrona si el mensaje contiene una fecha importante y la guardamos
@@ -107,7 +107,7 @@ export async function chat({ message, userId, date}) {
             saveBriefResponseRegister(userId, message, date);
             prompt = briefResponsePrompt;
         }
-        collectInformationAsync(hasADateReference, message, userId, moodAlternator);
+        collectInformationAsync(hasADateReference, message, userId, moodAlternator, date);
         const { riskScore, evaluation } = await riskScoreEvaluation(userId, message, date);
         const { predominantEmotion, recommendRoutine } = await handleRoutineRecommendation({
             userId,
@@ -118,7 +118,7 @@ export async function chat({ message, userId, date}) {
         });
         const messages = await compileConversationHistory(userId, message, prompt, date);
         const assistantReply = await userResponse(messages);
-        await saveMessagesToDB(userId, message, assistantReply);
+        await saveMessagesToDB(userId, message, assistantReply, date);
         return { assistantReply, predominantEmotion, recommendRoutine };
     } catch (error) {
         console.error('Error en el flujo del chat:', error.message);
@@ -147,20 +147,20 @@ async function compileConversationHistory(userId, currentMessage, prompt, date) 
 }
 
 // Función para guardar mensajes en la base de datos
-async function saveMessagesToDB(userId, userMessage, assistantReply) {
+async function saveMessagesToDB(userId, userMessage, assistantReply, date) {
     await Promise.all([
-        createMessage('user', userMessage, userId),
-        createMessage('assistant', assistantReply, userId),
+        createMessage('user', userMessage, userId, date),
+        createMessage('assistant', assistantReply, userId, new Date(date.getTime() + 1000)),
     ]);
 }
 
-const createMessage = async (type, text, userId) => {
+const createMessage = async (type, text, userId, date) => {
     await Conversations.create({
         id: `C-${generateUUID()}`,
         type,
         summaryAvailable: false,
         text,
-        messageDate: Date.now(),
+        messageDate: date,
         userId,
     });
 };

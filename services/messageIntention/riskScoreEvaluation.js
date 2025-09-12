@@ -38,7 +38,7 @@ async function stressLevelEvaluation(message) {
 
 export async function riskScoreEvaluation(userId, message, date) {
     let totalScore = 0
-    const importantDates = await importantDateNearby(userId)
+    const importantDates = await importantDateNearby(userId, date)
     if (importantDates.length > 0){
         console.log("Hay fechas importantes cercanas");
         totalScore += 2

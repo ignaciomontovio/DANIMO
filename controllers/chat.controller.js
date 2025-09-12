@@ -29,7 +29,7 @@ export const chatGenerateController = async (req, res) => {
             predominantEmotion,
             recommendRoutine,
             riskDetected
-        } = await generateChat({message: message, date: date, ignoreRiskEvaluation: true, userId: userFound.userId});
+        } = await generateChat({message: message, date: new Date(date), ignoreRiskEvaluation: true, userId: userFound.id});
         console.log(`✅ Mensaje ${value.message} enviado correctamente.`);
         console.log(`✅ Respuesta ${assistantReply} devuelta.`);
         return res.json({

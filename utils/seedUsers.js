@@ -129,6 +129,20 @@ const mockUsers = [
         livesWith: 'Padres',
         profilePic: null,
         firebaseToken: null
+    },
+    {
+        id: uuidv4(),
+        firstName: 'Fiodor',
+        lastName: 'Gimenez',
+        email: 'fiodorgimenez@gmail.com',
+        password: await hashPassword('Domingo1?'),
+        hasGoogleAccount: false,
+        birthDate: new Date('1994-12-15'),
+        gender: 'Masculino',
+        occupation: 'Diseñador',
+        livesWith: null,
+        profilePic: null,
+        firebaseToken: null
     }
 ];
 export default async function seedUsersIfEmpty() {

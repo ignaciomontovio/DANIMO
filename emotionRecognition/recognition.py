@@ -17,14 +17,14 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 def map_emotion(emotion):
     mapping = {
-        "happy": "alegría",
-        "sad": "tristeza",
-        "fear": "miedo",
-        "angry": "ira",
-        "surprise": "sorpresa",
-        "neutral": "neutral", 
-        "disgust": "aversión",
-        "disgusted": "aversión",
+        "happy": "Alegria",
+        "sad": "Tristeza",
+        "fear": "Miedo",
+        "angry": "Enojo",
+        "surprise": "Ansiedad",
+        "neutral": "Neutral", 
+        "disgust": "Enojo",
+        "disgusted": "Enojo",
     }
     return mapping.get(emotion, "neutral")
 

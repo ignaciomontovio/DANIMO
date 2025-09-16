@@ -182,10 +182,32 @@ export const validateEmotionRegisterInput = (data) => {
             'boolean.base': 'El campo "isPredominant" debe ser booleano.',
             'any.required': 'El campo "isPredominant" es obligatorio.'
         }),
-        activities: Joi.array().items(Joi.string()).required().messages({
-                'array.base': 'El campo "activities" debe ser una lista.',
-                'any.required': 'Debe indicar al menos una actividad.'
+        activities: Joi.alternatives()
+        .try(
+            Joi.array().items(Joi.string()).messages({
+            'array.base': 'El campo "activities" debe ser una lista.',
             }),
+            Joi.string()
+            .custom((value, helpers) => {
+                try {
+                const parsed = JSON.parse(value);
+                if (!Array.isArray(parsed)) {
+                    return helpers.error('any.invalid');
+                }
+                if (!parsed.every(item => typeof item === 'string')) {
+                    return helpers.error('any.invalid');
+                }
+                return parsed; // ✅ lo devuelve parseado como array
+                } catch (e) {
+                return helpers.error('any.invalid');
+                }
+            }, 'Parse JSON string to array')
+        )
+        .required()
+        .messages({
+            'any.required': 'Debe indicar al menos una actividad.',
+            'any.invalid': 'El campo "activities" debe ser un array válido (o un JSON parseable a array).',
+        }),
         photo: Joi.string().optional()
     });
     return schema.validate(data);

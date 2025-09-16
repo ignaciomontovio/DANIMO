@@ -4,6 +4,7 @@ import TypeEmotions from '../models/TypeEmotions.js';
 import { Op } from 'sequelize';
 import TypeActivities from '../models/TypeActivities.js';
 import Photos from '../models/Photos.js';
+import { detectEmotion } from '../recognition/recognition.js'; // 👈 importá la función
 
 export async function createEmotionRegister({ userId, emotion, isPredominant, activities, photo, date }) {
     const todayStart = new Date(date.setHours(0, 0, 0, 0));
@@ -27,13 +28,21 @@ export async function createEmotionRegister({ userId, emotion, isPredominant, ac
 
     let photoId = null;
 
-    // ✅ Si viene la foto como string base64, la guardamos
+    // ✅ Si viene la foto como string base64, procesamos con detectEmotion
     if (photo && typeof photo === 'string') {
+        // Ejecutar reconocimiento
+        const detected = await detectEmotion(photo);
+
+        // Si devuelve Neutral → null, sino usamos la emoción detectada
+        const detectedEmotion = detected;
+        console.log("Emocion detectada: " + detectedEmotion);
+
         const photoInstance = await Photos.create({
             id: `P-${uuidv4()}`,
             image: photo,
-            emotionName: emotion
+            emotionName: detectedEmotion
         });
+
         photoId = photoInstance.id;
     }
 
@@ -47,18 +56,23 @@ export async function createEmotionRegister({ userId, emotion, isPredominant, ac
         userId
     });
 
-    // 2. Buscamos las actividades por nombre
-    if (activities && activities.length > 0) {
+    let activitiesArray;
+
+    try {
+        activitiesArray = Array.isArray(activities) ? activities : JSON.parse(activities);
+    } catch (err) {
+        console.error("No se pudo parsear activities:", activities);
+        activitiesArray = [];
+    }
+
+    if (activitiesArray.length > 0) {
         const activityRecords = await TypeActivities.findAll({
             where: {
-                name: {
-                    [Op.in]: activities
-                }
+                name: { [Op.in]: activitiesArray }
             }
         });
 
-        // 3. Relacionamos las actividades al registro creado
-        await register.addActivities(activityRecords); // 👈 aquí se llena la tabla intermedia
+        await register.addActivities(activityRecords);
     }
 
     return register;

@@ -1,53 +1,44 @@
 import { spawn } from 'child_process';
+import fs from 'fs';
 import path from 'path';
+import os from 'os';
+import { fileURLToPath } from 'url';
 
-// Función asincrónica que ejecuta el script Python
-export async function detectEmotion(imagePath) {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export async function detectEmotion(imageData) {
     return new Promise((resolve, reject) => {
-        //ruta del script de python que usa deepface para determinar emocion
         const scriptPath = path.resolve(__dirname, '../emotionRecognition/recognition.py');
 
-        //spawn permite la creación de un proceso hijo.
-        // le mando el script y la ruta de la imagen como argumento
-        const python = spawn('python', [scriptPath, imagePath]);
+        const tmpPath = path.join(os.tmpdir(), `temp_image_${Date.now()}.jpg`);
+
+        // Detectar si es base64
+        if (typeof imageData === 'string' && imageData.startsWith('data:image')) {
+            const base64Data = imageData.split(',')[1];
+            fs.writeFileSync(tmpPath, Buffer.from(base64Data, 'base64'));
+        } else {
+            fs.writeFileSync(tmpPath, imageData);
+        }
+
+        const python = spawn('python', [scriptPath, tmpPath]);
 
         let output = '';
         let errorOutput = '';
 
-        //El encoding ya se maneja desde el script de python
-        //python.stdout.setEncoding('utf8');
-        //python.stderr.setEncoding('utf8');
+        python.stdout.on('data', (data) => output += data);
+        python.stderr.on('data', (data) => errorOutput += data);
 
-        //a medida que me llega info la voy concatenando
-        python.stdout.on('data', (data) => {
-            output += data;
-        });
-
-        python.stderr.on('data', (data) => {
-            errorOutput += data;
-        });
-
-        //terminó la ejecucion del script, muestro la salida o si hubo algun error
         python.on('close', (code) => {
-            if (code === 0) {
-                resolve(output.trim());
-            } else {
-                reject(new Error(`Código de salida ${code}. Error: ${errorOutput}`));
+            fs.unlinkSync(tmpPath);
+
+            try {
+                const result = JSON.parse(output.trim());
+                if (result.error) reject(new Error(`Python error: ${result.error}`));
+                else resolve(result.emotion);
+            } catch (err) {
+                reject(new Error(`No se pudo parsear la salida de Python. stdout: ${output}, stderr: ${errorOutput}`));
             }
         });
     });
 }
-
-// Llamar a la función. Esto lo vamos a tener que llevar al lugar donde la queramos usar
-(async () => {
-    //ruta de la imagen que va a usar el script. 
-    //PARA DESPUES: ver como obtener la foto de la camara
-    const imagePath = path.resolve(__dirname, '../emotionRecognition/Cara2.jpg');
-
-    try {
-        const emotion = await detectEmotion(imagePath);
-        console.log(emotion);
-    } catch (error) {
-        console.error("Error al detectar emoción:", error.message);
-    }
-})();

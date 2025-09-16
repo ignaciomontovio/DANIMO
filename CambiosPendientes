@@ -1,0 +1,7 @@
+- Hacer que el resumen histórico muestre rango de años ya que se equivoca y mezcla los años.
+- Hacer que el resumen muestre los periodos que no hubo actividad.
+- Ver contador de uso de la app, uno de warning y otro de bloquear la app.
+- Crear un endpoint nuevo que muestre los años que hay info para resumir  así no mostramos años de mas
+- Agregar grafico para actividades y hobbies
+- Agregar intentos de suicidio en el resumen por rango.
+- poner un warning en el chat con dani y un bloqueo  despues de x cantidad de mensajes x día

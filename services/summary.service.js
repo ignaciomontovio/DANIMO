@@ -106,3 +106,14 @@ async function getRiskMessagesInRange(userId, startDate, endDate) {
         attributes: ['message', 'date']
     });
 }
+
+export async function availableYears(userId) {
+    const years = await Conversations.findAll({
+        where: { userId },
+        attributes: [
+            [Conversations.sequelize.literal('DISTINCT EXTRACT(YEAR FROM "messageDate")'), 'year']
+        ],
+        order: [ [Conversations.sequelize.literal('EXTRACT(YEAR FROM "messageDate")'), 'ASC'] ]
+    });
+    return years.map(entry => parseInt(entry.get('year')));
+}

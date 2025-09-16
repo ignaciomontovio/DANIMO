@@ -2,15 +2,16 @@ import {
     validateChatGenerateInput,
     validateChatInput,
     validateSummaryForProfessionalInput,
-    validateSummaryInput
+    validateSummaryInput, validateUserId
 } from '../utils/validators.js';
 import {generateChat} from '../services/chat.service.js';
-import {rangedSummmary, weeklySummary, historicalSummary} from "../services/summary.service.js";
+import {rangedSummmary, weeklySummary, historicalSummary, availableYears} from "../services/summary.service.js";
 import userCache from '../utils/userCache.js';
 import Users from "../models/Users.js";
 
 const HISTORICAL_SUMMARY_CACHE_KEY = 'historicalSummary';
 const WEEKLY_SUMMARY_CACHE_KEY = 'weeklySummary';
+const RANGED_SUMMARY_CACHE_KEY = 'rangedSummary';
 
 export const chatGenerateController = async (req, res) => {
     const {error, value} = validateChatGenerateInput(req.body);
@@ -127,7 +128,14 @@ export const rangedSummaryController = async (req, res) => {
     }
     try {
         const { startDate, endDate } = value;
+        if(value.refreshCache === true) {
+            userCache.delete(value.userId, RANGED_SUMMARY_CACHE_KEY)
+        }
+        const cacheSummary = userCache.get(value.userId, RANGED_SUMMARY_CACHE_KEY);
+        if(cacheSummary != null)
+            return res.json(cacheSummary);
         const response = await rangedSummmary(value.userId, new Date(startDate), new Date(endDate));
+        userCache.set( `${value.userId} ${startDate} ${endDate}`, RANGED_SUMMARY_CACHE_KEY, response);
         console.log(`✅ Resumen generado para userId ${req.userId}`);
         console.log(`✅ Respuesta ${response.summary} devuelta.`);
         res.json(response);
@@ -138,4 +146,23 @@ export const rangedSummaryController = async (req, res) => {
         return res.status(status).json({ error: `Error al crear resumen: ${err.message}` });
     }
 };
+
+export const summaryAvailableYears = async (req, res) => {
+    const {error, value} = validateUserId(req.body)
+    if (error) {
+        console.error("❌ Error obteniendo años disponibles:", error.details[0].message);
+        return res.status(400).json({error: error.details[0].message});
+    }
+    await availableYears(value.userId).then(years => {
+        console.log(`✅ Años disponibles para userId ${value.userId}: ${years}`);
+        const currentYear = new Date().getFullYear();
+        if (!years.includes(currentYear)) {
+            years.push(currentYear);
+        }
+        return res.json({availableYears: years});
+    }).catch(err => {
+        console.error('❌ Error obteniendo años disponibles:', err);
+        return res.status(500).json({error: 'Error al obtener años disponibles'});
+    });
+}
 

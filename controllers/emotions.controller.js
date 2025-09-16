@@ -25,6 +25,13 @@ export const createEmotionRegister = async (req, res) => {
 
         const emotionName = emotionData.name;
 
+        let photo = null;
+        if (req.file) {
+            const mimeType = req.file.mimetype; // ej: 'image/png'
+            const base64 = req.file.buffer.toString('base64');
+            photo = `data:${mimeType};base64,${base64}`;
+        }
+
         await service.createEmotionRegister({ userId, emotion: emotionName, isPredominant, activities, photo, date });
         console.log(`✅ Emoción registrada: { userId: ${userId}, emotion: ${emotionName}, predominant: ${isPredominant} }`);
         res.json({ message: '¡Emoción registrada correctamente!' });

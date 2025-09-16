@@ -585,6 +585,13 @@ export const validateImportantEventsInput = (data) => {
     return schema.validate(data);
 };
 
+export const validateUserId = (data) => {
+    const schema = Joi.object({
+        userId: Joi.string().required()
+    });
+    return schema.validate(data);
+};
+
 // --------------Summary-----------------
 
 export const validateSummaryInput = (data) => {
@@ -601,7 +608,8 @@ export const validateSummaryInput = (data) => {
         userId: Joi.string().required().messages({
             'any.required': 'El campo userId es obligatorio.',
             'string.empty': 'El campo userId no puede estar vacío.'
-        })
+        }),
+        refreshCache: Joi.boolean().default(false),
     });
 
     return schema.validate(data);

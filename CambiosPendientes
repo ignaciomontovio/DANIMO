@@ -4,3 +4,4 @@
 - Crear un endpoint nuevo que muestre los años que hay info para resumir  así no mostramos años de mas
 - Agregar grafico para actividades y hobbies
 - Agregar intentos de suicidio en el resumen por rango.
+- poner un warning en el chat con dani y un bloqueo  despues de x cantidad de mensajes x día

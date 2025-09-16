@@ -14,4 +14,5 @@ router.post('/historicalSummary', authMiddleware, chatController.historicalSumma
 
 router.post('/summary', authMiddleware, chatController.rangedSummaryController);
 
+router.post("/summary/availableYears", authMiddleware, chatController.summaryAvailableYears)
 export default router;

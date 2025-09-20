@@ -9,12 +9,6 @@ export const createEmotionRegister = async (req, res) => {
         console.warn('⚠️ Validación fallida en createEmotionRegister:', error.details[0].message);
         return res.status(400).json({ error: error.details[0].message });
     }
-    console.log(`RECIBIDO:
-        emotionNumber: ${req.body.emotion}
-        isPredominant: ${req.body.isPredominant}
-        activities: ${req.body.activities}
-        date: ${values.date}
-    `)
 
     const { emotion: emotionNumber, isPredominant, activities, photo } = req.body;
     const userId = req.userId;

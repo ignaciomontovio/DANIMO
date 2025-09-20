@@ -52,7 +52,7 @@ export async function createEmotionRegister({ userId, emotion, isPredominant, ac
         emotionName: emotion,
         isPredominant,
         photoId: photoId,
-        date: new Date(),
+        date: date,
         userId
     });
 

@@ -208,7 +208,8 @@ export const validateEmotionRegisterInput = (data) => {
             'any.required': 'Debe indicar al menos una actividad.',
             'any.invalid': 'El campo "activities" debe ser un array válido (o un JSON parseable a array).',
         }),
-        photo: Joi.string().optional()
+        photo: Joi.string().optional(),
+        date: Joi.date().iso().default(() => new Date())
     });
     return schema.validate(data);
 };

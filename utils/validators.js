@@ -167,6 +167,7 @@ export const validateUnlinkProfessional = (body) => {
 
 export const validateEmotionRegisterInput = (data) => {
     const schema = Joi.object({
+        date: Joi.date().default(() => new Date()).optional(),
         emotion: Joi.number()
             .integer()
             .min(1)
@@ -208,8 +209,7 @@ export const validateEmotionRegisterInput = (data) => {
             'any.required': 'Debe indicar al menos una actividad.',
             'any.invalid': 'El campo "activities" debe ser un array válido (o un JSON parseable a array).',
         }),
-        photo: Joi.string().optional(),
-        date: Joi.date().iso().default(() => new Date())
+        photo: Joi.string().optional()
     });
     return schema.validate(data);
 };

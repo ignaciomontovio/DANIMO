@@ -4,7 +4,7 @@ import TypeEmotions from '../models/TypeEmotions.js';
 
 
 export const createEmotionRegister = async (req, res) => {
-    const { error, values } = validateEmotionRegisterInput(req.body);
+    const { error, value } = validateEmotionRegisterInput(req.body);
     if (error) {
         console.warn('⚠️ Validación fallida en createEmotionRegister:', error.details[0].message);
         return res.status(400).json({ error: error.details[0].message });
@@ -29,7 +29,7 @@ export const createEmotionRegister = async (req, res) => {
         }
 
         const emotionName = emotionData.name;
-
+        const emotionDate = value.date
         let photo = null;
         if (req.file) {
             const mimeType = req.file.mimetype; // ej: 'image/png'
@@ -37,7 +37,7 @@ export const createEmotionRegister = async (req, res) => {
             photo = `data:${mimeType};base64,${base64}`;
         }
 
-        await service.createEmotionRegister({ userId, emotion: emotionName, isPredominant, activities, photo, date: values.date });
+        await service.createEmotionRegister({ userId, emotion: emotionName, isPredominant, activities, photo, date: emotionDate });
         console.log(`✅ Emoción registrada: { userId: ${userId}, emotion: ${emotionName}, predominant: ${isPredominant} }`);
         res.json({ message: '¡Emoción registrada correctamente!' });
 

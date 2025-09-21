@@ -1,5 +1,6 @@
 import UsersEmotionalState from "./UsersEmotionalState.js";
 import ProfessionalPatientTokens from "./ProfessionalPatientTokens.js";
+import ActivityRegisters from "./ActivityRegisters.js";
 
 const defineRelations = (models) => {
     const {
@@ -19,7 +20,8 @@ const defineRelations = (models) => {
         TypeSleeps,
         Photos,
         ImportantEvents,
-        Routines
+        Routines,
+        ActivityRegisters
     } = models;
 
     // Usuario 1:N Medicaciones
@@ -201,6 +203,33 @@ const defineRelations = (models) => {
     UsersEmotionalState.belongsTo(Users, {
         foreignKey: "userId",
         as: "UsersEmotionalState",
+    });
+
+    // Usuario 1:N ActivityRegisters
+    Users.hasMany(ActivityRegisters, {
+        foreignKey: 'userId',
+        sourceKey: 'id',
+        as: 'ActivityRegisters'
+    });
+    ActivityRegisters.belongsTo(Users, {
+        foreignKey: 'userId',
+        targetKey: 'id',
+        as: 'User'
+    });
+
+    // ActivityRegisters N:N EmotionRegisters
+    EmotionRegisters.belongsToMany(ActivityRegisters, {
+        through: 'ActivityEmotionRegisters',
+        foreignKey: 'emotionRegisterId',
+        otherKey: 'activityRegisterId',
+        as: 'activityRegisters'  // 👈 nombre del alias
+    });
+
+    ActivityRegisters.belongsToMany(EmotionRegisters, {
+        through: 'ActivityEmotionRegisters',
+        foreignKey: 'activityRegisterId',
+        otherKey: 'emotionRegisterId',
+        as: 'emotionRegisters'   // 👈 nombre del alias
     });
 };
 export default defineRelations;

@@ -5,6 +5,7 @@ import { Op } from 'sequelize';
 import TypeActivities from '../models/TypeActivities.js';
 import Photos from '../models/Photos.js';
 import { detectEmotion } from '../recognition/recognition.js'; // 👈 importá la función
+import ActivityRegisters from '../models/ActivityRegisters.js';
 
 export async function createEmotionRegister({ userId, emotion, isPredominant, activities, photo, date }) {
     const todayStart = new Date(date.setHours(0, 0, 0, 0));
@@ -57,7 +58,6 @@ export async function createEmotionRegister({ userId, emotion, isPredominant, ac
     });
 
     let activitiesArray;
-
     try {
         activitiesArray = Array.isArray(activities) ? activities : JSON.parse(activities);
     } catch (err) {
@@ -66,6 +66,21 @@ export async function createEmotionRegister({ userId, emotion, isPredominant, ac
     }
 
     if (activitiesArray.length > 0) {
+        // ✅ Crear registros en ActivityRegisters
+        const newActivityRegisters = activitiesArray.map(name => ({
+            id: `AC-${uuidv4()}`,
+            date,
+            activityName: name,
+            userId
+        }));
+
+        const createdActivities = await ActivityRegisters.bulkCreate(newActivityRegisters, { returning: true });
+
+        // Asociar actividades con la emoción (esto inserta en ActivityEmotionRegisters)
+        await register.addActivityRegisters(createdActivities);
+
+        /*
+        // ✅ Asociación con TypeActivities (comentado por ahora)
         const activityRecords = await TypeActivities.findAll({
             where: {
                 name: { [Op.in]: activitiesArray }
@@ -73,6 +88,7 @@ export async function createEmotionRegister({ userId, emotion, isPredominant, ac
         });
 
         await register.addActivities(activityRecords);
+        */
     }
 
     return register;

@@ -1,5 +1,6 @@
 import * as service from '../services/stats.service.js';
-import { validateStatsEmotionsInput, validateMonthStatsInput, validateStatsYearInput } from '../utils/validators.js';
+import { validateStatsEmotionsInput, validateMonthStatsInput, validateStatsYearInput, 
+    validateStatsActivitiesInput } from '../utils/validators.js';
 import Users from '../models/Users.js';
 import Professionals from '../models/Professionals.js';
 
@@ -179,6 +180,40 @@ export const getYearStats = async (req, res) => {
         return res.status(200).json(stats);
     } catch (err) {
         console.error(`❌ Error en /stats/year:`, err.message);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+export const getActivitiesStats = async (req, res) => {
+    const userId = req.userId;
+    const { id, since, until } = req.body;
+
+    const { error } = validateStatsActivitiesInput({ id, since, until });
+    if (error) {
+        console.warn(`⚠️ Validación fallida en /stats/activities:`, error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    try {
+        const isUser = await Users.findByPk(userId);
+        const isProfessional = await Professionals.findByPk(userId);
+
+        if (!isUser && !isProfessional) {
+            return res.status(403).json({ error: 'Usuario no autorizado.' });
+        }
+
+        const targetUserId = isUser ? userId : id;
+
+        if (isProfessional && !id) {
+            return res.status(400).json({ error: 'Falta el id del usuario a consultar.' });
+        }
+
+        const stats = await service.getActivitiesStatsForUser(targetUserId, since, until);
+        console.log(`📊 Actividades devueltas para el usuario ${targetUserId}`);
+        console.log(stats);
+        return res.status(200).json(stats);
+    } catch (err) {
+        console.error(`❌ Error al obtener estadísticas de actividades:`, err.message);
         return res.status(500).json({ error: 'Error interno del servidor' });
     }
 };

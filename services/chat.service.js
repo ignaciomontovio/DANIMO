@@ -8,6 +8,7 @@ import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
 import {riskScoreEvaluation} from "./messageIntention/riskScoreEvaluation.js";
 import {
     autoResponseConditionChecker,
+    evaluateConversationDailyLimit,
     evaluateRecentSuicideRisk
 } from "./messageIntention/autoResponseConditionChecker.js";
 import {briefResponseCooldown, saveBriefResponseRegister} from "./messageIntention/briefResponse.js";
@@ -68,11 +69,27 @@ async function handleRoutineRecommendation({ userId, message, riskScore, evaluat
 }
 
 export async function generateChat({ message, date, ignoreRiskEvaluation, userId }) {
+    let warningConversationLimit = false;
     if (ignoreRiskEvaluation === false && await evaluateRecentSuicideRisk(userId) === true) {
         console.log("El usuario tiene riesgo de suicidio reciente, no se procesará el mensaje.");
         return {assistantReply: crisisRiskDefaultResponse, riskDetected: true};
     }
-    return chat({ message, userId, date});
+    const {warningLimit, reachedLimit} = await evaluateConversationDailyLimit(userId)
+    if (ignoreRiskEvaluation === false && warningLimit === true) {
+        console.log("El usuario está cerca de alcanzar el límite diario de mensajes.");
+        warningConversationLimit = true
+    }
+    if (ignoreRiskEvaluation === false && reachedLimit === true) {
+        console.log("El usuario ha alcanzado el límite diario de mensajes, no se procesará el mensaje.");
+        return {
+            assistantReply: "Has alcanzado el límite diario de mensajes. Por favor, intenta nuevamente mañana.",
+            reachedConversationLimit: true
+        };
+    }
+
+    const chatResponse = await chat({message: message, userId: userId, date: date})
+    chatResponse.warningConversationLimit = warningConversationLimit
+    return chatResponse
 }
 
 function collectInformationAsync(hasADateReference, message, userId, moodAlternator, date) {

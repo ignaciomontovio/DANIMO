@@ -26,10 +26,12 @@ export const chatGenerateController = async (req, res) => {
             return res.status(404).json({error: 'Usuario no encontrado'});
         }
         const {
-            assistantReply,
-            predominantEmotion,
-            recommendRoutine,
-            riskDetected
+            assistantReply: assistantReply,
+            predominantEmotion: predominantEmotion,
+            recommendRoutine: recommendRoutine,
+            warningConversationLimit: warningConversationLimit,
+            reachedConversationLimit: reachedConversationLimit,
+            riskDetected: riskDetected
         } = await generateChat({message: message, date: new Date(date), ignoreRiskEvaluation: true, userId: userFound.id});
         console.log(`✅ Mensaje ${value.message} enviado correctamente.`);
         console.log(`✅ Respuesta ${assistantReply} devuelta.`);
@@ -37,6 +39,8 @@ export const chatGenerateController = async (req, res) => {
             message: assistantReply,
             predominantEmotion: predominantEmotion,
             recommendRoutine: recommendRoutine,
+            warningConversationLimit: warningConversationLimit,
+            reachedConversationLimit: reachedConversationLimit,
             riskDetected: riskDetected
         });
     } catch (err) {
@@ -54,10 +58,12 @@ export const chatController = async (req, res) => {
     try {
         const {message} = req.body;
         const {
-            assistantReply,
-            predominantEmotion,
-            recommendRoutine,
-            riskDetected
+            assistantReply: assistantReply,
+            predominantEmotion: predominantEmotion,
+            recommendRoutine: recommendRoutine,
+            warningConversationLimit: warningConversationLimit,
+            reachedConversationLimit: reachedConversationLimit,
+            riskDetected: riskDetected
         } = await generateChat({message: message, date: new Date(Date.now()), ignoreRiskEvaluation: false, userId: req.userId});
         console.log(`✅ Mensaje ${value.message} enviado correctamente.`);
         console.log(`✅ Respuesta ${assistantReply} devuelta.`);
@@ -65,7 +71,9 @@ export const chatController = async (req, res) => {
             message: assistantReply,
             predominantEmotion: predominantEmotion,
             recommendRoutine: recommendRoutine,
-            riskDetected: riskDetected
+            riskDetected: riskDetected,
+            warningConversationLimit: warningConversationLimit,
+            reachedConversationLimit: reachedConversationLimit
         });
     } catch (err) {
         console.error('❌ Error en /chat dani:', err);

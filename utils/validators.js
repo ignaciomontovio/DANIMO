@@ -652,6 +652,7 @@ export const validateSummaryInput = (data) => {
             'string.empty': 'El campo userId no puede estar vacío.'
         }),
         refreshCache: Joi.boolean().default(false),
+        size: Joi.number().integer().optional().default(500)
     });
 
     return schema.validate(data);

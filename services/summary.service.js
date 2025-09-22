@@ -73,15 +73,14 @@ function getConversationMessagesForSummary(userId, prompt, startDate, endDate) {
     });
 }
 
-export async function rangedSummmary(userId, startDate, endDate) {
-    const RANGED_SUMMARY_LENGTH = 300;
+export async function rangedSummmary(userId, startDate, endDate, size) {
 
     console.log(`Generando resumen para userId ${userId} entre ${startDate} y ${endDate}`);
 
     startDate = new Date(startDate);
     endDate = new Date(endDate);
 
-    const prompt = rangedSummaryPrompt(RANGED_SUMMARY_LENGTH, startDate, endDate);
+    const prompt = rangedSummaryPrompt(size, startDate, endDate);
     let messages
     try {
         messages = await getConversationMessagesForSummary(userId, prompt, startDate, endDate);

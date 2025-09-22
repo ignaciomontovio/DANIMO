@@ -135,7 +135,7 @@ export const rangedSummaryController = async (req, res) => {
         const cacheSummary = userCache.get(INPUT_CACHE_KEY, RANGED_SUMMARY_CACHE_KEY);
         if(cacheSummary != null)
             return res.json(cacheSummary);
-        const response = await rangedSummmary(value.userId, new Date(startDate), new Date(endDate));
+        const response = await rangedSummmary(value.userId, new Date(startDate), new Date(endDate), value.size);
         userCache.set( INPUT_CACHE_KEY, RANGED_SUMMARY_CACHE_KEY, response);
         console.log(`✅ Resumen generado para userId ${req.userId}`);
         console.log(`✅ Respuesta ${response.summary} devuelta.`);

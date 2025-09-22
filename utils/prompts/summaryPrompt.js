@@ -16,7 +16,7 @@ Genera un resumen clínico-emocional del período analizado a partir de los mens
 Instrucciones obligatorias:
 - Basate únicamente en los mensajes del usuario que se incluyen a continuación. No inventes emociones, eventos, interpretaciones ni síntomas no mencionados.
 - No realices diagnósticos ni juicios clínicos. Describe solo lo expresado por la persona.
-- Organiza el resumen en períodos mencionando los periodos.
+- Organiza el resumen en períodos con sus respectivos rangos de fechas.
 - Si hay periodos sin actividad mencionar “no se registraron interacciones para este periodo”.
 - Utiliza un lenguaje claro, técnico y profesional, evitando expresiones coloquiales o ambiguas.
 - Redacta en tercera persona, describiendo estados emocionales, conductas, pensamientos o síntomas mencionados.

@@ -3,6 +3,19 @@ import * as service from '../services/emotions.service.js';
 import TypeEmotions from '../models/TypeEmotions.js';
 import { detectEmotion } from '../recognition/recognition.js';
 
+import * as tf from '@tensorflow/tfjs'; // TensorFlow puro en JS
+import * as faceapi from '@vladmandic/face-api';
+import canvas from 'canvas';
+import path from 'path';
+
+const { Canvas, Image, ImageData } = canvas;
+faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
+
+// Cargar modelos (hazlo una sola vez al iniciar la app)
+const modelPath = path.join(process.cwd(), 'models/face-api');
+await faceapi.nets.ssdMobilenetv1.loadFromDisk(modelPath);
+await faceapi.nets.faceExpressionNet.loadFromDisk(modelPath);
+
 export const createEmotionRegister = async (req, res) => {
     const { error, value } = validateEmotionRegisterInput(req.body);
     if (error) {
@@ -86,7 +99,7 @@ export const getAllEmotionRegisters = async (req, res) => {
     }
 };
 
-export const detectEmotionFromPhoto = async (req, res) => {
+/*export const detectEmotionFromPhoto = async (req, res) => {
   // validar que hay archivo
     const { error } = validatePhotoOnlyInput(req.file);
     if (error) {
@@ -107,5 +120,38 @@ export const detectEmotionFromPhoto = async (req, res) => {
     } catch (err) {
         console.error("❌ Error en /photo:", err);
         return res.status(500).json({ error: "Error al procesar la foto" });
+    }
+};*/
+
+export const detectEmotionFromPhoto = async (req, res) => {
+    // validar que hay archivo
+    const { error } = validatePhotoOnlyInput(req.file);
+    if (error) return res.status(400).json({ error });
+
+    try {
+        // cargar imagen desde buffer
+        const img = await canvas.loadImage(req.file.buffer);
+
+        // detectar cara y expresiones
+        const detection = await faceapi
+        .detectSingleFace(img)
+        .withFaceExpressions();
+
+        if (!detection) {
+        return res.status(404).json({ error: 'No se detectó ninguna cara' });
+        }
+
+        // obtener la emoción con mayor probabilidad
+        const expressions = detection.expressions;
+        const detectedEmotion = Object.keys(expressions).reduce((a, b) =>
+        expressions[a] > expressions[b] ? a : b
+        );
+
+        console.log(`✅ Foto procesada, emoción detectada: ${detectedEmotion}`);
+        return res.json({ emotion: detectedEmotion });
+
+    } catch (err) {
+        console.error('❌ Error en /photo:', err);
+        return res.status(500).json({ error: 'Error al procesar la foto' });
     }
 };

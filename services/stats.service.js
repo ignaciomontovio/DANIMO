@@ -3,7 +3,6 @@ import { Op, Sequelize } from 'sequelize';
 import ImportantEvents from "../models/ImportantEvents.js";
 import MoodAlternators from "../models/MoodAlternators.js";
 import ActivityRegisters from "../models/ActivityRegisters.js";
-import TypeActivities from '../models/TypeActivities.js';
 
 export async function getImportantEventsForUser(userId) {
     const importantEvents = await ImportantEvents.findAll({ where: { userId} });
@@ -57,52 +56,34 @@ export async function getEmotionStatsForUser(userId, since, until) {
 
 export async function getActivitiesStatsForUser(userId, since, until) {
     const where = { userId };
+
     if (since && until) {
-        where.date = { [Op.between]: [new Date(since), new Date(until)] };
+        const start = new Date(since);
+        start.setHours(0, 0, 0, 0);
+
+        const end = new Date(until);
+        end.setHours(23, 59, 59, 999);
+
+        where.date = { [Op.between]: [start, end] };
     }
 
-    // Traemos registros con categoría usando un join literal
+    console.log("🔍 WHERE usado en stats:", where);
+
     const results = await ActivityRegisters.findAll({
         where,
         attributes: [
             'activityName',
-            [Sequelize.fn('COUNT', Sequelize.col('ActivityRegisters.activityName')), 'count'],
-            [
-                Sequelize.literal(`(
-                    SELECT category 
-                    FROM "TypeActivities" 
-                    WHERE "TypeActivities"."name" = "ActivityRegisters"."activityName"
-                    LIMIT 1
-                )`),
-                'category'
-            ]
+            [Sequelize.fn('COUNT', Sequelize.col('activityName')), 'count']
         ],
-        group: ['activityName']
+        group: ['ActivityRegisters.activityName'] // 👈 nombre calificado
     });
 
     const total = results.reduce((sum, r) => sum + parseInt(r.get('count')), 0);
 
-    // Separar en hobbies y otras
-    const hobbies = [];
-    const activities = [];
-
-    results.forEach(r => {
-        const percentage = total > 0 ? (parseInt(r.get('count')) / total * 100).toFixed(2) : "0.00";
-        const activity = {
-            activityName: r.get('activityName'),
-            percentage
-        };
-
-        if (r.get('category') === 'Hobby') {
-            hobbies.push(activity);
-        } else {
-            activities.push(activity);
-        }
-    });
-
-    // Ordenar de mayor a menor porcentaje
-    hobbies.sort((a, b) => parseFloat(b.percentage) - parseFloat(a.percentage));
-    activities.sort((a, b) => parseFloat(b.percentage) - parseFloat(a.percentage));
-
-    return { hobbies, activities };
+    return results.map(r => ({
+        activityName: r.get('activityName'),
+        percentage: total > 0 
+            ? (parseInt(r.get('count')) / total * 100).toFixed(2) 
+            : "0.00"
+    }));
 }

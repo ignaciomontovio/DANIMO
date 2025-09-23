@@ -1,7 +1,7 @@
-import { validateEmotionRegisterInput , validatePhotoOnlyInput } from '../utils/validators.js';
+import { validateEmotionRegisterInput } from '../utils/validators.js';
 import * as service from '../services/emotions.service.js';
 import TypeEmotions from '../models/TypeEmotions.js';
-import { detectEmotion } from '../recognition/recognition.js';
+
 
 export const createEmotionRegister = async (req, res) => {
     const { error, value } = validateEmotionRegisterInput(req.body);
@@ -83,29 +83,5 @@ export const getAllEmotionRegisters = async (req, res) => {
     } catch (err) {
         console.error('❌ Error en /obtain:', err);
         res.status(500).json({ error: 'Error al obtener los registros de emociones' });
-    }
-};
-
-export const detectEmotionFromPhoto = async (req, res) => {
-  // validar que hay archivo
-    const { error } = validatePhotoOnlyInput(req.file);
-    if (error) {
-        return res.status(400).json({ error });
-    }
-
-    try {
-        const mimeType = req.file.mimetype; // ej: "image/jpeg"
-        const base64 = req.file.buffer.toString('base64');
-        const photo = `data:${mimeType};base64,${base64}`;
-
-        // llamar a script Python
-        //const detected = await detectEmotion(photo);
-
-        console.log(`✅ Foto procesada, emoción detectada: ${detected}`);
-        return res.json({ emotion: detected });
-
-    } catch (err) {
-        console.error("❌ Error en /photo:", err);
-        return res.status(500).json({ error: "Error al procesar la foto" });
     }
 };

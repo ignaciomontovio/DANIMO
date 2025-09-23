@@ -9,5 +9,6 @@ router.post('/entry', authMiddleware, upload.single('photo'), controller.createE
 router.get('/predominant', authMiddleware, controller.getPredominantEmotion);
 router.get('/types', controller.getTypeEmotions);
 router.get('/obtain', authMiddleware, controller.getAllEmotionRegisters);
+router.post('/photo', authMiddleware, upload.single('photo'), controller.detectEmotionFromPhoto);
 
 export default router;

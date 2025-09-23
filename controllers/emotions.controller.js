@@ -99,7 +99,7 @@ export const detectEmotionFromPhoto = async (req, res) => {
         const photo = `data:${mimeType};base64,${base64}`;
 
         // llamar a script Python
-        const detected = await detectEmotion(photo);
+        //const detected = await detectEmotion(photo);
 
         console.log(`✅ Foto procesada, emoción detectada: ${detected}`);
         return res.json({ emotion: detected });

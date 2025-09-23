@@ -214,6 +214,23 @@ export const validateEmotionRegisterInput = (data) => {
     return schema.validate(data);
 };
 
+export const validatePhotoOnlyInput = (data) => {
+    const schema = Joi.object({
+        file: Joi.object({
+        mimetype: Joi.string()
+            .valid('image/jpeg', 'image/png', 'image/jpg')
+            .required()
+            .messages({
+            'any.required': 'El archivo es obligatorio.',
+            'any.only': 'Solo se permiten imágenes JPEG o PNG.'
+            }),
+        buffer: Joi.any().required()
+        }).unknown(true).required()
+    });
+
+    return schema.validate({ file: data });
+};
+
 // ----------------------Sleeps --------------------------
 
 export const validateSleepRegisterInput = (data) => {

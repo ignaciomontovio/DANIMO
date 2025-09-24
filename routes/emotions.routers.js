@@ -1,5 +1,6 @@
 import express from 'express';
 import * as controller from '../controllers/emotions.controller.js';
+import * as photoController from '../controllers/photo.controller.js';
 import {authMiddleware} from '../middleware/middleware.js';
 import { upload } from '../utils/uploads.js';
 
@@ -9,5 +10,6 @@ router.post('/entry', authMiddleware, upload.single('photo'), controller.createE
 router.get('/predominant', authMiddleware, controller.getPredominantEmotion);
 router.get('/types', controller.getTypeEmotions);
 router.get('/obtain', authMiddleware, controller.getAllEmotionRegisters);
+router.post('/photo', authMiddleware, upload.single('photo'), photoController.detectEmotionFromPhoto);
 
 export default router;

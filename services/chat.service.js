@@ -15,14 +15,15 @@ import {briefResponseCooldown, saveBriefResponseRegister} from "./messageIntenti
 import {
     getPredominantEmotion,
     saveRoutineRecommended,
-    wasRoutineRecommendedInLast24Hours
+    wasRoutineRecommendedInLast24Hours,
+    countRoutinesRecommendedToday
 } from './messageIntention/routineRecommender.js';
 import {crisisRiskDefaultResponse} from "../utils/prompts/suicideRiskPrompt.js";
 
 dotenv.config();
 
 //Variable para definir el riesgo critico (por ahora 6, luego lo pondremos en 7)
-const criticalRiskLevel = 6;
+const CRITICAL_RISK_LEVEL = 7;
 
 // Función auxiliar para manejar respuestas automáticas y prompts
 async function handleAutoResponses({ message, userId, date }) {
@@ -58,13 +59,15 @@ async function handleAutoResponses({ message, userId, date }) {
 // Función auxiliar para manejar lógica de rutina recomendada
 async function handleRoutineRecommendation({ userId, message, riskScore, evaluation, date }) {
     let predominantEmotion = null;
-    const routineRecommended = await wasRoutineRecommendedInLast24Hours(userId, date);
-    if (riskScore >= criticalRiskLevel && !routineRecommended) {
+    // Contar cuántas rutinas se recomendaron hoy
+    const routinesToday = await countRoutinesRecommendedToday(userId, date);
+
+    if (riskScore >= CRITICAL_RISK_LEVEL && routinesToday < 3) {
         predominantEmotion = await getPredominantEmotion(JSON.parse(evaluation));
         await saveRoutineRecommended(userId, message);
         return { predominantEmotion, recommendRoutine: true };
-
     }
+
     return { predominantEmotion, recommendRoutine: false };
 }
 

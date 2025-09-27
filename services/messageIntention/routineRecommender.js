@@ -44,3 +44,24 @@ export function getPredominantEmotion(evaluation) {
 
     return score > 0 ? predominantEmotion : null;
 }
+
+export async function countRoutinesRecommendedToday(userId, currentDate = new Date()) {
+    // inicio y fin del día actual
+    const startOfDay = new Date(currentDate);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(currentDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const routinesCount = await UsersEmotionalState.count({
+        where: {
+            userId,
+            routineRecomended: true,
+            date: {
+                [Op.between]: [startOfDay, endOfDay]
+            }
+        }
+    });
+
+    return routinesCount;
+}

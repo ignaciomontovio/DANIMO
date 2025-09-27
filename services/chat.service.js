@@ -15,14 +15,15 @@ import {briefResponseCooldown, saveBriefResponseRegister} from "./messageIntenti
 import {
     getPredominantEmotion,
     saveRoutineRecommended,
-    wasRoutineRecommendedInLast24Hours
+    wasRoutineRecommendedInLast24Hours,
+    countRoutinesRecommendedToday
 } from './messageIntention/routineRecommender.js';
 import {crisisRiskDefaultResponse} from "../utils/prompts/suicideRiskPrompt.js";
 
 dotenv.config();
 
 //Variable para definir el riesgo critico (por ahora 6, luego lo pondremos en 7)
-const criticalRiskLevel = 6;
+const CRITICAL_RISK_LEVEL = 7;
 
 // Función auxiliar para manejar respuestas automáticas y prompts
 async function handleAutoResponses({ message, userId, date }) {
@@ -58,14 +59,28 @@ async function handleAutoResponses({ message, userId, date }) {
 // Función auxiliar para manejar lógica de rutina recomendada
 async function handleRoutineRecommendation({ userId, message, riskScore, evaluation, date }) {
     let predominantEmotion = null;
-    const routineRecommended = await wasRoutineRecommendedInLast24Hours(userId, date);
-    if (riskScore >= criticalRiskLevel && !routineRecommended) {
+
+    // Contar cuántas rutinas se recomendaron hoy
+    const routinesToday = await countRoutinesRecommendedToday(userId, date);
+
+    if (riskScore >= CRITICAL_RISK_LEVEL && routinesToday < 4) {
         predominantEmotion = await getPredominantEmotion(JSON.parse(evaluation));
         await saveRoutineRecommended(userId, message);
-        return { predominantEmotion, recommendRoutine: true };
 
+        const isFourth = routinesToday + 1 === 4;
+
+        return { 
+            predominantEmotion, 
+            recommendRoutine: true, 
+            contactProfessional: isFourth 
+        };
     }
-    return { predominantEmotion, recommendRoutine: false };
+
+    return { 
+        predominantEmotion, 
+        recommendRoutine: false, 
+        contactProfessional: false 
+    };
 }
 
 export async function generateChat({ message, date, ignoreRiskEvaluation, userId }) {
@@ -117,7 +132,7 @@ export async function chat({ message, userId, date}) {
             moodAlternator
         } = await handleAutoResponses({ message, userId, date });
         if (autoResponse === true) {
-            return { assistantReply: defaultResponse, predominantEmotion: null, recommendRoutine: false, riskDetected: hasSuicideRisk };
+            return { assistantReply: defaultResponse, predominantEmotion: null, recommendRoutine: false, riskDetected: hasSuicideRisk, contactProfessional: false };
         }
         if (isBriefResponse === true && await briefResponseCooldown(userId, date) === false) {
             console.log("El mensaje es una respuesta breve. Se mandará un disparador de conversacion.");
@@ -126,7 +141,7 @@ export async function chat({ message, userId, date}) {
         }
         collectInformationAsync(hasADateReference, message, userId, moodAlternator, date);
         const { riskScore, evaluation } = await riskScoreEvaluation(userId, message, date);
-        const { predominantEmotion, recommendRoutine } = await handleRoutineRecommendation({
+        const { predominantEmotion, recommendRoutine, contactProfessional } = await handleRoutineRecommendation({
             userId,
             message,
             riskScore,
@@ -136,7 +151,7 @@ export async function chat({ message, userId, date}) {
         const messages = await compileConversationHistory(userId, message, prompt, date);
         const assistantReply = await userResponse(messages);
         await saveMessagesToDB(userId, message, assistantReply, date);
-        return { assistantReply, predominantEmotion, recommendRoutine };
+        return { assistantReply, predominantEmotion, recommendRoutine, contactProfessional };
     } catch (error) {
         console.error('Error en el flujo del chat:', error.message);
         throw new Error('Ocurrió un problema al procesar la solicitud del chat.');

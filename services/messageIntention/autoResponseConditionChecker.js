@@ -8,6 +8,9 @@ import {v4 as uuidv4} from "uuid";
 import Conversations from "../../models/Conversations.js";
 import {Op} from "sequelize";
 const MILLISECONDS_IN_A_HOUR = 60 * 60 * 1000
+const WARNING_LIMIT = 55
+const REACHED_LIMIT = 60
+
 function logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator) {
     console.log(`--- Análisis de Intención del Mensaje ---
         ¿Riesgo de suicidio?         : ${hasSuicideRisk}
@@ -87,7 +90,7 @@ export async function evaluateConversationDailyLimit(userId) {
         },
         attributes: ['id']
     }).then(messages => messages.length)
-    const warningLimit = 5 < messageCount && messageCount <= 10;
-    const reachedLimit = 10 <= messageCount;
+    const warningLimit = WARNING_LIMIT < messageCount && messageCount <= REACHED_LIMIT;
+    const reachedLimit = REACHED_LIMIT <= messageCount;
     return {warningLimit, reachedLimit};
 }

@@ -38,13 +38,6 @@ export async function seedRoutines() {
             createdBy: 'system',
         },
         {
-            name: 'Meditación guiada para la ansiedad',
-            type: 'Video',
-            body: 'https://www.youtube.com/watch?v=inpok4MKVLM',
-            emotion: ['Ansiedad'],
-            createdBy: 'system',
-        },
-        {
             name: 'Ejercicio moderado',
             type: 'Pasos',
             body: JSON.stringify([
@@ -88,10 +81,24 @@ export async function seedRoutines() {
             createdBy: 'system',
         },
         {
-            name: 'Respiracion para dormir',
+            name: 'Respiracion de Jacobson',
             type: 'Video',
-            body: 'https://www.youtube.com/watch?v=IShkpOm63gg',
+            body: 'https://www.youtube.com/watch?v=eu-2iWv_fCM',
             emotion: ['Ansiedad', 'Miedo'],
+            createdBy: 'system',
+        },
+        {
+            name: 'Meditación mindfulness',
+            type: 'Video',
+            body: 'https://www.youtube.com/watch?v=9-IOMXpv7Ys',
+            emotion: ['Ansiedad', 'Enojo', 'Miedo', 'Tristeza'],
+            createdBy: 'system',
+        },
+        {
+            name: 'Controlar ataque de pánico',
+            type: 'Video',
+            body: 'https://www.youtube.com/watch?v=NG_RTAxcMLw&t=304s',
+            emotion: ['Ansiedad'],
             createdBy: 'system',
         }
     ];

@@ -31,7 +31,8 @@ export const chatGenerateController = async (req, res) => {
             recommendRoutine: recommendRoutine,
             warningConversationLimit: warningConversationLimit,
             reachedConversationLimit: reachedConversationLimit,
-            riskDetected: riskDetected
+            riskDetected: riskDetected,
+            contactProfessional: contactProfessional
         } = await generateChat({message: message, date: new Date(date), ignoreRiskEvaluation: true, userId: userFound.id});
         console.log(`✅ Mensaje ${value.message} enviado correctamente.`);
         console.log(`✅ Respuesta ${assistantReply} devuelta.`);
@@ -41,7 +42,8 @@ export const chatGenerateController = async (req, res) => {
             recommendRoutine: recommendRoutine,
             warningConversationLimit: warningConversationLimit,
             reachedConversationLimit: reachedConversationLimit,
-            riskDetected: riskDetected
+            riskDetected: riskDetected,
+            contactProfessional: contactProfessional
         });
     } catch (err) {
         console.error('❌ Error en /chat dani:', err);
@@ -63,7 +65,8 @@ export const chatController = async (req, res) => {
             recommendRoutine: recommendRoutine,
             warningConversationLimit: warningConversationLimit,
             reachedConversationLimit: reachedConversationLimit,
-            riskDetected: riskDetected
+            riskDetected: riskDetected,
+            contactProfessional: contactProfessional
         } = await generateChat({message: message, date: new Date(Date.now()), ignoreRiskEvaluation: false, userId: req.userId});
         console.log(`✅ Mensaje ${value.message} enviado correctamente.`);
         console.log(`✅ Respuesta ${assistantReply} devuelta.`);
@@ -73,7 +76,8 @@ export const chatController = async (req, res) => {
             recommendRoutine: recommendRoutine,
             riskDetected: riskDetected,
             warningConversationLimit: warningConversationLimit,
-            reachedConversationLimit: reachedConversationLimit
+            reachedConversationLimit: reachedConversationLimit,
+            contactProfessional: contactProfessional
         });
     } catch (err) {
         console.error('❌ Error en /chat dani:', err);

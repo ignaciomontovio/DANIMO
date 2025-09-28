@@ -97,7 +97,11 @@ export async function generateChat({ message, date, ignoreRiskEvaluation, userId
     if (ignoreRiskEvaluation === false && reachedLimit === true) {
         console.log("El usuario ha alcanzado el límite diario de mensajes, no se procesará el mensaje.");
         return {
-            assistantReply: "Has alcanzado el límite diario de mensajes. Por favor, intenta nuevamente mañana.",
+            assistantReply:
+                `Has interactuado mucho hoy con Dani. 
+                Para cuidar tu bienestar, el chat estará disponible nuevamente mañana. 
+                Mientras tanto, podés tomarte un descanso, respirar profundo o realizar alguna actividad que te ayude a relajarte. 
+                Estamos aquí para vos cuando regreses.`,
             reachedConversationLimit: true
         };
     }

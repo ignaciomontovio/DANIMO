@@ -10,6 +10,7 @@ router.post('/chat/generate', chatController.chatGenerateController);
 
 router.post('/weeklySummary', authMiddleware, chatController.weeklySummaryController);
 
+//REEMPLAZADO POR RANGED SUMMARY
 router.post('/historicalSummary', authMiddleware, chatController.historicalSummaryController);
 
 router.post('/summary', authMiddleware, chatController.rangedSummaryController);

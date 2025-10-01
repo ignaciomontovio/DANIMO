@@ -1,6 +1,8 @@
 import ImportantEvents from "../../models/ImportantEvents.js";
 import MoodAlternators from "../../models/MoodAlternators.js";
 import {stressLevelEvaluationResponse} from "../openai.service.js";
+import { Op } from "sequelize";
+import UsersEmotionalState from "../../models/UsersEmotionalState.js";
 
 async function importantDateNearby(userId, date) {
     const actualMonth = date.getMonth() + 1; // Los meses en JavaScript van de 0 a 11
@@ -131,6 +133,71 @@ export async function riskScoreEvaluation(userId, message, date) {
     if (seasonalPoints > 0) {
         //console.log("✅ Hay un MoodAlternator estacional que coincide con la estación actual");
         totalScore += seasonalPoints;
+    }
+
+    // NUEVA LÓGICA con UsersEmotionalState
+    const now = new Date(date);
+    const sevenDaysAgo = new Date(now);
+    sevenDaysAgo.setDate(now.getDate() - 7);
+
+    const fourteenDaysAgo = new Date(now);
+    fourteenDaysAgo.setDate(now.getDate() - 14);
+
+    // Intentos de suicidio
+    const suicideLastWeek = await UsersEmotionalState.findOne({
+        where: {
+            userId,
+            suicideRiskDetected: true,
+            date: { [Op.gte]: sevenDaysAgo }
+        }
+    });
+
+    if (suicideLastWeek) {
+        console.log("⚠️ Intento de suicidio en la última semana → +2");
+        totalScore += 2;
+    } else {
+        const suicidePrevWeek = await UsersEmotionalState.findOne({
+            where: {
+                userId,
+                suicideRiskDetected: true,
+                date: { [Op.between]: [fourteenDaysAgo, sevenDaysAgo] }
+            }
+        });
+        if (suicidePrevWeek) {
+            console.log("⚠️ Intento de suicidio en la semana anterior → +1");
+            totalScore += 1;
+        }
+    }
+
+    // Respuestas breves en la última semana
+    const briefResponsesCount = await UsersEmotionalState.count({
+        where: {
+            userId,
+            briefResponseDetected: true,
+            date: { [Op.gte]: sevenDaysAgo }
+        }
+    });
+
+    if (briefResponsesCount > 20) {
+        console.log("⚠️ Más de 20 respuestas breves en la última semana → +2");
+        totalScore += 2;
+    } else if (briefResponsesCount > 10) {
+        console.log("⚠️ Más de 10 respuestas breves en la última semana → +1");
+        totalScore += 1;
+    }
+
+    // Rutinas recomendadas en la última semana
+    const routinesCount = await UsersEmotionalState.count({
+        where: {
+            userId,
+            routineRecomended: true,
+            date: { [Op.gte]: sevenDaysAgo }
+        }
+    });
+
+    if (routinesCount >= 7) {
+        console.log("⚠️ Más de 7 rutinas recomendadas en la última semana → +1");
+        totalScore += 1;
     }
 
     //El puntaje máximo de riesgo es 10

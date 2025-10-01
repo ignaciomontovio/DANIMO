@@ -40,8 +40,14 @@ async function stressLevelEvaluation(message) {
 }
 
 async function moodAlternatorsScore(userId) {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
     const moodAlternators = await MoodAlternators.findAll({
-        where: { userId }
+        where: { 
+            userId,
+            date: { [Op.gte]: thirtyDaysAgo } // solo los últimos 30 días
+        }
     });
 
     // Contadores por categoría
@@ -88,7 +94,7 @@ function getSeason(date) {
 //Busco modificadores de animo para la estacion actual
 async function checkSeasonalMoodAlternators(userId, date) {
     const currentSeason = getSeason(date);
-    //console.log(`📅 Estamos en ${currentSeason}`);
+    console.log(`📅 Estamos en ${currentSeason}`);
 
     const moods = await MoodAlternators.findAll({
         where: { userId, category: "estacional" }
@@ -115,23 +121,23 @@ export async function riskScoreEvaluation(userId, message, date) {
     let totalScore = 0
     const importantDates = await importantDateNearby(userId, date)
     if (importantDates.length > 0){
-        console.log("Hay fechas importantes cercanas");
+        console.log("Hay fechas importantes cercanas → +2");
         totalScore += 2
     }
     const {risk, evaluation} = await stressLevelEvaluation(message)
     if( risk === true) {
-        console.log("El usuario tiene un nivel de estrés alto");
+        console.log("El usuario tiene un nivel de estrés alto → +4");
         totalScore += 4
     }
 
     //Sumo los puntos de los MoodAlternators
     const moodScore = await moodAlternatorsScore(userId);
-    //console.log(`Puntos obtenidos por MoodAlternators: ${moodScore}`);
+    console.log(`Puntos obtenidos por MoodAlternators: ${moodScore}`);
     totalScore += moodScore;
 
     const seasonalPoints = await checkSeasonalMoodAlternators(userId, date);
     if (seasonalPoints > 0) {
-        //console.log("✅ Hay un MoodAlternator estacional que coincide con la estación actual");
+        console.log("✅ Hay un MoodAlternator estacional que coincide con la estación actual → +1");
         totalScore += seasonalPoints;
     }
 

@@ -3,6 +3,7 @@ import MoodAlternators from "../../models/MoodAlternators.js";
 import {stressLevelEvaluationResponse} from "../openai.service.js";
 import { Op } from "sequelize";
 import UsersEmotionalState from "../../models/UsersEmotionalState.js";
+import SleepRegisters from "../../models/SleepRegisters.js";
 
 async function importantDateNearby(userId, date) {
     const actualMonth = date.getMonth() + 1; // Los meses en JavaScript van de 0 a 11
@@ -117,6 +118,31 @@ async function checkSeasonalMoodAlternators(userId, date) {
     return match ? 1 : 0;
 }
 
+// Calcular puntaje por calidad de sueño
+async function sleepScore(userId, date) {
+    const sevenDaysAgo = new Date(date);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const badSleepCount = await SleepRegisters.count({
+        where: {
+            userId,
+            sleepName: { [Op.in]: ["Malo", "Muy malo"] },
+            date: { [Op.gte]: sevenDaysAgo }
+        }
+    });
+
+    let score = 0;
+    if (badSleepCount > 6) {
+        console.log("😴 Más de 6 registros de sueño 'Malo' o 'Muy malo' en la última semana → +2");
+        score = 2;
+    } else if (badSleepCount > 3) {
+        console.log("😴 Entre 4 y 6 registros de sueño 'Malo' o 'Muy malo' en la última semana → +1");
+        score = 1;
+    }
+
+    return score;
+}
+
 export async function riskScoreEvaluation(userId, message, date) {
     let totalScore = 0
     const importantDates = await importantDateNearby(userId, date)
@@ -205,6 +231,10 @@ export async function riskScoreEvaluation(userId, message, date) {
         console.log("⚠️ Más de 7 rutinas recomendadas en la última semana → +1");
         totalScore += 1;
     }
+
+    // Puntaje de sueño
+    const sleepPoints = await sleepScore(userId, date);
+    totalScore += sleepPoints;
 
     //El puntaje máximo de riesgo es 10
     totalScore = Math.min(totalScore, 10);

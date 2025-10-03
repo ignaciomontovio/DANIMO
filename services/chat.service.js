@@ -19,11 +19,15 @@ import {
     countRoutinesRecommendedToday
 } from './messageIntention/routineRecommender.js';
 import {crisisRiskDefaultResponse} from "../utils/prompts/suicideRiskPrompt.js";
+import Users from "../models/Users.js";
+import Professionals from "../models/Professionals.js";
 
 dotenv.config();
 
-//Variable para definir el riesgo critico (por ahora 6, luego lo pondremos en 7)
+//Variable para definir el riesgo critico 
 const CRITICAL_RISK_LEVEL = 7;
+//Variable para definir el maximo de rutinas que se recomiendan por día
+const MAX_ROUTINES_RECOMENDED = 4;
 
 // Función auxiliar para manejar respuestas automáticas y prompts
 async function handleAutoResponses({ message, userId, date }) {
@@ -60,26 +64,40 @@ async function handleAutoResponses({ message, userId, date }) {
 async function handleRoutineRecommendation({ userId, message, riskScore, evaluation, date }) {
     let predominantEmotion = null;
 
-    // Contar cuántas rutinas se recomendaron hoy
     const routinesToday = await countRoutinesRecommendedToday(userId, date);
 
-    if (riskScore >= CRITICAL_RISK_LEVEL && routinesToday < 4) {
+    if (riskScore >= CRITICAL_RISK_LEVEL && routinesToday < MAX_ROUTINES_RECOMENDED) {
         predominantEmotion = await getPredominantEmotion(JSON.parse(evaluation));
         await saveRoutineRecommended(userId, message);
 
-        const isFourth = routinesToday + 1 === 4;
+        const isFourth = routinesToday + 1 === MAX_ROUTINES_RECOMENDED;
+
+        let contactProfessional = "no";
+        if (isFourth) {
+            // Traer el usuario con sus profesionales asociados
+            const user = await Users.findByPk(userId, {
+                include: [{ model: Professionals, as: "Professionals" }]
+            });
+
+            if (user && user.Professionals.length > 0) {
+                // Tomo el primero (o podrías recorrerlos)
+                contactProfessional = user.Professionals[0].email;
+            } else {
+                contactProfessional = "recomendar";
+            }
+        }
 
         return { 
             predominantEmotion, 
             recommendRoutine: true, 
-            contactProfessional: isFourth 
+            contactProfessional 
         };
     }
 
     return { 
         predominantEmotion, 
         recommendRoutine: false, 
-        contactProfessional: false 
+        contactProfessional: "no" 
     };
 }
 

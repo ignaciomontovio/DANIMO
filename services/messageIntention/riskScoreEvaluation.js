@@ -3,6 +3,7 @@ import MoodAlternators from "../../models/MoodAlternators.js";
 import {stressLevelEvaluationResponse} from "../openai.service.js";
 import { Op } from "sequelize";
 import UsersEmotionalState from "../../models/UsersEmotionalState.js";
+import SleepRegisters from "../../models/SleepRegisters.js";
 
 async function importantDateNearby(userId, date) {
     const actualMonth = date.getMonth() + 1; // Los meses en JavaScript van de 0 a 11
@@ -40,8 +41,14 @@ async function stressLevelEvaluation(message) {
 }
 
 async function moodAlternatorsScore(userId) {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
     const moodAlternators = await MoodAlternators.findAll({
-        where: { userId }
+        where: { 
+            userId,
+            date: { [Op.gte]: thirtyDaysAgo } // solo los últimos 30 días
+        }
     });
 
     // Contadores por categoría
@@ -88,7 +95,7 @@ function getSeason(date) {
 //Busco modificadores de animo para la estacion actual
 async function checkSeasonalMoodAlternators(userId, date) {
     const currentSeason = getSeason(date);
-    //console.log(`📅 Estamos en ${currentSeason}`);
+    console.log(`📅 Estamos en ${currentSeason}`);
 
     const moods = await MoodAlternators.findAll({
         where: { userId, category: "estacional" }
@@ -111,27 +118,52 @@ async function checkSeasonalMoodAlternators(userId, date) {
     return match ? 1 : 0;
 }
 
+// Calcular puntaje por calidad de sueño
+async function sleepScore(userId, date) {
+    const sevenDaysAgo = new Date(date);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const badSleepCount = await SleepRegisters.count({
+        where: {
+            userId,
+            sleepName: { [Op.in]: ["Malo", "Muy malo"] },
+            date: { [Op.gte]: sevenDaysAgo }
+        }
+    });
+
+    let score = 0;
+    if (badSleepCount > 6) {
+        console.log("😴 Más de 6 registros de sueño 'Malo' o 'Muy malo' en la última semana → +2");
+        score = 2;
+    } else if (badSleepCount > 3) {
+        console.log("😴 Entre 4 y 6 registros de sueño 'Malo' o 'Muy malo' en la última semana → +1");
+        score = 1;
+    }
+
+    return score;
+}
+
 export async function riskScoreEvaluation(userId, message, date) {
     let totalScore = 0
     const importantDates = await importantDateNearby(userId, date)
     if (importantDates.length > 0){
-        console.log("Hay fechas importantes cercanas");
+        console.log("Hay fechas importantes cercanas → +2");
         totalScore += 2
     }
     const {risk, evaluation} = await stressLevelEvaluation(message)
     if( risk === true) {
-        console.log("El usuario tiene un nivel de estrés alto");
+        console.log("El usuario tiene un nivel de estrés alto → +4");
         totalScore += 4
     }
 
     //Sumo los puntos de los MoodAlternators
     const moodScore = await moodAlternatorsScore(userId);
-    //console.log(`Puntos obtenidos por MoodAlternators: ${moodScore}`);
+    console.log(`Puntos obtenidos por MoodAlternators: ${moodScore}`);
     totalScore += moodScore;
 
     const seasonalPoints = await checkSeasonalMoodAlternators(userId, date);
     if (seasonalPoints > 0) {
-        //console.log("✅ Hay un MoodAlternator estacional que coincide con la estación actual");
+        console.log("✅ Hay un MoodAlternator estacional que coincide con la estación actual → +1");
         totalScore += seasonalPoints;
     }
 
@@ -199,6 +231,10 @@ export async function riskScoreEvaluation(userId, message, date) {
         console.log("⚠️ Más de 7 rutinas recomendadas en la última semana → +1");
         totalScore += 1;
     }
+
+    // Puntaje de sueño
+    const sleepPoints = await sleepScore(userId, date);
+    totalScore += sleepPoints;
 
     //El puntaje máximo de riesgo es 10
     totalScore = Math.min(totalScore, 10);

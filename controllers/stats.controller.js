@@ -260,3 +260,46 @@ export const getWeeklyActivities = async (req, res) => {
         return res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
+
+export const getActivitiesMonth = async (req, res) => {
+    const authUserId = req.userId;
+    const { userId, month, year } = req.body;
+
+    // Validación igual que emociones
+    const { error } = validateMonthStatsInput(req.body);
+    if (error) {
+        console.warn(`⚠️ Validación fallida en /stats/activities/month:`, error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    try {
+        const isUser = await Users.findByPk(authUserId);
+        const isProfessional = await Professionals.findByPk(authUserId);
+
+        if (!isUser && !isProfessional) {
+            return res.status(403).json({ error: 'Usuario no autorizado.' });
+        }
+
+        // Determinar el usuario objetivo
+        const targetUserId = isUser ? authUserId : userId;
+        if (isProfessional && !userId) {
+            return res.status(400).json({ error: 'Falta el userId del usuario a consultar.' });
+        }
+
+        // ✅ Primer día del mes
+        const startDate = new Date(year, month - 1, 1);
+        startDate.setHours(0, 0, 0, 0);
+
+        // ✅ Último día del mes
+        const endDate = new Date(year, month, 0);
+        endDate.setHours(23, 59, 59, 999);
+
+        const stats = await service.getActivitiesStatsForUser(targetUserId, startDate, endDate);
+
+        console.log(`📊 Actividades del mes ${month}/${year} para usuario ${targetUserId}`);
+        return res.status(200).json(stats);
+    } catch (err) {
+        console.error(`❌ Error al obtener estadísticas mensuales de actividades:`, err.message);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};

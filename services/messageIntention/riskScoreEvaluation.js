@@ -41,13 +41,13 @@ async function stressLevelEvaluation(message) {
 }
 
 async function moodAlternatorsScore(userId) {
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const fifteenDaysAgo = new Date();
+    fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 30);
 
     const moodAlternators = await MoodAlternators.findAll({
         where: { 
             userId,
-            date: { [Op.gte]: thirtyDaysAgo } // solo los últimos 30 días
+            date: { [Op.gte]: fifteenDaysAgo } // solo los últimos 15 días
         }
     });
 
@@ -63,9 +63,20 @@ async function moodAlternatorsScore(userId) {
     }
 
     let score = 0;
-    score += Math.floor(economico / 2); // CAMBIAR PARA QUE SUME 2 puntos maximo
-    score += Math.floor(trabajo / 2);   // CAMBIAR PARA QUE SUME 1 punto máximo
-    score += necesidad;                 // 1 punto por cada necesidad, pero solo por 15 dias
+     // ✅ Económico: máx 2 puntos
+    if (economico >= 4) {
+        score += 2;
+    } else if (economico >= 2) {
+        score += 1;
+    }
+
+    // ✅ Trabajo: máx 1 punto
+    if (trabajo >= 2) {
+        score += 1;
+    }
+
+    // ✅ Necesidad: igual que antes
+    score += necesidad;
 
     return score;
 }

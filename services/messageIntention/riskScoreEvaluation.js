@@ -63,9 +63,9 @@ async function moodAlternatorsScore(userId) {
     }
 
     let score = 0;
-    score += Math.floor(economico / 2); // 1 punto cada 2 económicos
-    score += Math.floor(trabajo / 2);   // 1 punto cada 2 laborales
-    score += necesidad;                 // 1 punto por cada necesidad
+    score += Math.floor(economico / 2); // CAMBIAR PARA QUE SUME 2 puntos maximo
+    score += Math.floor(trabajo / 2);   // CAMBIAR PARA QUE SUME 1 punto máximo
+    score += necesidad;                 // 1 punto por cada necesidad, pero solo por 15 dias
 
     return score;
 }
@@ -201,7 +201,8 @@ export async function riskScoreEvaluation(userId, message, date) {
         }
     }
 
-    // Respuestas breves en la última semana
+    // Respuestas breves en la última semana (descartado)
+    /*
     const briefResponsesCount = await UsersEmotionalState.count({
         where: {
             userId,
@@ -217,8 +218,10 @@ export async function riskScoreEvaluation(userId, message, date) {
         console.log("⚠️ Más de 10 respuestas breves en la última semana → +1");
         totalScore += 1;
     }
+    */
 
-    // Rutinas recomendadas en la última semana
+    // Rutinas recomendadas en la última semana (descartado)
+    /*
     const routinesCount = await UsersEmotionalState.count({
         where: {
             userId,
@@ -231,6 +234,7 @@ export async function riskScoreEvaluation(userId, message, date) {
         console.log("⚠️ Más de 7 rutinas recomendadas en la última semana → +1");
         totalScore += 1;
     }
+    */
 
     // Puntaje de sueño
     const sleepPoints = await sleepScore(userId, date);

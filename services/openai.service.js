@@ -39,7 +39,7 @@ export async function sendMessageToAzureOpenIA(messages, model = AZURE_OPENAI_AP
     return replyContent
 }
 
-export async function sendMessageToAzureOpenIAWithParseJson(messages, model = AZURE_OPENAI_API_GPT3_URL) {
+export async function sendMessageToAzureOpenIAWithParseJson(messages, model = AZURE_OPENAI_API_GPT4_URL) {
     const replyContent = await sendMessageToAzureOpenIA(messages, model)
     const parsedReply = JSON.parse(replyContent);
     //console.log(parsedReply);

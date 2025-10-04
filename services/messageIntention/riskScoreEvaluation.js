@@ -29,9 +29,22 @@ async function importantDateNearby(userId, date) {
 }
 
 function emotionWithRiskLevel(emotion) {
-    return emotion.ira >= 4 || emotion.angustia >= 4 ||emotion.tristeza >= 4 || emotion.miedo >= 4
-        || emotion.frustracion >= 4 || emotion.culpa >= 4
-        || emotion.confusion >= 4 || emotion.euforia >= 4
+    const highRisk = 
+        emotion.ira >= 4 || emotion.angustia >= 4 || emotion.tristeza >= 4 || emotion.miedo >= 4 ||
+        emotion.frustracion >= 4 || emotion.culpa >= 4 ||
+        emotion.confusion >= 4 || emotion.euforia >= 4;
+
+    if (highRisk) return true;
+
+    // Nueva lógica: si 3 o más emociones están en nivel 3 o más devuelvo true
+    const emotions = [
+        emotion.ira, emotion.angustia, emotion.tristeza, emotion.miedo,
+        emotion.frustracion, emotion.culpa, emotion.confusion, emotion.euforia
+    ];
+
+    const countLevel3 = emotions.filter(value => value >= 3).length;
+
+    return countLevel3 >= 3;
 }
 
 async function stressLevelEvaluation(message) {
@@ -170,8 +183,8 @@ export async function riskScoreEvaluation(userId, message, date) {
     }
     const {risk, evaluation} = await stressLevelEvaluation(message)
     if( risk === true) {
-        console.log("El usuario tiene un nivel de estrés alto → +4");
-        totalScore += 4
+        console.log("El usuario tiene un nivel de estrés alto → +5");
+        totalScore += 5
     }
 
     //Sumo los puntos de los MoodAlternators

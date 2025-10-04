@@ -61,7 +61,6 @@ export async function getActivitiesStatsForUser(userId, since, until) {
         where.date = { [Op.between]: [new Date(since), new Date(until)] };
     }
 
-    // Traemos registros con categoría usando un join literal
     const results = await ActivityRegisters.findAll({
         where,
         attributes: [
@@ -80,17 +79,14 @@ export async function getActivitiesStatsForUser(userId, since, until) {
         group: ['activityName']
     });
 
-    const total = results.reduce((sum, r) => sum + parseInt(r.get('count')), 0);
-
-    // Separar en hobbies y otras
     const hobbies = [];
     const activities = [];
 
     results.forEach(r => {
-        const percentage = total > 0 ? (parseInt(r.get('count')) / total * 100).toFixed(2) : "0.00";
+        const count = parseInt(r.get('count'));
         const activity = {
             activityName: r.get('activityName'),
-            percentage
+            count
         };
 
         if (r.get('category') === 'Hobby') {
@@ -100,9 +96,9 @@ export async function getActivitiesStatsForUser(userId, since, until) {
         }
     });
 
-    // Ordenar de mayor a menor porcentaje
-    hobbies.sort((a, b) => parseFloat(b.percentage) - parseFloat(a.percentage));
-    activities.sort((a, b) => parseFloat(b.percentage) - parseFloat(a.percentage));
+    // Ordenar de mayor a menor (por cantidad)
+    hobbies.sort((a, b) => b.count - a.count);
+    activities.sort((a, b) => b.count - a.count);
 
     return { hobbies, activities };
 }

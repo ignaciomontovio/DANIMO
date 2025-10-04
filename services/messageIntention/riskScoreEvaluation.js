@@ -42,7 +42,7 @@ async function stressLevelEvaluation(message) {
 
 async function moodAlternatorsScore(userId) {
     const fifteenDaysAgo = new Date();
-    fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 30);
+    fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
 
     const moodAlternators = await MoodAlternators.findAll({
         where: { 
@@ -55,11 +55,13 @@ async function moodAlternatorsScore(userId) {
     let economico = 0;
     let trabajo = 0;
     let necesidad = 0;
+    let estudio = 0;
 
     for (const mood of moodAlternators) {
         if (mood.category === "economico") economico++;
         if (mood.category === "trabajo") trabajo++;
         if (mood.category === "necesidad") necesidad++;
+        if (mood.category === "estudio") estudio++;
     }
 
     let score = 0;
@@ -72,6 +74,11 @@ async function moodAlternatorsScore(userId) {
 
     // ✅ Trabajo: máx 1 punto
     if (trabajo >= 2) {
+        score += 1;
+    }
+
+    // ✅ Estudio: máx 1 punto
+    if (estudio >= 2) {
         score += 1;
     }
 

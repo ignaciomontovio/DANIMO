@@ -138,7 +138,7 @@ function collectInformationAsync(hasADateReference, message, userId, moodAlterna
     if (moodAlternator === true) {
         console.log("El mensaje hace referencia a alteradores de animo");
         //Validamos de forma asincrona si el mensaje contiene un alterador de animo y la guardamos
-        moodAlternatorResponse(message, userId);
+        moodAlternatorResponse(message, userId, date);
     }
 }
 

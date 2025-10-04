@@ -396,7 +396,7 @@ export const validateDaniMoodAlternatorResponse = (data) => {
         esSignificativo: Joi.boolean().required(),
         descripcionAlteradorAnimo: Joi.string().allow(null).allow('null'),
         categoriaAlteradorAnimo: Joi.string()
-            .valid('necesidad', 'trabajo', 'economico', 'estacional', 'climatica', 'ninguna')
+            .valid('necesidad', 'trabajo', 'economico', 'estacional', 'estudio', 'ninguna')
             .required()
     });
 

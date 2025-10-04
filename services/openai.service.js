@@ -133,7 +133,7 @@ export async function userIntentMessage(message) {
     return {conversacionNoDanimo: value.conversacionNoDanimo, intentaBorrarHistorial: value.intentaBorrarHistorial}
 }
 
-export async function moodAlternatorResponse(message,userId) {
+export async function moodAlternatorResponse(message,userId,date) {
     const messages = [
         {role: 'system', content: moodAlternatorPrompt},
         {role: 'user', content: message}];
@@ -150,7 +150,8 @@ export async function moodAlternatorResponse(message,userId) {
             id: "MA-" + uuidv4(),
             description: value.descripcionAlteradorAnimo,
             category: value.categoriaAlteradorAnimo,
-            userId: userId
+            userId: userId,
+            date: date
         })
         
     }

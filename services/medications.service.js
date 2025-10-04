@@ -99,3 +99,13 @@ export async function softDeleteMedication({ userId, name }) {
 
     return medication;
 }
+
+export const getMedicationsByUserOrdered = async (userId) => {
+    return await Medications.findAll({
+        where: { userId },
+        order: [
+            ['active', 'DESC'],  // Activas primero
+            ['name', 'ASC']      // Luego orden alfabético opcional
+        ]
+    });
+};

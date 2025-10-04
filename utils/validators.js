@@ -487,6 +487,16 @@ export const validateDeleteMedicationInput = (data) => {
     return schema.validate(data);
 };
 
+export function validatePatientMedicationRequest(body) {
+    const schema = Joi.object({
+        id: Joi.string().required().messages({
+            'string.empty': 'El id del usuario es obligatorio.',
+            'any.required': 'El id del usuario es obligatorio.'
+        })
+    });
+    return schema.validate(body);
+};
+
 // ----------------------Routines--------------------------
 
 export const validateRoutineCreationInput = (data) => {

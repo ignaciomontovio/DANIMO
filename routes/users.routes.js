@@ -23,4 +23,5 @@ router.post('/generate/professional-token', authMiddleware, usersController.gene
 router.get('/professionals', authMiddleware, usersController.getUserProfessionals);
 router.post('/unlink-professional', authMiddleware, usersController.unlinkProfessional);
 
+router.post('/send-email-professional', authMiddleware, usersController.sendEmailToProfessional);
 export default router;

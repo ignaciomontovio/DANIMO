@@ -10,7 +10,34 @@ import createError from 'http-errors';
 import { generateRandomKey } from '../utils/jwt.js';
 import Professionals from '../models/Professionals.js';
 import UsersEmotionalState from '../models/UsersEmotionalState.js';
-import { where, Op } from 'sequelize';
+import { Op } from 'sequelize';
+import {contactWithProfessionalMessage} from "../utils/defaultMessages.js";
+
+
+export async function sendEmailToProfessional(userId) {
+    const user = await Users.findByPk(userId, {
+        include: [{
+            model: Professionals,
+            as: 'Professionals', // 👈 Este alias es obligatorio por esta definido así en el modelo
+            attributes: ['email', 'occupation'],
+            through: { attributes: [] } // 👈 Esto oculta la tabla intermedia
+        }]
+    });
+    if (!user) {
+        throw new Error('El usuario no existe.');
+    }
+    const bodyMessage = contactWithProfessionalMessage(user.firstName, user.lastName)
+    const subject = `Notificación de estado emocional – ${user.firstName} ${user.lastName}`
+    const professionals = user.Professionals
+    if(!professionals) {
+        throw new Error('El usuario no tiene profesionales asociados.');
+    }
+    for (const professional of professionals) {
+        await sendEmail(professional.email, subject, bodyMessage);
+    }
+    return "Email enviado con éxito";
+}
+
 
 const TWO_HOURS = 1000 * 60 * 60 * 2;
 const findUserByEmail = async (email) => {

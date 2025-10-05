@@ -10,7 +10,12 @@ import {
     validateEmailBody,
     validateUnlinkProfessional
 } from '../utils/validators.js';
-import { signToken, verifyToken, signRefreshToken } from '../utils/jwt.js';
+
+export let sendEmailToProfessional = async (req, res) => {
+    const userId = req.userId;
+    await usersService.sendEmailToProfessional(userId)
+}
+
 
 export const validateTokenController = async (req, res) => {
     const { error, value } = validateToken(req.body);

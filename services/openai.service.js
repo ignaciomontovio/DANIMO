@@ -39,7 +39,7 @@ export async function sendMessageToAzureOpenIA(messages, model = AZURE_OPENAI_AP
     return replyContent
 }
 
-export async function sendMessageToAzureOpenIAWithParseJson(messages, model = AZURE_OPENAI_API_GPT3_URL) {
+export async function sendMessageToAzureOpenIAWithParseJson(messages, model = AZURE_OPENAI_API_GPT4_URL) {
     const replyContent = await sendMessageToAzureOpenIA(messages, model)
     const parsedReply = JSON.parse(replyContent);
     //console.log(parsedReply);
@@ -133,7 +133,7 @@ export async function userIntentMessage(message) {
     return {conversacionNoDanimo: value.conversacionNoDanimo, intentaBorrarHistorial: value.intentaBorrarHistorial}
 }
 
-export async function moodAlternatorResponse(message,userId) {
+export async function moodAlternatorResponse(message,userId,date) {
     const messages = [
         {role: 'system', content: moodAlternatorPrompt},
         {role: 'user', content: message}];
@@ -150,7 +150,8 @@ export async function moodAlternatorResponse(message,userId) {
             id: "MA-" + uuidv4(),
             description: value.descripcionAlteradorAnimo,
             category: value.categoriaAlteradorAnimo,
-            userId: userId
+            userId: userId,
+            date: date
         })
         
     }

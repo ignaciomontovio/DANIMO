@@ -14,4 +14,6 @@ router.patch('/update', authMiddleware, controller.editMedication);
 
 router.post('/delete', authMiddleware, controller.deleteMedication);
 
+router.post('/patient', authMiddleware, controller.getMedicationsByPatient);
+
 export default router;

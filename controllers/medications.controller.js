@@ -1,6 +1,9 @@
 import { validateMedicationInput, validateMedicationNameQuery, 
     validateEditMedicationInput, validateDeleteMedicationInput } from '../utils/validators.js';
 import * as service from '../services/medications.service.js';
+import { validatePatientMedicationRequest } from '../utils/validators.js';
+import Professionals from '../models/Professionals.js';
+import Users from '../models/Users.js';
 
 export const createMedication = async (req, res) => {
     const { error } = validateMedicationInput(req.body);
@@ -107,5 +110,45 @@ export const deleteMedication = async (req, res) => {
     } catch (err) {
         console.error('❌ Error eliminando medicación:', err);
         res.status(500).json({ error: 'Error eliminando medicación' });
+    }
+};
+
+export const getMedicationsByPatient = async (req, res) => {
+    try {
+        const professionalId = req.userId;
+
+        // 1. Validar que quien hace la request es un profesional
+        const isProfessional = await Professionals.findByPk(professionalId);
+        if (!isProfessional) {
+            return res.status(403).json({
+                error: 'Solo los profesionales pueden acceder a este recurso.'
+            });
+        }
+
+        // 2. Validar body
+        const { error } = validatePatientMedicationRequest(req.body);
+        if (error) {
+            console.warn('⚠️ Validación fallida en /medications/patient:', error.details[0].message);
+            return res.status(400).json({ error: error.details[0].message });
+        }
+
+        const { id: patientId } = req.body;
+
+        // 3. Confirmar que el usuario existe
+        const userExists = await Users.findByPk(patientId);
+        if (!userExists) {
+            return res.status(404).json({ error: 'El usuario indicado no existe.' });
+        }
+
+        // 4. Obtener medicaciones desde el service
+        const medications = await service.getMedicationsByUserOrdered(patientId);
+
+        return res.status(200).json({
+            message: 'Medicaciones obtenidas correctamente.',
+            data: medications
+        });
+    } catch (err) {
+        console.error('❌ Error en getMedicationsByPatient:', err);
+        return res.status(500).json({ error: 'Error interno del servidor' });
     }
 };

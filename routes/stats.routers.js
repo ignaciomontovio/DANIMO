@@ -10,5 +10,7 @@ router.post('/month', authMiddleware, controller.getEmotionsMonth);
 router.post('/year', authMiddleware, controller.getYearStats);
 router.post('/important-events', authMiddleware, controller.getImportantEvents);
 router.post('/activities', authMiddleware, controller.getActivitiesStats);
+router.post('/activities-week', authMiddleware, controller.getWeeklyActivities);
+router.post('/activities-month', authMiddleware, controller.getActivitiesMonth);
 
 export default router;

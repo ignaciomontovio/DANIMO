@@ -29,9 +29,22 @@ async function importantDateNearby(userId, date) {
 }
 
 function emotionWithRiskLevel(emotion) {
-    return emotion.ira >= 4 || emotion.angustia >= 4 ||emotion.tristeza >= 4 || emotion.miedo >= 4
-        || emotion.frustracion >= 4 || emotion.culpa >= 4
-        || emotion.confusion >= 4 || emotion.euforia >= 4
+    const highRisk = 
+        emotion.ira >= 4 || emotion.angustia >= 4 || emotion.tristeza >= 4 || emotion.miedo >= 4 ||
+        emotion.frustracion >= 4 || emotion.culpa >= 4 ||
+        emotion.confusion >= 4 || emotion.euforia >= 4;
+
+    if (highRisk) return true;
+
+    // Nueva lógica: si 3 o más emociones están en nivel 3 o más devuelvo true
+    const emotions = [
+        emotion.ira, emotion.angustia, emotion.tristeza, emotion.miedo,
+        emotion.frustracion, emotion.culpa, emotion.confusion, emotion.euforia
+    ];
+
+    const countLevel3 = emotions.filter(value => value >= 3).length;
+
+    return countLevel3 >= 3;
 }
 
 async function stressLevelEvaluation(message) {
@@ -41,13 +54,13 @@ async function stressLevelEvaluation(message) {
 }
 
 async function moodAlternatorsScore(userId) {
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const fifteenDaysAgo = new Date();
+    fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
 
     const moodAlternators = await MoodAlternators.findAll({
         where: { 
             userId,
-            date: { [Op.gte]: thirtyDaysAgo } // solo los últimos 30 días
+            date: { [Op.gte]: fifteenDaysAgo } // solo los últimos 15 días
         }
     });
 
@@ -55,17 +68,35 @@ async function moodAlternatorsScore(userId) {
     let economico = 0;
     let trabajo = 0;
     let necesidad = 0;
+    let estudio = 0;
 
     for (const mood of moodAlternators) {
         if (mood.category === "economico") economico++;
         if (mood.category === "trabajo") trabajo++;
         if (mood.category === "necesidad") necesidad++;
+        if (mood.category === "estudio") estudio++;
     }
 
     let score = 0;
-    score += Math.floor(economico / 2); // 1 punto cada 2 económicos
-    score += Math.floor(trabajo / 2);   // 1 punto cada 2 laborales
-    score += necesidad;                 // 1 punto por cada necesidad
+     // ✅ Económico: máx 2 puntos
+    if (economico >= 4) {
+        score += 2;
+    } else if (economico >= 2) {
+        score += 1;
+    }
+
+    // ✅ Trabajo: máx 1 punto
+    if (trabajo >= 2) {
+        score += 1;
+    }
+
+    // ✅ Estudio: máx 1 punto
+    if (estudio >= 2) {
+        score += 1;
+    }
+
+    // ✅ Necesidad: igual que antes
+    score += necesidad;
 
     return score;
 }
@@ -152,8 +183,8 @@ export async function riskScoreEvaluation(userId, message, date) {
     }
     const {risk, evaluation} = await stressLevelEvaluation(message)
     if( risk === true) {
-        console.log("El usuario tiene un nivel de estrés alto → +4");
-        totalScore += 4
+        console.log("El usuario tiene un nivel de estrés alto → +5");
+        totalScore += 5
     }
 
     //Sumo los puntos de los MoodAlternators
@@ -201,7 +232,8 @@ export async function riskScoreEvaluation(userId, message, date) {
         }
     }
 
-    // Respuestas breves en la última semana
+    // Respuestas breves en la última semana (descartado)
+    /*
     const briefResponsesCount = await UsersEmotionalState.count({
         where: {
             userId,
@@ -217,8 +249,10 @@ export async function riskScoreEvaluation(userId, message, date) {
         console.log("⚠️ Más de 10 respuestas breves en la última semana → +1");
         totalScore += 1;
     }
+    */
 
-    // Rutinas recomendadas en la última semana
+    // Rutinas recomendadas en la última semana (descartado)
+    /*
     const routinesCount = await UsersEmotionalState.count({
         where: {
             userId,
@@ -231,6 +265,7 @@ export async function riskScoreEvaluation(userId, message, date) {
         console.log("⚠️ Más de 7 rutinas recomendadas en la última semana → +1");
         totalScore += 1;
     }
+    */
 
     // Puntaje de sueño
     const sleepPoints = await sleepScore(userId, date);

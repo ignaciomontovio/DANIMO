@@ -33,11 +33,35 @@ export function moodAlternatorDetected(text) {
         ['problema', 'plata'],
         ['no', 'tengo', 'dinero'],
         ['deuda', 'grande'],
+
+        // Estudio (nuevo)
+        ['bulling', 'escuela'],
+        ['bullying', 'escuela'],
+        ['bullying', 'colegio'],
+        ['me', 'molestan', 'clase'],
+        ['compañeros', 'molestan'],
+        ['estres', 'examen'],
+        ['estres', 'facultad'],
+        ['estres', 'estudio'],
+        ['odio', 'escuela'],
+        ['odio', 'facultad'],
+        ['profesor', 'insulto'],
+        ['no', 'rindo', 'examen'],
+        ['ansiedad', 'estudio'],
+        ['preocupado', 'examen'],
+        ['tarea', 'mucho'],
+        ['trabajo', 'practico'],
+        ['no', 'entiendo', 'clase'],
+        ['me', 'burlan', 'escuela'],
+        ['me', 'burlan', 'colegio'],
+        ['mal', 'colegio']
     ];
 
+    /*
     const climaticWords = new Set([
         'lluvia', 'llueve', 'tormenta', 'frio', 'calor', 'viento', 'nieve', 'granizo', 'humedad'
     ]);
+    */
 
     const seasonalWords = new Set([
         'invierno', 'primavera', 'verano', 'otoño',
@@ -50,8 +74,9 @@ export function moodAlternatorDetected(text) {
         group.every(word => cleaned.includes(word))
     );
 
-    const foundClimatic = words.some(word => climaticWords.has(word));
+    //const foundClimatic = words.some(word => climaticWords.has(word));
     const foundSeasonal = words.some(word => seasonalWords.has(word));
 
-    return foundInGroups || foundClimatic || foundSeasonal;
+    //return foundInGroups || foundClimatic || foundSeasonal;
+    return foundInGroups || foundSeasonal;
 }

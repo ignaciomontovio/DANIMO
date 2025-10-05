@@ -217,3 +217,89 @@ export const getActivitiesStats = async (req, res) => {
         return res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
+
+export const getWeeklyActivities = async (req, res) => {
+    const requesterId = req.userId; // viene del middleware
+    const { userId: bodyUserId } = req.body;
+
+    try {
+        const isUser = await Users.findByPk(requesterId);
+        const isProfessional = await Professionals.findByPk(requesterId);
+
+        if (!isUser && !isProfessional) {
+            return res.status(403).json({ error: 'Usuario no autorizado.' });
+        }
+
+        // Determinar el usuario objetivo
+        let targetUserId;
+        if (isUser) {
+            targetUserId = requesterId;
+        } else if (isProfessional) {
+            if (!bodyUserId) {
+                return res.status(400).json({ error: 'Falta el userId del paciente a consultar.' });
+            }
+            targetUserId = bodyUserId;
+        }
+
+        // Calcular rango de fechas (últimos 7 días)
+        const today = new Date();
+
+        // Hasta fin del día actual (sin perder registros por milisegundos)
+        const until = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+        until.setMilliseconds(-1);  // Esto da 23:59:59.999 del día actual
+
+        // Desde hace 7 días, al inicio exacto
+        const since = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+
+        const stats = await service.getActivitiesStatsForUser(targetUserId, since, until);
+
+        console.log(`📊 Actividades de la semana para el usuario ${targetUserId}`);
+        return res.status(200).json(stats);
+    } catch (err) {
+        console.error(`❌ Error en /stats/activities/week:`, err.message);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+export const getActivitiesMonth = async (req, res) => {
+    const authUserId = req.userId;
+    const { userId, month, year } = req.body;
+
+    // Validación igual que emociones
+    const { error } = validateMonthStatsInput(req.body);
+    if (error) {
+        console.warn(`⚠️ Validación fallida en /stats/activities/month:`, error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
+    try {
+        const isUser = await Users.findByPk(authUserId);
+        const isProfessional = await Professionals.findByPk(authUserId);
+
+        if (!isUser && !isProfessional) {
+            return res.status(403).json({ error: 'Usuario no autorizado.' });
+        }
+
+        // Determinar el usuario objetivo
+        const targetUserId = isUser ? authUserId : userId;
+        if (isProfessional && !userId) {
+            return res.status(400).json({ error: 'Falta el userId del usuario a consultar.' });
+        }
+
+        // ✅ Primer día del mes
+        const startDate = new Date(year, month - 1, 1);
+        startDate.setHours(0, 0, 0, 0);
+
+        // ✅ Último día del mes
+        const endDate = new Date(year, month, 0);
+        endDate.setHours(23, 59, 59, 999);
+
+        const stats = await service.getActivitiesStatsForUser(targetUserId, startDate, endDate);
+
+        console.log(`📊 Actividades del mes ${month}/${year} para usuario ${targetUserId}`);
+        return res.status(200).json(stats);
+    } catch (err) {
+        console.error(`❌ Error al obtener estadísticas mensuales de actividades:`, err.message);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};

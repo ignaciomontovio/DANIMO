@@ -25,7 +25,7 @@ import Professionals from "../models/Professionals.js";
 dotenv.config();
 
 //Variable para definir el riesgo critico 
-const CRITICAL_RISK_LEVEL = 7;
+const CRITICAL_RISK_LEVEL = 5;
 //Variable para definir el maximo de rutinas que se recomiendan por día
 const MAX_ROUTINES_RECOMENDED = 4;
 
@@ -138,7 +138,7 @@ function collectInformationAsync(hasADateReference, message, userId, moodAlterna
     if (moodAlternator === true) {
         console.log("El mensaje hace referencia a alteradores de animo");
         //Validamos de forma asincrona si el mensaje contiene un alterador de animo y la guardamos
-        moodAlternatorResponse(message, userId);
+        moodAlternatorResponse(message, userId, date);
     }
 }
 

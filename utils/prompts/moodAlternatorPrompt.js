@@ -6,7 +6,11 @@ export const moodAlternatorPrompt = `Extraé del mensaje los alteradores de áni
    - "trabajo": si menciona problemas laborales como estrés, malas condiciones, desempleo, relaciones tóxicas, sobrecarga, salario insuficiente, etc.
    - "economico": si refiere a falta de dinero, deudas, no llegar a fin de mes, aumento de precios, etc.
    - "estacional": si está vinculado a una estación del año específica (invierno, verano, etc.) que influya en el estado anímico.
-   - "climatica": si refiere al clima (lluvia, calor, frío, tormentas, etc.) como algo que afecta su ánimo.
+   - "estudio": si refiere a situaciones escolares, universitarias o académicas. Esto incluye:
+       • bullying o maltrato en la escuela o universidad
+       • problemas con compañeros o profesores
+       • estrés por exámenes, exposiciones, tareas, prácticas o evaluaciones
+       • ansiedad por rendimiento o presión educativa
 4. Ignorá expresiones poéticas, simbólicas, impersonales o referidas a personas públicas. El evento debe ser vivido por el hablante de manera directa.
 5. Ignorá alteraciones físicas o emocionales leves si no están ligadas a una causa o situación relevante (por ejemplo, "me dolía un poco la cabeza ayer").
 6. Si el mensaje no incluye ningún alterador claro de ánimo, indicá que no se detecta.
@@ -14,6 +18,6 @@ export const moodAlternatorPrompt = `Extraé del mensaje los alteradores de áni
 {
   "esSignificativo": false o true,
   "descripcionAlteradorAnimo": "[Breve explicación de cómo afecta al usuario el alterador, o 'null' si no aplica]",
-  "categoriaAlteradorAnimo": "necesidad", "trabajo", "economico", "estacional", "climatica" o "ninguna" si no se hubiera detectado
+  "categoriaAlteradorAnimo": "necesidad", "trabajo", "economico", "estacional", "estudio" o "ninguna" si no se hubiera detectado
 }
 `;

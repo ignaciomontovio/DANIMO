@@ -23,7 +23,7 @@ Instrucciones obligatorias:
 - Si existe un patrón emocional general sustentado por el discurso, podés incluirlo al cierre.
 - Minimo 20 palabras y máximo ${summaryLength} palabras.
 - El resumen debe ser claro, preciso y evitar redundancias o explicaciones innecesarias.  
-- Hoy es ${new Date().toISOString().slice(0, 10)}. El rango analizado va del ${startDate.toISOString().slice(0, 10)} al ${endDate.toISOString().slice(0, 10)}.
+- Hoy es ${new Date().toISOString().slice(0, 10)}.
 `
 }
 

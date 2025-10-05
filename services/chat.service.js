@@ -4,7 +4,7 @@ import {v4 as generateUUID} from 'uuid';
 import {generalPrompt} from '../utils/prompts/generalPrompt.js';
 import {dateEvaluationResponse, moodAlternatorResponse, userResponse} from './openai.service.js';
 import dotenv from 'dotenv';
-import {briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
+import {briefResponsePastTopicRevivalPrompt, briefResponsePrompt} from "../utils/prompts/briefResponsePrompt.js";
 import {riskScoreEvaluation} from "./messageIntention/riskScoreEvaluation.js";
 import {
     autoResponseConditionChecker,
@@ -21,7 +21,6 @@ import {
 import {crisisRiskDefaultResponse} from "../utils/prompts/suicideRiskPrompt.js";
 import Users from "../models/Users.js";
 import Professionals from "../models/Professionals.js";
-
 dotenv.config();
 
 //Variable para definir el riesgo critico 
@@ -159,7 +158,11 @@ export async function chat({ message, userId, date}) {
         if (isBriefResponse === true && await briefResponseCooldown(userId, date) === false) {
             console.log("El mensaje es una respuesta breve. Se mandará un disparador de conversacion.");
             saveBriefResponseRegister(userId, message, date);
-            prompt = briefResponsePrompt;
+            if( Math.random() < 0.5 ){
+                prompt = briefResponsePrompt;
+            } else {
+                prompt = briefResponsePastTopicRevivalPrompt;
+            }
         }
         collectInformationAsync(hasADateReference, message, userId, moodAlternator, date);
         const { riskScore, evaluation } = await riskScoreEvaluation(userId, message, date);

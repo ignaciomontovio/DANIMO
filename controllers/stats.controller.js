@@ -11,7 +11,6 @@ export const getImportantEvents = async (req, res) => {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-
     try {
         const isProfessional = await Professionals.findByPk(req.userId);
 

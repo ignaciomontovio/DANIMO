@@ -1,6 +1,6 @@
 import * as service from '../services/stats.service.js';
 import { validateStatsEmotionsInput, validateMonthStatsInput, validateStatsYearInput, 
-    validateStatsActivitiesInput } from '../utils/validators.js';
+    validateStatsActivitiesInput, validateImportantEventsInput } from '../utils/validators.js';
 import Users from '../models/Users.js';
 import Professionals from '../models/Professionals.js';
 

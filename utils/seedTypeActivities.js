@@ -15,7 +15,6 @@ const initialActivities = [
     { name: 'Dibujar', category: 'Hobby' },
     { name: 'Gimnasio', category: 'Hobby' },
     { name: 'Fiesta', category: 'Hobby' },
-    { name: 'Salir a bailar', category: 'Hobby' },
     { name: 'Amistades', category: 'Hobby' },
     { name: 'Escribir', category: 'Hobby' },
     { name: 'Deportes', category: 'Hobby' },

@@ -23,6 +23,21 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
     await testConnection();
     //await syncDatabase({ force: true }); //Para que la base se cree desde 0
-
+    await syncDatabase(); // usa alter por defecto
+    await seedQuotesIfEmpty();
+    await seedTypeActivities();
+    await seedTypeEmotions();
+    await seedTypeSleep();
+    await seedRoutines();
+    await seedUsersIfEmpty();
+    await seedProfessionalsIfEmpty();
+    await seedUserProfessionalLinks();
+    await notificationServiceInitialize()
+    await seedAnaGarciaChat()
+    await seedLuisMartinezChat()
+    await seedCarlosPerezChat()
+    await seedPedroFernandezChat()
+    await seedStefyEmotions()
+    await seedMariaRuizChat()
     console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });

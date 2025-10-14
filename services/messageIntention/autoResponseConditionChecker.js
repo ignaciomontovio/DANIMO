@@ -8,7 +8,7 @@ import {v4 as uuidv4} from "uuid";
 import Conversations from "../../models/Conversations.js";
 import {Op} from "sequelize";
 const MILLISECONDS_IN_A_HOUR = 60 * 60 * 1000
-const WARNING_LIMIT = 5
+const WARNING_LIMIT = 50
 const REACHED_LIMIT = 60
 
 function logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator) {

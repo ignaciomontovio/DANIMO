@@ -2,10 +2,8 @@ import TypeActivity from '../models/TypeActivities.js';
 
 const initialActivities = [
     // Hogar
-    { name: 'Cocinar', category: 'Hogar' },
     { name: 'Limpiar', category: 'Hogar' },
-    { name: 'Comprar', category: 'Hogar' },
-    { name: 'Regar', category: 'Hogar' },
+    { name: 'Compras', category: 'Hogar' },
 
     // Hobby
     { name: 'Leer', category: 'Hobby' },
@@ -15,10 +13,16 @@ const initialActivities = [
     { name: 'Dibujar', category: 'Hobby' },
     { name: 'Gimnasio', category: 'Hobby' },
     { name: 'Fiesta', category: 'Hobby' },
-    { name: 'Salir a bailar', category: 'Hobby' },
     { name: 'Amistades', category: 'Hobby' },
+    { name: 'Familia', category: 'Hobby' },
+    { name: 'Pareja', category: 'Hobby' },
     { name: 'Escribir', category: 'Hobby' },
     { name: 'Deportes', category: 'Hobby' },
+    { name: 'Jardineria', category: 'Hobby' },
+    { name: 'Cocinar', category: 'Hobby' },
+    { name: 'Television', category: 'Hobby' },
+    { name: 'Pasear al perro', category: 'Hobby' },
+    { name: 'Redes Sociales', category: 'Hobby' },
 
     // Estudio
     { name: 'Estudiar', category: 'Estudio' },
@@ -26,7 +30,8 @@ const initialActivities = [
     { name: 'Resumir', category: 'Estudio' },
 
     // Trabajo
-    { name: 'Trabajar', category: 'Trabajo' }
+    { name: 'Trabajar', category: 'Trabajo' },
+    { name: 'Finanzas', category: 'Trabajo' }
 ];
 
 export default async function seedTypeActivities() {

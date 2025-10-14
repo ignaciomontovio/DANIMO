@@ -4,35 +4,29 @@ const initialActivities = [
     // Hogar
     { name: 'Cocinar', category: 'Hogar' },
     { name: 'Limpiar', category: 'Hogar' },
-    { name: 'Lavar', category: 'Hogar' },
-    { name: 'Ordenar', category: 'Hogar' },
     { name: 'Comprar', category: 'Hogar' },
     { name: 'Regar', category: 'Hogar' },
-    { name: 'Reparar', category: 'Hogar' },
 
     // Hobby
     { name: 'Leer', category: 'Hobby' },
     { name: 'Musica', category: 'Hobby' },
-    { name: 'Instrumento', category: 'Hobby' },
     { name: 'Videojuegos', category: 'Hobby' },
     { name: 'Pintar', category: 'Hobby' },
     { name: 'Dibujar', category: 'Hobby' },
-    { name: 'Entrenar', category: 'Hobby' },
-    { name: 'Bailar', category: 'Hobby' },
+    { name: 'Gimnasio', category: 'Hobby' },
+    { name: 'Fiesta', category: 'Hobby' },
+    { name: 'Salir a bailar', category: 'Hobby' },
     { name: 'Amistades', category: 'Hobby' },
+    { name: 'Escribir', category: 'Hobby' },
+    { name: 'Deportes', category: 'Hobby' },
 
     // Estudio
     { name: 'Estudiar', category: 'Estudio' },
-    { name: 'Escribir', category: 'Estudio' },
     { name: 'Investigar', category: 'Estudio' },
-    { name: 'Practicar', category: 'Estudio' },
     { name: 'Resumir', category: 'Estudio' },
 
     // Trabajo
-    { name: 'Reunirse', category: 'Trabajo' },
-    { name: 'Entregas', category: 'Trabajo' },
-    { name: 'Informes', category: 'Trabajo' },
-    { name: 'Presentaciones', category: 'Trabajo' }
+    { name: 'Trabajar', category: 'Trabajo' }
 ];
 
 export default async function seedTypeActivities() {

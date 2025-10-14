@@ -27,6 +27,10 @@ export const validateRegisterInputProf = (data) => Joi.object({
         'any.required': 'La matricula es obligatoria.',
         'string.empty': 'La matricula no puede ser vacia.'
     }),
+    occupation: Joi.string().required().messages({
+        'any.required': 'La profesion es obligatoria.',
+        'string.empty': 'La profesion no puede ser vacia.'
+    }),
     dni: Joi.number().integer().required().messages({
         'number.base': 'El campo dni debe ser un número.',
         'any.required': 'El dni es obligatorio.'

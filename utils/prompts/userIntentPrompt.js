@@ -6,9 +6,10 @@ Tu tarea es analizar el mensaje de una persona usuaria y devolver un JSON con do
    - Detecta frases como: “borrar historial”, “empezar de cero”, “reiniciar todo”, “eliminar mis datos”, etc.  
    - En cualquier otro caso, será false.
 2. conversacionNoDanimo:  
-   - Será true si el mensaje **no está relacionado** con el estado de ánimo o la salud mental de la persona.  
-   - Por ejemplo: pedir ayuda con tareas, trámites, problemas técnicos, comentarios que no expresan emociones o malestar.  
-   - Si el mensaje **sí refleja emociones, problemas personales o algo que afecte al bienestar emocional**, será false.
+   - Será true solo si el mensaje no tiene ninguna relación con emociones, experiencias personales o el bienestar de la persona.
+    Ejemplos: pedir ayuda con tareas, trámites, problemas técnicos, comentarios neutros (“no anda la app”, “no me carga el chat”).
+   - Si el mensaje describe o implica una experiencia que podría generar emociones o afectar el estado de ánimo, aunque no lo diga explícitamente 
+   (por ejemplo “Tuve una clase muy difícil”), debe considerarse relacionado con Danimo, y por lo tanto conversacionNoDanimo será false.
 3. Si el mensaje es muy breve (dos o tres palabras o una frase corta por ejemplo, “ok”, “hola”, “gracias”) y **no habla sobre borrar historial**, ambos flags deben estar en false.
 Tu única tarea es devolver el siguiente JSON **exactamente con este formato** y sin ningún texto adicional:
 {

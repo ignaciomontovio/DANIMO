@@ -32,14 +32,14 @@ function emotionWithRiskLevel(emotion) {
     const highRisk = 
         emotion.ira >= 4 || emotion.angustia >= 4 || emotion.tristeza >= 4 || emotion.miedo >= 4 ||
         emotion.frustracion >= 4 || emotion.culpa >= 4 ||
-        emotion.confusion >= 4 || emotion.euforia >= 4;
+        emotion.confusion >= 4;
 
     if (highRisk) return true;
 
     // Nueva lógica: si 3 o más emociones están en nivel 3 o más devuelvo true
     const emotions = [
         emotion.ira, emotion.angustia, emotion.tristeza, emotion.miedo,
-        emotion.frustracion, emotion.culpa, emotion.confusion, emotion.euforia
+        emotion.frustracion, emotion.culpa, emotion.confusion
     ];
 
     const countLevel3 = emotions.filter(value => value >= 3).length;

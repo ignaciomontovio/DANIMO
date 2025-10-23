@@ -9,7 +9,7 @@ import Conversations from "../../models/Conversations.js";
 import {Op} from "sequelize";
 const MILLISECONDS_IN_A_HOUR = 60 * 60 * 1000
 const WARNING_LIMIT = 50
-const REACHED_LIMIT = 60
+const REACHED_LIMIT = 1000
 
 function logFlags(hasSuicideRisk, containsLinks, isBriefResponse, hasADateReference, clearHistory, moodAlternator) {
     console.log(`--- Análisis de Intención del Mensaje ---

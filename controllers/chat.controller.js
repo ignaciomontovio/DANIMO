@@ -36,7 +36,6 @@ export const chatGenerateController = async (req, res) => {
         } = await generateChat({message: message, date: new Date(date), ignoreRiskEvaluation: true, userId: userFound.id});
         console.log(`✅ Mensaje ${value.message} enviado correctamente.`);
         console.log(`✅ Respuesta ${assistantReply} devuelta.`);
-        console.log(`✅ Respuesta: ${assistantReply}`);
         console.log(`✅ Emoción predominante: ${predominantEmotion}`);
         console.log(`✅ Rutina recomendada: ${recommendRoutine}`);
         console.log(`✅ Límite de conversaciones advertido: ${warningConversationLimit}`);
@@ -77,7 +76,6 @@ export const chatController = async (req, res) => {
         } = await generateChat({message: message, date: new Date(Date.now()), ignoreRiskEvaluation: false, userId: req.userId});
         console.log(`✅ Mensaje ${value.message} enviado correctamente.`);
         console.log(`✅ Respuesta ${assistantReply} devuelta.`);
-        console.log(`✅ Respuesta: ${assistantReply}`);
         console.log(`✅ Emoción predominante: ${predominantEmotion}`);
         console.log(`✅ Rutina recomendada: ${recommendRoutine}`);
         console.log(`✅ Límite de conversaciones advertido: ${warningConversationLimit}`);

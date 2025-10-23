@@ -159,11 +159,12 @@ export async function chat({ message, userId, date}) {
         if (isBriefResponse === true ) {
             console.log("El mensaje es una respuesta breve. Se mandará un disparador de conversacion.");
             saveBriefResponseRegister(userId, message, date);
-            if( Math.random() < 0.5 ){
-                console.log("⚠️ Se eligió el prompt de tecnica proyectiva.");
+            let resultRandom = Math.random()
+            if( resultRandom < 0.5 ){
+                console.log(`⚠️ Se eligió el prompt de tecnica proyectiva. Res: ${resultRandom}`);
                 prompt = briefResponsePrompt;
             } else {
-                console.log("⚠️ Se eligió el prompt de reactivación de tema pasado.");
+                console.log(`⚠️ Se eligió el prompt de reactivación de tema pasado. Res: ${resultRandom}`);
                 prompt = briefResponsePastTopicRevivalPrompt;
             }
         }

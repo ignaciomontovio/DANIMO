@@ -12,5 +12,6 @@ router.post('/important-events', authMiddleware, controller.getImportantEvents);
 router.post('/activities', authMiddleware, controller.getActivitiesStats);
 router.post('/activities-week', authMiddleware, controller.getWeeklyActivities);
 router.post('/activities-month', authMiddleware, controller.getActivitiesMonth);
+router.post('/sleeps-week', authMiddleware, controller.getWeeklySleeps);
 
 export default router;

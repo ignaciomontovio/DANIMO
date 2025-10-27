@@ -1,8 +1,9 @@
 import EmotionRegisters from '../models/EmotionRegisters.js';
-import { Op, Sequelize } from 'sequelize';
+import { Op, fn, col, Sequelize } from 'sequelize';
 import ImportantEvents from "../models/ImportantEvents.js";
 import MoodAlternators from "../models/MoodAlternators.js";
 import ActivityRegisters from "../models/ActivityRegisters.js";
+import SleepRegisters from "../models/SleepRegisters.js";
 import TypeActivities from '../models/TypeActivities.js';
 
 export async function getImportantEventsForUser(userId) {
@@ -101,4 +102,27 @@ export async function getActivitiesStatsForUser(userId, since, until) {
     activities.sort((a, b) => b.count - a.count);
 
     return { hobbies, activities };
+}
+
+export async function getSleepsStatsForUser(userId, since, until) {
+    const where = { userId };
+
+    if (since && until) {
+        where.date = { [Op.between]: [new Date(since), new Date(until)] };
+    }
+
+    const results = await SleepRegisters.findAll({
+        where,
+        attributes: [
+        'sleepName',
+        [fn('COUNT', col('sleepName')), 'count']
+        ],
+        group: ['sleepName'],
+        order: [[fn('COUNT', col('sleepName')), 'DESC']]
+    });
+
+    return results.map(r => ({
+        sleepName: r.sleepName,
+        count: r.dataValues.count
+    }));
 }

@@ -302,3 +302,46 @@ export const getActivitiesMonth = async (req, res) => {
         return res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
+
+export const getWeeklySleeps = async (req, res) => {
+    const requesterId = req.userId; // viene del middleware
+    const { userId: bodyUserId } = req.body;
+
+    try {
+        const isUser = await Users.findByPk(requesterId);
+        const isProfessional = await Professionals.findByPk(requesterId);
+
+        if (!isUser && !isProfessional) {
+            return res.status(403).json({ error: 'Usuario no autorizado.' });
+        }
+
+        // Determinar el usuario objetivo
+        let targetUserId;
+        if (isUser) {
+            targetUserId = requesterId;
+        } else if (isProfessional) {
+            if (!bodyUserId) {
+                return res.status(400).json({ error: 'Falta el userId del paciente a consultar.' });
+            }
+            targetUserId = bodyUserId;
+        }
+
+        // Calcular rango de fechas (últimos 7 días)
+        const today = new Date();
+
+        // Hasta fin del día actual (sin perder registros por milisegundos)
+        const until = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+        until.setMilliseconds(-1);  // Esto da 23:59:59.999 del día actual
+
+        // Desde hace 7 días, al inicio exacto
+        const since = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+
+        const sleeps = await service.getSleepsStatsForUser(targetUserId, since, until);
+
+        console.log(`📊 Registros de sueño de la semana para el usuario ${targetUserId}`);
+        return res.status(200).json(sleeps);
+    } catch (err) {
+        console.error(`❌ Error en /stats/sleeps-week:`, err.message);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};

@@ -12,7 +12,6 @@ export const createSleepRegister = async (req, res) => {
 
     let { hoursOfSleep, sleep, date } = req.body;
     const userId = req.userId;
-    const today = new Date().toISOString().split('T')[0];
 
     try {
         //Puede tener varios registros de sueño en un mismo dia. Despues borrar esto
@@ -29,7 +28,7 @@ export const createSleepRegister = async (req, res) => {
         }
         await service.createSleepRegister({ userId, hoursOfSleep, sleep, date });
 
-        console.log(`✅ Sueño registrado correctamente para userId=${userId}`);
+        console.log(`✅ Sueño registrado correctamente para userId=${userId} para el dia ${date}`);
         res.json({ message: '¡Sueño registrado correctamente!' });
     } catch (err) {
         console.error('❌ Error en createSleepRegister:', err);

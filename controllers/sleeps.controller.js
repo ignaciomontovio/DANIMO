@@ -10,7 +10,7 @@ export const createSleepRegister = async (req, res) => {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { hoursOfSleep, sleep } = req.body;
+    let { hoursOfSleep, sleep, date } = req.body;
     const userId = req.userId;
     const today = new Date().toISOString().split('T')[0];
 
@@ -23,8 +23,11 @@ export const createSleepRegister = async (req, res) => {
             return res.status(409).json({ error: 'Ya existe un registro de sueño para hoy.' });
         }
         */
-
-        await service.createSleepRegister({ userId, hoursOfSleep, sleep });
+        if(date == null){
+            console.warn(`⚠️ Fecha no proporcionada, se usará la fecha actual para userId=${userId}`);
+            date = new Date().toISOString();
+        }
+        await service.createSleepRegister({ userId, hoursOfSleep, sleep, date });
 
         console.log(`✅ Sueño registrado correctamente para userId=${userId}`);
         res.json({ message: '¡Sueño registrado correctamente!' });

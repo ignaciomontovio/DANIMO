@@ -249,7 +249,8 @@ export const validateSleepRegisterInput = (data) => {
                 'number.min': `"sleep" debe ser al menos 1`,
                 'number.max': `"sleep" no puede ser mayor que 5`,
                 'any.required': `"sleep" es obligatorio`
-            })
+            }),
+        date: Joi.date().iso().optional()
     });
 
     return schema.validate(data);

@@ -178,6 +178,9 @@ export async function chat({ message, userId, date}) {
             date
         });
         const messages = await compileConversationHistory(userId, message, prompt, date);
+        console.log("----------")
+        console.log(`${JSON.stringify(messages)}`);
+        console.log("----------")
         const assistantReply = await userResponse(messages);
         await saveMessagesToDB(userId, message, assistantReply, date);
         return { assistantReply, predominantEmotion, recommendRoutine, contactProfessional };

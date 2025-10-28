@@ -28,7 +28,7 @@ export const createSleepRegister = async (req, res) => {
         }
         await service.createSleepRegister({ userId, hoursOfSleep, sleep, date });
 
-        console.log(`✅ Sueño registrado correctamente para userId=${userId} para el dia ${date}`);
+        console.log(`✅ Sueño registrado correctamente para userId=${userId} para el dia ${date.toString()}`);
         res.json({ message: '¡Sueño registrado correctamente!' });
     } catch (err) {
         console.error('❌ Error en createSleepRegister:', err);

@@ -10,9 +10,10 @@ export async function emergencyButton(userId) {
     where: {userId},
   })
   for (const contact of emergencyContacts) {
-    const msj = "Hola " + contact.name + ", somos DANIMO y " + user.firstName
+    const msj = "Hola " + contact.name + ", somos DANIMO. " + user.firstName
         + " " + user.lastName
-        + " te tiene en sus contactos de emergencia y ha solicitado ayuda."
+        + " te tiene en su lista de contactos de emergencia y está atravesando un momento difícil. " +
+        "Tu apoyo puede hacer una gran diferencia, quizás podrías comunicarte con esta persona.";
     await sendMessage(contact.phoneNumber, msj)
   }
 }

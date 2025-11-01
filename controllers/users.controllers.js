@@ -278,3 +278,35 @@ export const getRedFlags = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener Red Flags' });
     }
 };
+
+export const resetEmotionalState = async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        console.error("❌ Email no proporcionado en body");
+        return res.status(400).json({ error: "Email es requerido" });
+    }
+
+    try {
+        const deleted = await usersService.resetEmotionalState(email);
+
+        const totalDeleted =
+            deleted.deletedConversations +
+            deleted.deletedEmotionRegisters +
+            deleted.deletedSleepRegisters +
+            deleted.deletedActivityRegisters +
+            deleted.deletedState;
+
+        console.log(`🗑️ Registros eliminados: ${totalDeleted}`);
+
+        return res.status(200).json({
+            message: totalDeleted > 0
+                ? `Se eliminaron ${totalDeleted} registros`
+                : "No había registros para eliminar"
+        });
+
+    } catch (err) {
+        console.error("❌ Error eliminando registros:", err);
+        return res.status(500).json({ error: err.message });
+    }
+};

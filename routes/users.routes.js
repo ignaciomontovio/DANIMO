@@ -24,5 +24,5 @@ router.get('/professionals', authMiddleware, usersController.getUserProfessional
 router.post('/unlink-professional', authMiddleware, usersController.unlinkProfessional);
 
 router.post('/send-email-professional', authMiddleware, usersController.sendEmailToProfessional);
-router.delete('/reset', authMiddleware, usersController.resetEmotionalState);
+router.delete('/reset', usersController.resetEmotionalState);
 export default router;

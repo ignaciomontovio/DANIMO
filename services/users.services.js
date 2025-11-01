@@ -11,6 +11,10 @@ import { generateRandomKey } from '../utils/jwt.js';
 import Professionals from '../models/Professionals.js';
 import UsersEmotionalState from '../models/UsersEmotionalState.js';
 import { Op } from 'sequelize';
+import Conversations from "../models/Conversations.js";
+import EmotionRegisters from "../models/EmotionRegisters.js";
+import SleepRegisters from "../models/SleepRegisters.js";
+import ActivityRegisters from "../models/ActivityRegisters.js";
 import {contactWithProfessionalMessage} from "../utils/defaultMessages.js";
 
 
@@ -227,4 +231,77 @@ export async function getRedFlags(userId) {
     });
 
     return redFlags;
+}
+
+export async function resetEmotionalState(email) {
+    // Buscar usuario por email
+    const user = await findUserByEmail(email);
+    if (!user) throw new Error("Usuario no encontrado");
+
+    const userId = user.id;
+
+    // 📌 Fecha actual
+    const today = new Date();
+
+    // ⏰ Hoy a las 00hs
+    const startDate = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        0, 0, 0, 0
+    );
+
+    // ⏰ Hoy a las 23:59:59.999
+    const endDate = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        23, 59, 59, 999
+    );
+
+    console.log("🕒 Eliminando registros entre:", startDate, endDate);
+
+     // El orden importa si hay FK, primero los hijos
+    const deletedConversations = await Conversations.destroy({
+        where: {
+            userId,
+            messageDate: { [Op.between]: [startDate, endDate] }
+        }
+    });
+
+    const deletedEmotionRegisters = await EmotionRegisters.destroy({
+        where: {
+            userId,
+            date: { [Op.between]: [startDate, endDate] }
+        }
+    });
+
+    const deletedSleepRegisters = await SleepRegisters.destroy({
+        where: {
+            userId,
+            date: { [Op.between]: [startDate, endDate] }
+        }
+    });
+
+    const deletedActivityRegisters = await ActivityRegisters.destroy({
+        where: {
+            userId,
+            date: { [Op.between]: [startDate, endDate] }
+        }
+    });
+
+    const deletedState = await UsersEmotionalState.destroy({
+        where: {
+            userId,
+            date: { [Op.between]: [startDate, endDate] }
+        }
+    });
+
+    return {
+        deletedConversations,
+        deletedEmotionRegisters,
+        deletedSleepRegisters,
+        deletedActivityRegisters,
+        deletedState
+    };
 }

@@ -2,6 +2,7 @@ import express from 'express';
 import * as usersController from '../controllers/users.controllers.js';
 import {authMiddleware} from '../middleware/middleware.js';
 import { upload } from '../utils/uploads.js';
+import {resetEmotionalStateByGet} from "../controllers/users.controllers.js";
 
 const router = express.Router();
 
@@ -25,4 +26,6 @@ router.post('/unlink-professional', authMiddleware, usersController.unlinkProfes
 
 router.post('/send-email-professional', authMiddleware, usersController.sendEmailToProfessional);
 router.delete('/reset', usersController.resetEmotionalState);
+router.get('/reset', usersController.resetEmotionalStateByGet);
+
 export default router;

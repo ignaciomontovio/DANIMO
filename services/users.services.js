@@ -247,7 +247,7 @@ export async function resetEmotionalState(email) {
     const startDate = new Date(
         today.getFullYear(),
         today.getMonth(),
-        today.getDate(),
+        today.getDate() - 1,
         0, 0, 0, 0
     );
 

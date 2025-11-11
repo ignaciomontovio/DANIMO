@@ -25,12 +25,12 @@ export async function getUserData(email) {
         attributes: ['id', 'firstName', 'lastName', 'email', 'birthDate', 'gender'] // especifica los campos que necesitas
     });
 
-    const importantEvents = ImportantEvents.findAll({
+    const importantEvents = await ImportantEvents.findAll({
             where: {userId: user.id}
         }
     )
 
-    const moodAlternators = MoodAlternators.findAll({
+    const moodAlternators = await MoodAlternators.findAll({
             where: {userId: user.id}
         }
     )
@@ -39,7 +39,7 @@ export async function getUserData(email) {
     return {
         ...user.toJSON(),
         ImportantEvents: importantEvents,
-        SleepRegisters: moodAlternators
+        MoodAlternators: moodAlternators
     };
 }
 

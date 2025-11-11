@@ -173,8 +173,7 @@ export async function chat({ message, userId, date}) {
             }
 
              */
-            const rawMessages = await compileConversationHistory(userId, message, prompt, date);
-            messages = rawMessages.slice(-6)
+            messages = await compileConversationHistory(userId, message, prompt, date, 6);
         } else {
             messages = await compileConversationHistory(userId, message, prompt, date);
         }
@@ -200,17 +199,21 @@ export async function chat({ message, userId, date}) {
 }
 
 // Función responsable de compilar el historial de conversación
-async function compileConversationHistory(userId, currentMessage, prompt, date) {
+async function compileConversationHistory(userId, currentMessage, prompt, date, limit = 0) {
     const messages = [{role: 'system', content: prompt}];
 
     const conversations = await Conversations.findAll({where: {userId}});
     if (conversations?.length > 0) {
-        conversations
+        let phrases = conversations
             .filter(conversation => conversation.messageDate < date)
             .sort((a, b) => a.messageDate - b.messageDate)
-            .forEach(({type, text}) => {
-                messages.push({role: type, content: text});
-            });
+
+        if (limit !== 0) {
+            phrases = phrases.slice((-1) * limit)
+        }
+        phrases.forEach(({type, text}) => {
+            messages.push({role: type, content: text});
+        });
     }
     messages.push({
         role: 'user',

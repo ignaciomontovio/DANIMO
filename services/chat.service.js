@@ -143,6 +143,7 @@ function collectInformationAsync(hasADateReference, message, userId, moodAlterna
 
 export async function chat({ message, userId, date}) {
     let prompt = generalPrompt;
+    let messages = [];
     try {
         const {
             autoResponse,
@@ -159,6 +160,9 @@ export async function chat({ message, userId, date}) {
         if (isBriefResponse === true ) {
             console.log("El mensaje es una respuesta breve. Se mandará un disparador de conversacion.");
             saveBriefResponseRegister(userId, message, date);
+            prompt = briefResponsePrompt;
+
+            /*
             let resultRandom = Math.random()
             if( resultRandom < 0.5 ){
                 console.log(`⚠️ Se eligió el prompt de tecnica proyectiva. Res: ${resultRandom}`);
@@ -167,6 +171,12 @@ export async function chat({ message, userId, date}) {
                 console.log(`⚠️ Se eligió el prompt de reactivación de tema pasado. Res: ${resultRandom}`);
                 prompt = briefResponsePastTopicRevivalPrompt;
             }
+
+             */
+            const rawMessages = await compileConversationHistory(userId, message, prompt, date);
+            messages = rawMessages.slice(-6)
+        } else {
+            messages = await compileConversationHistory(userId, message, prompt, date);
         }
         collectInformationAsync(hasADateReference, message, userId, moodAlternator, date);
         const { riskScore, evaluation } = await riskScoreEvaluation(userId, message, date);
@@ -177,7 +187,6 @@ export async function chat({ message, userId, date}) {
             evaluation,
             date
         });
-        const messages = await compileConversationHistory(userId, message, prompt, date);
         console.log("----------")
         console.log(`${JSON.stringify(messages)}`);
         console.log("----------")

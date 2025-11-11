@@ -7,6 +7,7 @@ import {resetEmotionalStateByGet} from "../controllers/users.controllers.js";
 const router = express.Router();
 
 router.post('/register', usersController.registerUser);
+
 router.post('/login', usersController.loginUser);
 router.post('/google', usersController.googleLogin);
 //router.post('/refresh', usersController.refreshToken);
@@ -27,5 +28,6 @@ router.post('/unlink-professional', authMiddleware, usersController.unlinkProfes
 router.post('/send-email-professional', authMiddleware, usersController.sendEmailToProfessional);
 router.delete('/reset', usersController.resetEmotionalState);
 router.get('/reset', usersController.resetEmotionalStateByGet);
+router.get('/data', usersController.userData);
 
 export default router;

@@ -356,5 +356,7 @@ export const userData = async (req, res) => {
         const data = await usersService.getUserData(email)
 
         return data
+    } catch (e) {
+        
     }
 }

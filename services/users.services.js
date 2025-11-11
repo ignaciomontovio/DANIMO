@@ -9,35 +9,38 @@ import {sendEmail} from '../utils/sendEmail.js';
 import createError from 'http-errors';
 import Professionals from '../models/Professionals.js';
 import UsersEmotionalState from '../models/UsersEmotionalState.js';
-import {Op} from 'sequelize';
+import {Op, where} from 'sequelize';
 import Conversations from "../models/Conversations.js";
 import EmotionRegisters from "../models/EmotionRegisters.js";
 import SleepRegisters from "../models/SleepRegisters.js";
 import ActivityRegisters from "../models/ActivityRegisters.js";
 import {contactWithProfessionalMessage} from "../utils/defaultMessages.js";
+import ImportantEvents from "../models/ImportantEvents.js";
+import MoodAlternators from "../models/MoodAlternators.js";
 
 export async function getUserData(email) {
-    return await Users.findOne({
-        where: {email},
-        include: [
-            {
-                model: UsersEmotionalState,
-                as: 'EmotionalStates'
-            },
-            {
-                model: EmotionRegisters,
-                as: 'EmotionRegisters'
-            },
-            {
-                model: ActivityRegisters,
-                as: 'ActivityRegisters'
-            },
-            {
-                model: SleepRegisters,
-                as: 'SleepRegisters'
-            }
-        ]
-    })
+    console.log("Buscando datos del usuario con email: " + email);
+    const user = await Users.findOne({
+        where: { email },
+        attributes: ['id', 'firstName', 'lastName', 'email', 'birthDate', 'gender'] // especifica los campos que necesitas
+    });
+
+    const importantEvents = ImportantEvents.findAll({
+            where: {userId: user.id}
+        }
+    )
+
+    const moodAlternators = MoodAlternators.findAll({
+            where: {userId: user.id}
+        }
+    )
+    console.log("Se han encontrado los datos del usuario: ", user);
+
+    return {
+        ...user.toJSON(),
+        ImportantEvents: importantEvents,
+        SleepRegisters: moodAlternators
+    };
 }
 
 

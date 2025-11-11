@@ -354,8 +354,8 @@ export const userData = async (req, res) => {
 
     try {
         const data = await usersService.getUserData(email)
-
-        return data
+        console.log("Data de usuario obtenida correctamente.");
+        res.status(200).json(data);
     } catch (e) {
         
     }

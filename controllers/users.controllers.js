@@ -342,3 +342,19 @@ export const resetEmotionalStateByGet = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 };
+
+
+export const userData = async (req, res) => {
+    const {email} = req.query; // query param opcional
+
+    if (!email) {
+        console.error("❌ Email no proporcionado en queryparam");
+        return res.status(400).json({error: "Email es requerido"});
+    }
+
+    try {
+        const data = await usersService.getUserData(email)
+
+        return data
+    }
+}

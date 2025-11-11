@@ -1,21 +1,44 @@
 import Users from '../models/Users.js';
 import RecoveryTokens from '../models/RecoveryTokens.js';
 import ProfesionalPatientTokens from "../models/ProfessionalPatientTokens.js";
-import { v4 as uuidv4 } from 'uuid';
-import { hashPassword, comparePassword } from '../utils/password.js';
-import { signToken, signRefreshToken } from '../utils/jwt.js';
-import { verifyGoogleToken } from '../utils/google.js';
+import {v4 as uuidv4} from 'uuid';
+import {comparePassword, hashPassword} from '../utils/password.js';
+import {generateRandomKey, signToken} from '../utils/jwt.js';
+import {verifyGoogleToken} from '../utils/google.js';
 import {sendEmail} from '../utils/sendEmail.js';
 import createError from 'http-errors';
-import { generateRandomKey } from '../utils/jwt.js';
 import Professionals from '../models/Professionals.js';
 import UsersEmotionalState from '../models/UsersEmotionalState.js';
-import { Op } from 'sequelize';
+import {Op} from 'sequelize';
 import Conversations from "../models/Conversations.js";
 import EmotionRegisters from "../models/EmotionRegisters.js";
 import SleepRegisters from "../models/SleepRegisters.js";
 import ActivityRegisters from "../models/ActivityRegisters.js";
 import {contactWithProfessionalMessage} from "../utils/defaultMessages.js";
+
+export async function getUserData(email) {
+    return await Users.findOne({
+        where: {email},
+        include: [
+            {
+                model: UsersEmotionalState,
+                as: 'EmotionalStates'
+            },
+            {
+                model: EmotionRegisters,
+                as: 'EmotionRegisters'
+            },
+            {
+                model: ActivityRegisters,
+                as: 'ActivityRegisters'
+            },
+            {
+                model: SleepRegisters,
+                as: 'SleepRegisters'
+            }
+        ]
+    })
+}
 
 
 export async function sendEmailToProfessional(userId) {

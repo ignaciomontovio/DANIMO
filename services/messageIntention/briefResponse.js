@@ -37,7 +37,7 @@ export async function briefResponseCooldown(userId, date) {
         const diff = now - br.date;
         const diffInMinutes = Math.floor(diff / (1000 * 60));
         console.log(`Diferencia en minutos desde la última respuesta breve: ${diffInMinutes}`);
-        const inCololdown = diffInMinutes < 120
+        const inCololdown = diffInMinutes < 30
         if(inCololdown) {
             console.log("⚠️ El usuario está en cooldown de respuestas breves.");
         }

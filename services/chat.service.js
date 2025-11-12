@@ -156,8 +156,8 @@ export async function chat({ message, userId, date}) {
         if (autoResponse === true) {
             return { assistantReply: defaultResponse, predominantEmotion: null, recommendRoutine: false, riskDetected: hasSuicideRisk, contactProfessional: false };
         }
-        //&& await briefResponseCooldown(userId, date) === false TURN OFF COOLDOWN
-        if (isBriefResponse === true ) {
+        // TURN OFF COOLDOWN
+        if (isBriefResponse === true && await briefResponseCooldown(userId, date) === false) {
             console.log("El mensaje es una respuesta breve. Se mandará un disparador de conversacion.");
             saveBriefResponseRegister(userId, message, date);
             prompt = briefResponsePrompt;

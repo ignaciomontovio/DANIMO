@@ -14,6 +14,7 @@ import axios from "axios";
 import {v4 as uuidv4} from 'uuid';
 import {format} from "date-fns";
 import {userIntentPrompt} from "../utils/prompts/userIntentPrompt.js";
+import Conversations from "../models/Conversations.js";
 
 //const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 //const CHATGPT_API_KEY = process.env.CHATGPT_API_KEY;
@@ -118,13 +119,25 @@ export async function stressLevelEvaluationResponse(message) {
     return reply
 }
 
-export async function userIntentMessage(message) {
+export async function userIntentMessage(message, userId) {
     const messages = [
-        {role: 'system', content: userIntentPrompt},
-        {role: 'user', content: message}];
+        {role: 'system', content: userIntentPrompt}];
 
+    const conversations = await Conversations.findAll({where: {userId}});
+    if (conversations?.length > 1) {
+        conversations
+            .sort((a, b) => a.messageDate - b.messageDate)
+            .slice(-2)
+            .forEach(({type, text}) => {
+                messages.push({role: type, content: text});
+            });
+    }
+    messages.push({
+        role: 'user',
+        content: message
+    });
     const reply = await sendMessageToAzureOpenIAWithParseJson(messages);
-    const { error, value } = validateUserIntentResponse(reply);
+    const {error, value} = validateUserIntentResponse(reply);
 
     if (error) {
         throw new Error(`Respuesta inválida en userIntentMessge: ${error.details[0].message}`);

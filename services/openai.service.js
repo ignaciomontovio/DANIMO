@@ -22,7 +22,7 @@ const AZURE_OPENAI_API_GPT3_URL = process.env.AZURE_OPENAI_API_GPT3_URL
 const AZURE_OPENAI_API_GPT4_URL = process.env.AZURE_OPENAI_API_GPT4_URL
 const AZURE_OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY
 
-export async function sendMessageToAzureOpenIA(messages, model = AZURE_OPENAI_API_GPT3_URL) {
+export async function sendMessageToAzureOpenIA(messages, model = AZURE_OPENAI_API_GPT4_URL) {
     const headers = {
         Authorization: `Bearer ${AZURE_OPENAI_API_KEY}`,
         'Content-Type': 'application/json',

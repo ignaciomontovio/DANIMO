@@ -5,11 +5,10 @@ export const sendNotificationToAllUsers = async (req, res) => {
     try {
         const users = await Users.findAll({ where: { firebaseToken: { $ne: null } } })
         for (const user of users) {
-            await service.sendPushNotificationToUser(user.id);
+            service.sendPushNotificationToUser(user.id);
         }
-        const result = await service.sendPushNotificationToUser(userId);
         console.log("✅ Notificaciones enviadas correctamente a todos los usuarios");
-        res.json({ message: result });
+        res.json({ message: "Ok" });
     } catch (err) {
         console.error('❌ Error al enviar notificacion a los usuarios ');
         res.status(500).json({ error: err.message });

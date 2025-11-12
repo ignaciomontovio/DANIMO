@@ -1,9 +1,16 @@
 import * as service from "../services/notifications.services.js";
 import Users from "../models/Users.js";
+import {Op} from "sequelize";
 
 export const sendNotificationToAllUsers = async (req, res) => {
     try {
-        const users = await Users.findAll({ where: { firebaseToken: { $ne: null } } })
+        const users = await Users.findAll({
+            where: {
+                firebaseToken: {
+                    [Op.not]: null
+                }
+            }
+        });
         for (const user of users) {
             service.sendPushNotificationToUser(user.id);
         }

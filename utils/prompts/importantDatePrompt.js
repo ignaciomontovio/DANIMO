@@ -40,7 +40,8 @@ a fechas absolutas (en formato ISO AAAA-MM-DD).
   - "esta semana estuve cansado"
   - "me sentí algo mal el martes"
   Este tipo de frases no deben ser tomadas como eventos importantes, a menos que indiquen una situación grave, crónica o con alto impacto emocional.
-6. Devolver la información en el siguiente formato:
+6. No consideres eventos positivos como fechas importantes. Solo se deben considerar si afectan al usuario de forma negativa. 
+7. Devolver la información en el siguiente formato:
 {
   "esSignificativo": false o true,
   "fechaImportante": "['null' o una fecha en formato ISO: AAAA-MM-DD si el mensaje incluye una fecha clave]",

@@ -137,7 +137,7 @@ const mockProfessionals = [
         dni: 654390123,
         firstName: 'Juan',
         lastName: 'Fierro',
-        email: 'juanfierro@proton.me',
+        email: 'juanfierro@gmail.com',
         password: await hashPassword('Domingo1?'),
         hasGoogleAccount: false,
         birthDate: new Date('1982-09-25'),

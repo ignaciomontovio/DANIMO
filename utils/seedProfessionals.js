@@ -131,6 +131,22 @@ const mockProfessionals = [
         profilePic: null,
         license: 'EEA6789',
         authorized: true
+    },
+    {
+        id: uuidv4(),
+        dni: 654390123,
+        firstName: 'Juan',
+        lastName: 'Fierro',
+        email: 'juanfierro@proton.me',
+        password: await hashPassword('Domingo1?'),
+        hasGoogleAccount: false,
+        birthDate: new Date('1982-09-25'),
+        gender: 'Masculino',
+        occupation: 'Psicólogo',
+        livesWith: 'Amigos',
+        profilePic: null,
+        license: 'EEA6789',
+        authorized: true
     }
 ];
 

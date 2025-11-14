@@ -171,6 +171,62 @@ const mockUsers = [
         livesWith: null,
         profilePic: null,
         firebaseToken: null
+    },
+    {
+        id: uuidv4(),
+        firstName: 'Pedro',
+        lastName: 'Montovio',
+        email: 'pedromontovio@gmail.com',
+        password: await hashPassword('Domingo1?'),
+        hasGoogleAccount: false,
+        birthDate: new Date('1996-04-15'),
+        gender: 'Masculino',
+        occupation: 'Programador',
+        livesWith: null,
+        profilePic: null,
+        firebaseToken: null
+    },
+    {
+        id: uuidv4(),
+        firstName: 'Lucas',
+        lastName: 'Cocciardi',
+        email: 'lucascocciardi@gmail.com',
+        password: await hashPassword('Domingo1?'),
+        hasGoogleAccount: false,
+        birthDate: new Date('1996-04-15'),
+        gender: 'Masculino',
+        occupation: 'Programador',
+        livesWith: null,
+        profilePic: null,
+        firebaseToken: null
+    },
+    {
+        id: uuidv4(),
+        firstName: 'Valentina',
+        lastName: 'Violi',
+        email: 'valentinavioli@gmail.com',
+        password: await hashPassword('Domingo1?'),
+        hasGoogleAccount: false,
+        birthDate: new Date('1996-04-15'),
+        gender: 'Femenino',
+        occupation: 'Marketing Digital',
+        livesWith: null,
+        profilePic: null,
+        firebaseToken: null
+    },
+    {
+        id: uuidv4(),
+        firstName: 'Fiodor',
+        lastName: 'Lecuona',
+        email: 'fiodorlecuona@gmail.com',
+        password: await hashPassword('Domingo1?'),
+        hasGoogleAccount: false,
+        birthDate: new Date('1996-04-15'),
+        gender: 'Masculino',
+        occupation: 'Minero',
+        livesWith: null,
+        profilePic: null,
+        firebaseToken: null
     }
 ];
 export default async function seedUsersIfEmpty() {

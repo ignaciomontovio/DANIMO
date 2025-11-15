@@ -175,7 +175,7 @@ export async function chat({ message, userId, date}) {
              */
             messages = await compileConversationHistory(userId, message, prompt, date, 6);
         } else {
-            messages = await compileConversationHistory(userId, message, prompt, date);
+            messages = await compileConversationHistory(userId, message, prompt, date, 8);
         }
         collectInformationAsync(hasADateReference, message, userId, moodAlternator, date);
         const { riskScore, evaluation } = await riskScoreEvaluation(userId, message, date);

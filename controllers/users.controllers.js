@@ -327,7 +327,8 @@ export const resetEmotionalStateByGet = async (req, res) => {
             deleted.deletedEmotionRegisters +
             deleted.deletedSleepRegisters +
             deleted.deletedActivityRegisters +
-            deleted.deletedState;
+            deleted.deletedState +
+            deleted.deletedMoodAlternator;
 
         console.log(`🗑️ Registros eliminados: ${totalDeleted}`);
 

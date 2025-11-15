@@ -323,11 +323,19 @@ export async function resetEmotionalState(email) {
         }
     });
 
+    const deletedMoodAlternator = await MoodAlternators.destroy({
+        where: {
+            userId,
+            date: { [Op.between]: [startDate, endDate] }
+        }
+    })
+
     return {
         deletedConversations,
         deletedEmotionRegisters,
         deletedSleepRegisters,
         deletedActivityRegisters,
-        deletedState
+        deletedState,
+        deletedMoodAlternator,
     };
 }

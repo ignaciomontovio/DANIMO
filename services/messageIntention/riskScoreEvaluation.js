@@ -207,6 +207,7 @@ export async function riskScoreEvaluation(userId, message, date) {
     fourteenDaysAgo.setDate(now.getDate() - 14);
 
     // Intentos de suicidio
+    /*
     const suicideLastWeek = await UsersEmotionalState.findOne({
         where: {
             userId,
@@ -231,6 +232,7 @@ export async function riskScoreEvaluation(userId, message, date) {
             totalScore += 1;
         }
     }
+    */
 
     // Respuestas breves en la última semana (descartado)
     /*
@@ -268,8 +270,10 @@ export async function riskScoreEvaluation(userId, message, date) {
     */
 
     // Puntaje de sueño
+    /*
     const sleepPoints = await sleepScore(userId, date);
     totalScore += sleepPoints;
+    */
 
     //El puntaje máximo de riesgo es 10
     totalScore = Math.min(totalScore, 10);
